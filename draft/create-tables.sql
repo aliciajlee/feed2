@@ -10,6 +10,7 @@ create table users(
     uid int auto_increment not null primary key,
     email varchar(30),
     username varchar(20),
+    ppPath varchar(50)
     password varchar(20),
     location varchar(30)
 );

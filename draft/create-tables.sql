@@ -2,7 +2,7 @@
 -- CHANGE TO DB NAME
 use sxu5_db;
 
-
+drop table if exists tags;
 drop table if exists posts;
 drop table if exists users;
 create table users(
@@ -26,10 +26,9 @@ create table posts (
     price enum ("1", "2", "3", "4"),
     time timestamp,
     foreign key (uid) references users(uid)
-        --    on delete cascade
+           on delete cascade
 );
 
-drop table if exists tags;
 create table tags (
     type varchar(20),
     pid int,

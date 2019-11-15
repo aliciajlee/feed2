@@ -1,8 +1,8 @@
-drop table if exists Users;
-drop table if exists Posts;
-drop table if exists Tags;
-drop table if exists Tagpost;
 drop table if exists Follows;
+drop table if exists TagPost;
+drop table if exists Tags;
+drop table if exists Posts;
+drop table if exists Users;
 
 create table Users(
        uid int auto_increment,

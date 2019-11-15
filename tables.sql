@@ -50,7 +50,7 @@ create table Tagpost(
        pid int,
        tid int,
        foreign key (pid) references Posts(pid)
-           on delete cascade
+           on delete cascade,
        foreign key (tid) references Tags(tid)
            on delete cascade
 

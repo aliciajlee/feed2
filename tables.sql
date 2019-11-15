@@ -41,9 +41,8 @@ create table Posts(
 
 
 create table Tags(
-    type varchar(20),
-    tid int auto_increment primary key,
-           on delete cascade
+    ttype varchar(20),
+    tid int auto_increment primary key
 );
 
 create table Tagpost(

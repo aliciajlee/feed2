@@ -1,6 +1,7 @@
 drop table if exists Users;
 drop table if exists Posts;
 drop table if exists Tags;
+drop table if exists Tagpost;
 
 create table Users(
        uid int auto_increment,
@@ -29,7 +30,14 @@ create table Posts(
 );
 
 
-create table tagPost(
+create table Tags(
+    type varchar(20),
+    tid int auto_increment primary key,
+           on delete cascade
+           on update cascade
+);
+
+create table Tagpost(
        pid int,
        tid int,
        foreign key (pid) references Posts(pid)
@@ -37,11 +45,4 @@ create table tagPost(
        foreign key (tid) references Tags(tid)
            on delete cascade
 
-);
-
-create table Tags(
-    type varchar(20),
-    tid int auto_increment primary key,
-           on delete cascade
-           on update cascade
 );

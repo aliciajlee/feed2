@@ -1,5 +1,5 @@
 drop table if exists Follows;
-drop table if exists TagPost;
+drop table if exists Tagpost;
 drop table if exists Tags;
 drop table if exists Posts;
 drop table if exists Users;
@@ -15,6 +15,13 @@ create table Users(
        primary key (uid)
 );
 
+load data local INFILE
+'starter-data/accounts-list.csv'
+into Table Users
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
+
 create table Follows(
        follower_id int,
        followee_id int,
@@ -22,6 +29,13 @@ create table Follows(
            on delete cascade
 
 );
+
+load data local INFILE
+'starter-data/follow-list.csv'
+into Table Follows
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n';
+
 
 
 create table Posts(

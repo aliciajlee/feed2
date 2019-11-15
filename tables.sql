@@ -2,6 +2,7 @@ drop table if exists Users;
 drop table if exists Posts;
 drop table if exists Tags;
 drop table if exists Tagpost;
+drop table if exists Follows;
 
 create table Users(
        uid int auto_increment,
@@ -12,6 +13,14 @@ create table Users(
        unique(username),
        index(username),
        primary key (uid)
+);
+
+create table Follows(
+       follower_id int,
+       followee_id int,
+       foreign key (follower_id) references Users(uid)
+           on delete cascade
+
 );
 
 
@@ -27,6 +36,7 @@ create table Posts(
     time timestamp,
     foreign key (uid) references Users(uid)
            on delete cascade
+           
 );
 
 
@@ -34,7 +44,6 @@ create table Tags(
     type varchar(20),
     tid int auto_increment primary key,
            on delete cascade
-           on update cascade
 );
 
 create table Tagpost(
@@ -46,3 +55,4 @@ create table Tagpost(
            on delete cascade
 
 );
+

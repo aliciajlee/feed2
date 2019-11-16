@@ -2,9 +2,10 @@
 <html lang='en'>
 <head>
     <meta charset='utf-8'>
-    <meta name=author content="">
-    <title>{{ page_title }}</title>
-    <link rel='stylesheet' href="{{url_for('static', filename = 'style.css')}}">
+    <meta name=author content="Rachel Navarrette">
+    <title>Feed</title>
+    <h1> Feed </h1>
+    <link rel='stylesheet' href="{{url_for('static', filename = 'style3.css')}}">
     {% block head_stuff %} {% endblock %}
 </head>
 <body>
@@ -21,6 +22,14 @@
             
 {% block main_content %}
 <h1>Welcome!</h1>
+{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery.js"></script>
+{% block jquery_scripts %}
+<script>
+console.log('jQuery loaded');
+</script>
 {% endblock %}
 
 </body>

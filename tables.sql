@@ -1,3 +1,5 @@
+use sxu5_db;
+
 drop table if exists Follows;
 drop table if exists Tagpost;
 drop table if exists Tags;
@@ -15,11 +17,6 @@ create table Users(
        primary key (uid)
 );
 
-load data local INFILE
-'starter-data/accounts-list.csv'
-into Table Users
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n';
 
 
 create table Follows(
@@ -30,33 +27,25 @@ create table Follows(
 
 );
 
-load data local INFILE
-'starter-data/follow-list.csv'
-into Table Follows
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n';
-
-
 
 create table Posts(
     pid int auto_increment not null primary key,
     uid int,
-    rating enum("1", "2", "3", "4", "5"),
-    review varchar(500),
     restaurant varchar(30),
+    rating enum("1", "2", "3", "4", "5"),
+    price enum ("1", "2", "3", "4"),
+    review varchar(500),
     imgPath varchar(50), 
     location varchar(50),
-    price enum ("1", "2", "3", "4"),
     time timestamp,
     foreign key (uid) references Users(uid)
            on delete cascade
            
 );
 
-
 create table Tags(
-    ttype varchar(20),
-    tid int auto_increment primary key
+    tid int auto_increment primary key,
+    ttype varchar(20)
 );
 
 create table Tagpost(

@@ -1,4 +1,4 @@
-use sxu5_db;
+-- use sxu5_db;
 
 drop table if exists Follows;
 drop table if exists Tagpost;
@@ -16,7 +16,6 @@ create table Users(
        index(username),
        primary key (uid)
 );
-
 
 create table Follows(
        follower_id int,

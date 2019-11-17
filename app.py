@@ -36,13 +36,20 @@ def home():
 
     return render_template("home.html", page_title="Home", posts=posts)
 
-#search by dish name, tag, restaurant, etc
+# for now return all results where post name, tag, restaurant match
 @app.route("/search/", methods=["POST"])
 def search():
     query = request.values.get('query')
     print(query)
+    conn = db.getConn(DB)
+    posts = db.getQueryAll(conn, query)
 
-    return render_template("results.html", page_title = "Search Results")
+    print(posts)
+
+    # if no posts flash
+
+
+    return render_template("home.html", page_title = "Search Results", posts=posts)
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():

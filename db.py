@@ -17,3 +17,17 @@ def getAllPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''')
     return curs.fetchall() # change this later
+
+# returns posts where query matches post name, tag, restaurant,
+def getQueryAll(conn, query):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''(select * from Posts where pname like %s 
+                                            or restaurant like %s)
+                    union
+                    (select Posts.pid, uid, pname, rating, price, review, restaurant, location, imgPath, time 
+                                            from Posts inner join 
+                                            (select pid from Tagpost inner join Tags 
+                                            on Tags.tid = Tagpost.tid 
+                                            where Tags.ttype like %s) as p 
+                                            on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', query])
+    return curs.fetchall()

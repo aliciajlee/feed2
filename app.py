@@ -6,8 +6,11 @@ app = Flask(__name__)
 import os
 import dbi
 import bcrypt
+import db # database stuff
 
 app.secret_key = 'able baker charlie'
+
+DB = 'sxu5_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -20,6 +23,35 @@ def getConn():
     if DSN is None:
         DSN = dbi.read_cnf()
     return dbi.connect(DSN)
+
+# display all posts
+# change to only following posts later or maybe another route for follwing posts
+@app.route("/home/") # users don't have to be logged in right to see home feed right?
+def home():
+    print("clicked home")
+    
+    conn = db.getConn(DB)
+    posts = db.getAllPosts(conn)
+
+    # how should they be sorted -- bootstrap card thing inserts by column and not row
+
+
+    return render_template("home.html", page_title="Home", posts=posts)
+
+# for now return all results where post name, tag, restaurant match
+@app.route("/search/", methods=["POST"])
+def search():
+    query = request.values.get('query')
+    print(query)
+    conn = db.getConn(DB)
+    posts = db.getQueryAll(conn, query)
+
+    print(posts)
+
+    # if no posts flash
+
+
+    return render_template("home.html", page_title = "Search Results", posts=posts)
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():

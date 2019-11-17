@@ -22,12 +22,22 @@ def getAllPosts(conn):
 def getQueryAll(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''(select * from Posts where pname like %s 
+<<<<<<< HEAD
                                             or restaurant like %s)
+=======
+                                            or restaurant like %s
+                                            or location like %s)
+>>>>>>> homefeed
                     union
                     (select Posts.pid, uid, pname, rating, price, review, restaurant, location, imgPath, time 
                                             from Posts inner join 
                                             (select pid from Tagpost inner join Tags 
                                             on Tags.tid = Tagpost.tid 
                                             where Tags.ttype like %s) as p 
+<<<<<<< HEAD
                                             on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', query])
     return curs.fetchall()
+=======
+                                            on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', '%'+query+'%', query])
+    return curs.fetchall() # change to limit x offset y order by time
+>>>>>>> homefeed

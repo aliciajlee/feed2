@@ -1,6 +1,7 @@
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory)
 from werkzeug import secure_filename
+
 app = Flask(__name__)
 
 import os
@@ -10,39 +11,31 @@ import db
 
 app.secret_key = 'able baker charlie'
 
-DB = 'sxu5_db' #CHANGE
-
-@app.route('/')
-def index():
-    return render_template('main.html', page_title='Feed')
-
-DSN = None
-
 def getConn():
     global DSN
     if DSN is None:
         DSN = dbi.read_cnf()
     return dbi.connect(DSN)
 
+@app.route('/')
+def index():
+    return render_template('main.html', page_title='Feed')
+
 # display all posts
 # change to only following posts later or maybe another route for follwing posts
 @app.route("/home/") # users don't have to be logged in right to see home feed right?
 def home():
-    print("clicked home")
+
     
-    conn = db.getConn(DB)
-    posts = db.getAllPosts(conn)
 
-
-    return render_template("home.html", page_title="Home", posts=posts)
+    return render_template("home.html", page_title="Home")
 
 #search by dish name, tag, restaurant, etc
-@app.route("/search/", methods=["POST"])
-def search():
-    query = request.values.get('query')
-    print(query)
+@app.route("/search/<query>", methods=["POST"])
+def search(query):
+    pass
 
-    return render_template("results.html", page_title = "Search Results")
+
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -53,13 +46,14 @@ def signUp():
             username = request.form['username']
             passwd1 = request.form['password1']
             passwd2 = request.form['password2']
+            # ADD USERNAME STUFF   
             if passwd1 != passwd2:
                 flash('passwords do not match')
                 return redirect( url_for('index'))
             hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
             hashed_str = hashed.decode('utf-8')
             print(passwd1, type(passwd1), hashed, hashed_str)
-            conn = getConn()
+            conn = db.getConn()
             curs = dbi.cursor(conn)
             try:
                 curs.execute('''INSERT INTO Users(uid,username,hashed)
@@ -118,10 +112,11 @@ def login():
                 session['uid'] = row['uid']
                 session['logged_in'] = True
                 session['visits'] = 1
-                return redirect( url_for('user', username=username) )
+                # return redirect( url_for('user', username=username) )  why user
+                return redirect(url_for('home'))
             else:
                 flash('login incorrect. Try again or join')
-                return redirect( url_for('index'))
+                return redirect( url_for('index')) # should go back to login page?
         except Exception as err:
             flash('form submission error '+str(err))
             return redirect( url_for('index') )

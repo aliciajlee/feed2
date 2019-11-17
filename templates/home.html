@@ -1,15 +1,69 @@
-{% extends "base.html" %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name=author content="Sandra Xu">  
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css"
+              href="/static/home.css">
+        <link rel="stylesheet" 
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+    </head>
 
-{% block main_content %}
-<p>Click to <a href="{{ url_for('index') }}">return to the main page</a>.</p>
+    <body>
+        {% block nav %} 
+        <!-- make navbar look nicer later -->
+        <nav class="navbar fixed-top navbar-light bg-light justify-content-between">
+            <!-- do fix at top -->
+            <a class="navbar-brand nav-link font-large" href="/home/">Feed</a>
+            <div class="flex-grow-1 d-flex">
+                <form method=POST action="/search/" class="form-inline flex-nowrap bg-light mx-0 mx-lg-auto rounded p-1">
+                    <input name="query" class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
+                    <button name="submit-btn"class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
 
-<h1>Greetings {{name}} ({{uid}})</h1>
+            <!-- collapse button here -->
 
-<p>You have visited {{visits}} times.</p>
+            <a class="navbar" href="#">
+                <i class="far fa-plus-square icon fa-2x"></i>
+            </a>
+            <a class = "navbar" href="#">
+                <i class="far fa-user-circle fa-2x"></i>
+            </a>
+        </nav>
 
-<form id="logoutform" action="{{url_for('logout')}}">
-    <button type="submit">logout</button>
-</form>
+        {% endblock %}
 
 
-{% endblock %}
+        {% block posts %}
+            <div class="masonry card-columns">
+            {% for post in posts %}
+                <div class="item card">
+                    <!-- <img src="{{post['imgPath']}}"> -->
+                    <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{post['pname']}}</h5>
+                        <!-- rating -->
+                        <p class="card-text rating" data-rating="{{post['rating']}}"></p>
+                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            
+
+        {% endblock %}
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    
+    <script src="{{url_for('static',filename='home.js')}}"></script>
+    
+</body>
+
+
+</html>
+
+

@@ -33,6 +33,8 @@ def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
 
+    # how should they be sorted -- bootstrap card thing inserts by column and not row
+
 
     return render_template("home.html", page_title="Home", posts=posts)
 

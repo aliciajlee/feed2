@@ -6,7 +6,7 @@ app = Flask(__name__)
 import os
 import dbi
 import bcrypt
-import db
+import db # database stuff
 
 app.secret_key = 'able baker charlie'
 

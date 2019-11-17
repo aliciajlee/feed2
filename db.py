@@ -1,3 +1,5 @@
+# database functions
+
 import dbi
 
 DSN = None

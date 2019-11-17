@@ -11,7 +11,7 @@ app.secret_key = 'able baker charlie'
 
 @app.route('/')
 def index():
-    return render_template('main.html', page_title='Feed')
+    return render_template('signup.html', page_title='Feed')
 
 DSN = None
 
@@ -27,6 +27,7 @@ def signUp():
         return redirect(url_for('index'))
     else:
         try:
+            email = request.form['email']
             username = request.form['username']
             passwd1 = request.form['password1']
             passwd2 = request.form['password2']
@@ -39,9 +40,9 @@ def signUp():
             conn = getConn()
             curs = dbi.cursor(conn)
             try:
-                curs.execute('''INSERT INTO Users(uid,username,hashed)
-                                VALUES(null,%s,%s)''',
-                            [username, hashed_str])
+                curs.execute('''INSERT INTO Users(uid,username,email,hashed)
+                                VALUES(null,%s,%s,%s)''',
+                            [username, email, hashed_str])
             except Exception as err:
                 flash('That username is taken: {}'.format(repr(err)))
                 return redirect(url_for('index'))
@@ -112,7 +113,7 @@ def user(username):
             username = session['username']
             uid = session['uid']
             session['visits'] = 1+int(session['visits'])
-            return render_template('greet.html',
+            return render_template('home.html',
                                    page_title='My App: Welcome {}'.format(username),
                                    name=username,
                                    uid=uid,

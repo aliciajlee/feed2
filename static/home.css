@@ -1,5 +1,5 @@
 body{
-    padding: 80px 10px 0px 10px;
+    padding: 70px 10px 0px 10px;
 }
 
 .font-large{
@@ -7,9 +7,9 @@ body{
     font-weight: 600 !important;
 }
 
-#search{
-    width: 430px !important;
-}
+/* #search{
+    width: 450px !important;
+} */
 
 .h1 {
     text-align: center;
@@ -26,12 +26,16 @@ h4{
     font-weight:normal; 
 }
 
+#search {
+    width: 450px !important;
+}
+
 @media (max-width: 320px) {
     .card-columns {
         -webkit-column-count: 1;
         -moz-column-count:1;
         column-count: 1 !important;
-    }
+    };
 }
 
 @media (min-width: 576px) {

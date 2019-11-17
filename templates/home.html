@@ -1,3 +1,5 @@
+{% extends "nav.html" %}
+
 <!doctype html>
 <html>
     <head>
@@ -13,31 +15,12 @@
 
     <body>
         {% block nav %} 
-        <!-- make navbar look nicer later -->
-        <nav class="navbar fixed-top navbar-light bg-light justify-content-between">
-            <!-- do fix at top -->
-            <a class="navbar-brand nav-link font-large" href="/home/">Feed</a>
-            <div class="flex-grow-1 d-flex">
-                <form method=POST action="/search/" class="form-inline flex-nowrap bg-light mx-0 mx-lg-auto rounded p-1">
-                    <input name="query" class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-                    <button name="submit-btn"class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
-
-            <!-- collapse button here -->
-
-            <a class="navbar" href="#">
-                <i class="far fa-plus-square icon fa-2x"></i>
-            </a>
-            <a class = "navbar" href="#">
-                <i class="far fa-user-circle fa-2x"></i>
-            </a>
-        </nav>
+            {{super()}}
 
         {% endblock %}
 
 
-        {% block posts %}
+        {% block content %}
             <div class="masonry card-columns">
             {% for post in posts %}
                 <div class="item card">
@@ -48,7 +31,7 @@
                         <h5 class="card-title">{{post['pname']}}</h5>
                         <!-- rating -->
                         <p class="card-text rating" data-rating="{{post['rating']}}"></p>
-                        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                        <p class="card-text">{{post['review'] | truncate(150)}}</p>
                     </div>
                 </div>
             {% endfor %}

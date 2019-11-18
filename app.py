@@ -30,6 +30,9 @@ def getConn():
 def home():
     print("clicked home")
     
+    if not session.get("logged_in"):
+        flash("Please log in to continue")
+        return redirect(url_for("login"))
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
 
@@ -128,7 +131,7 @@ def login():
                 session['uid'] = row['uid']
                 session['logged_in'] = True
                 session['visits'] = 1
-                return redirect( url_for('user', username=username) )
+                return redirect( url_for('home') )
             else:
                 flash('login incorrect. Try again or join')
                 return redirect( url_for('index'))

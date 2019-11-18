@@ -39,8 +39,14 @@
             <a class="navbar" href="#">
                 <i class="far fa-plus-square icon fa-2x"></i>
             </a>
-            <a class = "navbar" href="#">
-                <i class="far fa-user-circle fa-2x"></i>
+            <!-- Added by Rachel, trying to get a drop down menu on the profil button that will allowing logging out and going to the profile page, it's not working right now and I think it ruined signing in/signing up. It was working before I decided to added drop down feature.....-->
+            <a class = "navbar">
+                <button class="far fa-user-circle fa-2x"></button>
+                    <!-- <button class="dropbtn">Dropdown</button> -->
+                    <div class="dropdown-content">
+                      <a action="{{url_for('profile')">Profile</a>
+                      <a id="logout" action="{{url_for('logout')}}">Log Out</a>
+                    </div>
             </a>
         </nav>
 

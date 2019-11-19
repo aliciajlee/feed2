@@ -56,6 +56,13 @@ def search():
 
     return render_template("home.html", page_title = "Results • Feed", posts=posts)
 
+@app.route('/post/<pid>')
+def post(pid):
+
+
+    return render_template("post.html", post=post)
+
+
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
     if request.method == 'GET':

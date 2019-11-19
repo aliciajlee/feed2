@@ -30,6 +30,11 @@ h4{
     width: 450px !important;
 }
 
+a.custom-card,
+a.custom-card:hover {
+  color: inherit;
+}
+
 @media (max-width: 320px) {
     .card-columns {
         -webkit-column-count: 1;

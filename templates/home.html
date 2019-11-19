@@ -23,6 +23,7 @@
         {% block content %}
             <div class="masonry card-columns">
             {% for post in posts %}
+            <a href="/post/{{post['pid']}}" class = "custom-card"> 
                 <div class="item card">
                     <!-- <img src="{{post['imgPath']}}"> -->
                     <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
@@ -34,6 +35,7 @@
                         <p class="card-text">{{post['review'] | truncate(150)}}</p>
                     </div>
                 </div>
+            </a>
             {% endfor %}
             </div>
             

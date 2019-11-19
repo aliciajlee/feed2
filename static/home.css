@@ -30,6 +30,8 @@ h4{
     width: 450px !important;
 }
 
+
+
 @media (max-width: 320px) {
     .card-columns {
         -webkit-column-count: 1;

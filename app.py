@@ -30,13 +30,16 @@ def getConn():
 def home():
     print("clicked home")
     
+    if not session.get("logged_in"):
+        flash("Please log in to continue")
+        return redirect(url_for("login"))
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
 
     # how should they be sorted -- bootstrap card thing inserts by column and not row
 
 
-    return render_template("home.html", page_title="Home", posts=posts)
+    return render_template("home.html", page_title="Home • Feed", posts=posts)
 
 # for now return all results where post name, tag, restaurant match
 @app.route("/search/", methods=["POST"])
@@ -51,7 +54,7 @@ def search():
     # if no posts flash
 
 
-    return render_template("home.html", page_title = "Search Results", posts=posts)
+    return render_template("home.html", page_title = "Results • Feed", posts=posts)
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -128,7 +131,7 @@ def login():
                 session['uid'] = row['uid']
                 session['logged_in'] = True
                 session['visits'] = 1
-                return redirect( url_for('user', username=username) )
+                return redirect( url_for('home') )
             else:
                 flash('login incorrect. Try again or join')
                 return redirect( url_for('index'))

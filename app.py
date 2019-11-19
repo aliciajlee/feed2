@@ -133,7 +133,7 @@ def login():
                 session['logged_in'] = True
                 session['fullname'] = row['fullname'] #add other stuff in the table so the profile.html can get this stuff
                 #session['visits'] = 1
-                return redirect(url_for('user', username=username) )
+                return redirect(url_for('user', username=username) ) #add full name, biotext...etc so user() can get them
             else:
                 flash('login incorrect. Try again or join')
                 return redirect( url_for('index'))
@@ -154,7 +154,8 @@ def user(username):
             return render_template('profile.html', 
                                    name=username,
                                    uid=uid
-                                   ) #visits=session['visits'], #page_title='My App: Welcome {}'.format(username)
+                                   ) #make sure to add the otherstuff so profile.html knows
+        #visits=session['visits'], #page_title='My App: Welcome {}'.format(username)
 
         else:
             flash('You are not logged in. Please login or join')
@@ -191,6 +192,7 @@ def profile():
 def editProf():
     fullName = request.form['fName']
     biotext = request.form['bioText']
+    #make db edit for this info
     #redirect to profile
 
 if __name__ == '__main__':

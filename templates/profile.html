@@ -5,8 +5,8 @@
 	<meta name=author content="Rachel Navarrette">
 	<title>{{name}}</title>
 	<h1> Feed </h1>
-
 <link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}">
+</head>
 <header>
 
 	<div class="container">
@@ -15,20 +15,35 @@
 
 			<div class="profile-image">
 
-				<img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
+				<img src="https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1568&q=80"  style= "width: 100%
+				; height: 150%; border-radius: 50%;"  alt="profile_pic">
 
 			</div>
-
+			<!-- Edit profile form -->
 			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name">{{name}}</h1>
+				<h1 class="profile-user-name">{{name}}</h1> 
 
-				<!-- <button class="btn profile-edit-btn">Edit Profile</button> -->
+				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profilem</button>
 
-				<button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog" aria-hidden="true"></i></button>
+				<div class="form-popup" id="editForm">
+  				<form action="{{url_for('editProf')}}" class="form-container">
+    			<h1>Save Changes</h1>
+
+    			<label for="full_name"><b>Name</b></label>
+    			<input type="text" placeholder="Name" name="fName" required>
+
+    			<label for="bio_text"><b>Edit Bio</b></label>
+   			    <input type="text" placeholder="Bio: " name="bioText" required>
+
+    			<button type="submit" class="btn">Login</button>
+    			<!-- <button type="button" class="btn cancel" onclick="closeFor()">Close</button> --> 
+  				</form>
+				</div>
 
 			</div>
-
+			<!-- End Edit Profile -->
+			
 			<div class="profile-stats">
 
 				<ul>
@@ -39,11 +54,11 @@
 
 			</div>
 
-			<!-- <div class="profile-bio">
+			<div class="profile-bio">
 
-				<p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
+				<p><span class="profile-real-name">{{name}}</span> Lorem ipsum dolor sit, amet consectetur adipisicing elit 📷✈️🏕️</p>
 
-			</div> -->
+			</div> 
 
 		</div>
 		<!-- End of profile section -->
@@ -62,4 +77,13 @@
 	<!-- End of container -->
 
 </main>
-
+<script>
+	function editProfile() {
+	  document.getElementById("editForm").style.display = "block";
+	}
+	
+	//function closeForm() {
+	 // document.getElementById("editForm").style.display = "none";
+	//}
+	</script>
+</html>

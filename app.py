@@ -39,7 +39,7 @@ def home():
     # how should they be sorted -- bootstrap card thing inserts by column and not row
 
 
-    return render_template("home.html", page_title="Home", posts=posts)
+    return render_template("home.html", page_title="Home • Feed", posts=posts)
 
 # for now return all results where post name, tag, restaurant match
 @app.route("/search/", methods=["POST"])
@@ -54,7 +54,7 @@ def search():
     # if no posts flash
 
 
-    return render_template("home.html", page_title = "Search Results", posts=posts)
+    return render_template("home.html", page_title = "Results • Feed", posts=posts)
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():

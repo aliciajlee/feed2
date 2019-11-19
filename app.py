@@ -175,6 +175,12 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
+@app.route('/profile/')
+def profile():
+     username = session['username']
+     uid = session['uid']
+     return render_template('profile.html',name=username, uid=uid)
+     
 
 if __name__ == '__main__':
     import sys,os

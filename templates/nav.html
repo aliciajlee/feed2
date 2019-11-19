@@ -41,12 +41,11 @@
             </a>
             <!-- Added by Rachel, trying to get a drop down menu on the profil button that will allowing logging out and going to the profile page, it's not working right now and I think it ruined signing in/signing up. It was working before I decided to added drop down feature.....-->
             <a class = "navbar">
-                <button class="far fa-user-circle fa-2x"></button>
-                    <!-- <button class="dropbtn">Dropdown</button> -->
-                    <div class="dropdown-content">
-                      <a action="{{url_for('profile')">Profile</a>
-                      <a id="logout" action="{{url_for('logout')}}">Log Out</a>
-                    </div>
+                    <form action="{{url_for('profile')}}">
+                        <input class="far fa-user-circle fa-2x" type="submit" />
+                    </form>
+                <!-- <button class="far fa-user-circle fa-2x" href="{{url_for('profile')}}"></button> -->
+                         
             </a>
         </nav>
 

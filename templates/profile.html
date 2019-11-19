@@ -24,26 +24,26 @@
 
 				<h1 class="profile-user-name">{{name}}</h1> 
 
-				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profilem</button>
+				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profile</button>
 
 				<div class="form-popup" id="editForm">
-  				<form action="{{url_for('editProf')}}" class="form-container">
-    			<h1>Save Changes</h1>
+  				<form methods= "POST" action="{{url_for('editProf')}}" class="form-container">
+    			<h1>Edit Profile</h1>
 
     			<label for="full_name"><b>Name</b></label>
     			<input type="text" placeholder="Name" name="fName" required>
-
+				
     			<label for="bio_text"><b>Edit Bio</b></label>
    			    <input type="text" placeholder="Bio: " name="bioText" required>
 
-    			<button type="submit" class="btn">Login</button>
+    			<button type="submit" class="btn">Save Changes</button>
     			<!-- <button type="button" class="btn cancel" onclick="closeFor()">Close</button> --> 
   				</form>
 				</div>
 
 			</div>
 			<!-- End Edit Profile -->
-			
+
 			<div class="profile-stats">
 
 				<ul>

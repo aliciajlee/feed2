@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <meta name=author content="Sandra Xu">  
+        <meta name=author content="Sandra Xu and Rachel Navarrette (the button for logging out and going to profile.html)">  
         <title>Home</title>
         <link rel="stylesheet" type="text/css"
               href="/static/home.css">
@@ -41,7 +41,7 @@
             </a>
             <!-- Added by Rachel, trying to get a drop down menu on the profil button that will allowing logging out and going to the profile page, it's not working right now and I think it ruined signing in/signing up. It was working before I decided to added drop down feature.....-->
             <a class = "navbar">
-                    <form action="{{url_for('profile')}}">
+                    <form action="{{url_for('profile', {{username}})}}">
                         <input class="far fa-user-circle fa-2x" type="submit" />
                     </form>
                 <!-- <button class="far fa-user-circle fa-2x" href="{{url_for('profile')}}"></button> -->

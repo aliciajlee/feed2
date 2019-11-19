@@ -10,7 +10,7 @@ import db # database stuff
 
 app.secret_key = 'able baker charlie'
 
-DB = 'sxu5_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -59,8 +59,12 @@ def signUp():
         return redirect(url_for('index'))
     else:
         try:
+            fullname = request.form['fName'] 
+            print(fullname)
             email = request.form['email']
+            print(email)
             username = request.form['username']
+            print(username)
             passwd1 = request.form['password1']
             passwd2 = request.form['password2']
             if passwd1 != passwd2:
@@ -68,25 +72,25 @@ def signUp():
                 return redirect( url_for('index'))
             hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
             hashed_str = hashed.decode('utf-8')
-            print(passwd1, type(passwd1), hashed, hashed_str)
+            #print(passwd1, type(passwd1), hashed, hashed_str)
             conn = getConn()
             curs = dbi.cursor(conn)
             try:
-                curs.execute('''INSERT INTO Users(uid,username,email,hashed)
-                                VALUES(null,%s,%s,%s)''',
-                            [username, email, hashed_str])
+                curs.execute('''INSERT INTO Users(uid,fullname,email,username,hashed, biotxt, profpicPath)
+                                VALUES(null,%s,%s,%s,%s, null, null)''',
+                            [fullname, email, username, hashed_str])
             except Exception as err:
                 flash('That username is taken: {}'.format(repr(err)))
                 return redirect(url_for('index'))
             curs.execute('select last_insert_id()')
             row = curs.fetchone()
             uid = row[0]
-            flash('FYI, you were issued UID {}'.format(uid))
+            #flash('FYI, you were issued UID {}'.format(uid))
             session['username'] = username
             session['uid'] = uid
             session['logged_in'] = True
-            session['visits'] = 1
-            return redirect( url_for('user', username=username) )
+            #session['visits'] = 1
+            return redirect(url_for('user', username=username) )
         except Exception as err:
             flash('form submission error '+str(err))
             return redirect( url_for('index') )
@@ -101,7 +105,7 @@ def login():
             passwd = request.form['password']
             conn = getConn()
             curs = dbi.dictCursor(conn)
-            curs.execute('''SELECT uid,hashed
+            curs.execute('''SELECT *
                         FROM Users
                         WHERE username = %s''',
                         [username])
@@ -112,23 +116,24 @@ def login():
                 flash('login incorrect. Try again or join')
                 return redirect( url_for('index'))
             hashed = row['hashed']
-            print('hashed: {} {}'.format(hashed,type(hashed)))
-            print('passwd: {}'.format(passwd))
-            print('hashed.encode: {}'.format(hashed.encode('utf-8')))
+            #print('hashed: {} {}'.format(hashed,type(hashed)))
+            # print('passwd: {}'.format(passwd))
+            #print('hashed.encode: {}'.format(hashed.encode('utf-8')))
             bc = bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
-            print('bcrypt: {}'.format(bc))
-            print('str(bcrypt): {}'.format(str(bc)))
-            print('bc.decode: {}'.format(bc.decode('utf-8')))
-            print('equal? {}'.format(hashed==bc.decode('utf-8')))
+            #print('bcrypt: {}'.format(bc))
+            #print('str(bcrypt): {}'.format(str(bc)))
+            #print('bc.decode: {}'.format(bc.decode('utf-8')))
+            #print('equal? {}'.format(hashed==bc.decode('utf-8')))
             hashed2 = bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
             hashed2_str = hashed2.decode('utf-8')
             if hashed2_str == hashed:
-                flash('successfully logged in as '+username)
+                #flash('successfully logged in as '+username)
                 session['username'] = username
                 session['uid'] = row['uid']
                 session['logged_in'] = True
-                session['visits'] = 1
-                return redirect( url_for('user', username=username) )
+                session['fullname'] = row['fullname'] #add other stuff in the table so the profile.html can get this stuff
+                #session['visits'] = 1
+                return redirect(url_for('user', username=username) )
             else:
                 flash('login incorrect. Try again or join')
                 return redirect( url_for('index'))
@@ -144,12 +149,12 @@ def user(username):
         if 'username' in session:
             username = session['username']
             uid = session['uid']
-            session['visits'] = 1+int(session['visits'])
-            return render_template('home.html',
-                                   page_title='My App: Welcome {}'.format(username),
+
+            #session['visits'] = 1+int(session['visits'])
+            return render_template('profile.html', 
                                    name=username,
-                                   uid=uid,
-                                   visits=session['visits'])
+                                   uid=uid
+                                   ) #visits=session['visits'], #page_title='My App: Welcome {}'.format(username)
 
         else:
             flash('You are not logged in. Please login or join')
@@ -175,12 +180,18 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
-@app.route('/profile/')
+@app.route('/profile/<username>')
 def profile():
      username = session['username']
      uid = session['uid']
+     #add a way to get fullname and bio text, image file
      return render_template('profile.html',name=username, uid=uid)
      
+@app.route('/editprofile/', methods= ["POST"])
+def editProf():
+    fullName = request.form['fName']
+    biotext = request.form['bioText']
+    #redirect to profile
 
 if __name__ == '__main__':
     import sys,os

@@ -8,9 +8,12 @@ drop table if exists Users;
 
 create table Users(
        uid int auto_increment,
-       username varchar(50) not null,
+       fullname varchar(50) not null,
        email varchar(50) not null,
+       username varchar(50) not null,
        hashed char(60),
+       biotxt varchar(350),
+       profpicPath varchar(50),
        unique(email),
        unique(username),
        index(username),

@@ -194,9 +194,7 @@ def upload():
         if request.method == 'POST':
             print('in post!')
             try:
-                #testing purposes, uid = 1
-                #uid = session['uid']
-                uid = 1
+                uid = session['uid']
                 postconn = db.getConn(DB)
                 pid = db.getNumPosts(postconn) + 1
                 name = request.form['name'] 

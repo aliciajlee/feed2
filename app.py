@@ -160,7 +160,8 @@ def user(username):
             profPic = db.getPPic(conn, uid)
             #print(profPic['profpicPath'])
             #session['visits'] = 1+int(session['visits'])
-            return redirect(url_for('profile', username= username))
+            return redirect(url_for('home'))
+            #return redirect(url_for('profile', username= username))
             #return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) #THIS WORKS
         
 
@@ -188,6 +189,12 @@ def logout():
     except Exception as err:
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
+
+
+@app.route('/profile/')
+def redirProfile():
+    username = session['username']
+    return redirect(url_for('profile', username = username))
 
 
 @app.route('/profile/<username>')

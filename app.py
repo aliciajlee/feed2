@@ -16,7 +16,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'sxu5_db' #CHANGE
+DB = 'alee31_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -197,9 +197,9 @@ def upload():
                 #testing purposes, uid = 1
                 #uid = session['uid']
                 uid = 1
-                print('uid is: '+ str(uid))
+                postconn = db.getConn(DB)
+                pid = db.getNumPosts(postconn) + 1
                 name = request.form['name'] 
-                print ('name is: ' + name)
                 rating = request.form['rating']
                 review = request.form['review']
                 restaurant = request.form['restaurant']
@@ -216,12 +216,9 @@ def upload():
                 print('mime type is {}'.format(mime_type))
                 if not mime_type or mime_type.lower() not in ['jpeg','gif','png']:
                     raise Exception('Not recognized as JPEG, GIF or PNG: {}'
-                                    .format(mime_type))
-                
-                
+                                    .format(mime_type))                
                 ext = f.filename.split('.')[-1]
-                #change later so we use pid instead of name
-                filename = secure_filename('{}.{}'.format(name,ext))
+                filename = secure_filename('{}.{}'.format(pid,ext))
                 user_folder = os.path.join(app.config['UPLOADS'],str(uid))
 
                 #if user folder doesn't exist, create it. Otherwise, upload it

@@ -12,16 +12,13 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
-<<<<<<< HEAD
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Posts''')
     result = curs.fetchone()
     return result['count(*)']
 
-=======
 # for displaying posts in feed
->>>>>>> posts
 def getAllPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''') # we don't need to get all change later

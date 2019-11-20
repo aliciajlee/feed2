@@ -16,7 +16,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'alee31_db' #CHANGE
+DB = 'sxu5_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -63,8 +63,6 @@ def search():
 
     return render_template("home.html", page_title = "Results • Feed", posts=posts)
 
-<<<<<<< HEAD
-=======
 @app.route('/post/<pid>')
 def post(pid):
     conn = db.getConn(DB)
@@ -75,7 +73,6 @@ def post(pid):
     return render_template("post.html", post=post)
 
 
->>>>>>> posts
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
     if request.method == 'GET':

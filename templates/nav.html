@@ -3,10 +3,11 @@
     <head>
         {% block head %}
         <meta charset="utf-8">
-        <meta name=author content="Sandra Xu">  
-        <title>{{page_title}}</title>
+        <meta name=author content="Sandra Xu and Rachel Navarrette">  
+        <title>Home</title>
         <link rel="stylesheet" type="text/css"
               href="/static/home.css">
+        <link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}"> 
         <link rel="stylesheet" 
               href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
@@ -37,13 +38,16 @@
             </div>
 
             <!-- collapse button here -->
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button> -->
 
-            <a class="navbar" href="/upload/">
-                <i class="far fa-plus-square icon fa-2x"></i>
-            </a>
-            <a class = "navbar" href="#">
-                <i class="far fa-user-circle fa-2x"></i>
-            </a>
+            <a class="navbar" href="/upload/"><i class="far fa-plus-square icon fa-2x"></i></a>
+
+            <!-- Added by Rachel, trying to get a drop down menu on the profil button that will allowing logging out and going to the profile page, it's not working right now and I think it ruined signing in/signing up. It was working before I decided to added drop down feature.....-->
+            
+            <a class="navbar" href="/profile/"><i class="far fa-user-circle fa-2x"></i></a>
+             
         </nav>
 
     {% endblock %}
@@ -52,9 +56,12 @@
 
     {% endblock %}
 
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <!-- <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script> -->
     
     <script src="{{url_for('static',filename='home.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
 </body>
 

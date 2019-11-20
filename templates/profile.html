@@ -1,0 +1,104 @@
+{% extends "nav.html" %}
+
+<!doctype html>
+<html lang='en'>
+<head>
+
+    <meta charset='utf-8'>
+	<meta name=author content="Rachel Navarrette">
+	<title>{{proName}}</title>
+	<h1> Feed </h1>
+
+	
+    </head>
+
+<header>
+	{% block nav %} 
+            {{super()}}
+
+		{% endblock %}
+		{% block content %}
+	<div class="container">
+
+		<div class="profile">
+
+			<div class="profile-image">
+
+				<img src="{{url_for('static', filename = ppic)}}"  style= "width: 100%
+				; height: 150%; border-radius: 50%;"  alt="profile_pic">
+
+			</div>
+			<!-- Edit profile form -->
+			<div class="profile-user-settings">
+
+				<h1 class="profile-user-name">{{profName}}</h1> 
+
+				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profile</button>
+
+				<div class="form-popup" id="editForm">
+  				<form method=POST action="{{url_for('editProf')}}" class="form-container" enctype=multipart/form-data>
+    			<h1>Edit Profile</h1>
+
+    			<label for="full_name"><b>Name</b></label>
+    			<input type="text" placeholder="Name" name="fName" required>
+				
+    			<label for="bio_text"><b>Edit Bio</b></label>
+   			    <input type="text" placeholder="Bio: " name="bioText" required>
+				
+				
+					<label for="profile_pic"><b>Upload Profile Picture</b></label>
+					<input type="file" placeholder="Upload File" name="pic" required>
+				
+				
+    			<button type="submit" class="btn">Save Changes</button>
+    			<!-- <button type="button" class="btn cancel" onclick="closeFor()">Close</button> --> 
+  				</form>
+				</div>
+
+			</div>
+			<!-- End Edit Profile -->
+
+			<div class="profile-stats">
+
+				<ul>
+					<li><span class="profile-stat-count">164</span> posts</li>
+					<li><span class="profile-stat-count">188</span> followers</li>
+					<li><span class="profile-stat-count">206</span> following</li>
+				</ul>
+
+			</div>
+
+			<div class="profile-bio">
+
+				<p><span class="profile-real-name">{{fname}}</span> {{bio}}</p>
+
+			</div> 
+
+		</div>
+		<!-- End of profile section -->
+
+	</div>
+	<!-- End of container -->
+
+</header>
+
+<main>
+	
+		<!-- End of gallery -->
+
+		<!-- <div class="loader"></div> -->
+
+	<!-- End of container -->
+
+</main>
+<script>
+	function editProfile() {
+	  document.getElementById("editForm").style.display = "block";
+	}
+	
+	//function closeForm() {
+	 // document.getElementById("editForm").style.display = "none";
+	//}
+	</script>
+	 {% endblock %}
+    </html>

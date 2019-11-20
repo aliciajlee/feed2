@@ -8,6 +8,7 @@
       <!-- Register form-->
       <form class="login-form" action="{{url_for('signUp')}}" method="post">
         <p> Welcome to Feed! <br> See what you eat, eat what you see.</p> 
+        <input placeholder="Name" type="text" name="fName" required/>
         <input placeholder="Email" type="email" name="email" required/>
         <input type="text" name="username" required pattern="^\w+$" placeholder="Username"/>
         <input placeholder="password" placeholder="Password" type="password" name="password1" required/>

@@ -1,4 +1,3 @@
-1,jdoe,jdoe@gmail.com,b'$2b$12$8MQ/PU46z93i7hcvVuvxKu26cnSUMTeQZtMV1SVEWzFnbUJKwjI.y'
-2,foodlvr,anonymous@gmail.com, b'$2b$12$3VmT7bC0DOKPBNWINHWD/.7Xq7RzlcNlnp1X/zdFvAJURczjKHSc.'
-3,wendy123,wendy@wellesley.edu,b'$2b$12$Sq5mIooSnB3YPguslKhGHeLLeTkdlYISAk7aaoLNKeMitMUeVlGJe'
-4,sandra,sxu5@wellesley.edu,$2b$12$oV.LhqYcW/ixUe8NcOdZ5eSB.Lt1U4/N9C/UPfooooq3az2g75OpS
+1,John Doe,jdoe,jdoe@gmail.com,b'$2b$12$8MQ/PU46z93i7hcvVuvxKu26cnSUMTeQZtMV1SVEWzFnbUJKwjI.y', NULL, NULL 
+2, Selena Gomez, foodlvr,anonymous@gmail.com, b'$2b$12$3VmT7bC0DOKPBNWINHWD/.7Xq7RzlcNlnp1X/zdFvAJURczjKHSc.', NULL, NULL
+3, Alina Zheng, wendy123, wendy@wellesley.edu,b'$2b$12$Sq5mIooSnB3YPguslKhGHeLLeTkdlYISAk7aaoLNKeMitMUeVlGJe', NULL, NULL

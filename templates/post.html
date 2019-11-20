@@ -19,7 +19,25 @@
 
     
     {% block content %}
-
+    <p>Form to upload a file:
+        <form method="post" action="/post/" enctype="multipart/form-data">
+            <p><label>Dish Name: <input type="text" name="name"></label></p>
+            <p><label>Rating: <input type="int" name="rating"></label></p>
+            <p><label>Rating: <input type="radio" name="rating" value="1"> 1 
+                <input type="radio" name="rating" value="2"> 2
+                <input type="radio" name="rating" value="3"> 3 
+                <input type="radio" name="rating" value="4"> 4
+                <input type="radio" name="rating" value="5"> 5</p>
+            <p><label>Review: <input type="text" name="review"></label></p>
+            <p><label>Restaurant: <input type="text" name="restaurant"></label></p>
+            <p><label>Location: <input type="text" name="location"></label></p>
+            <p><label>Pic: <input type="file" name="pic"></label></p>
+            <p><label>Price: <input type="radio" name="price" value="1"> 1 
+                <input type="radio" name="price" value="2"> 2
+                <input type="radio" name="price" value="3"> 3 
+                <input type="radio" name="price" value="4"> 4 </p>
+            <p><input type="submit" value="upload"></p>
+        </form>
     {% endblock %}
 
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>

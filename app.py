@@ -160,8 +160,8 @@ def user(username):
             profPic = db.getPPic(conn, uid)
             #print(profPic['profpicPath'])
             #session['visits'] = 1+int(session['visits'])
-            return render_template('home.html') #THIS DOESN'T WORK
-            #return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) THIS WORKS
+            #return render_template('home.html') #THIS DOESN'T WORK
+            return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) #THIS WORKS
         
 
         else:

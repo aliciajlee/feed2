@@ -60,13 +60,11 @@ def signUp():
     else:
         try:
             fullname = request.form['fName'] 
-            print(fullname)
             email = request.form['email']
-            print(email)
             username = request.form['username']
-            print(username)
             passwd1 = request.form['password1']
             passwd2 = request.form['password2']
+            profpicPath = 'img/default_profilepic.jpeg'
             if passwd1 != passwd2:
                 flash('passwords do not match')
                 return redirect( url_for('index'))
@@ -77,8 +75,8 @@ def signUp():
             curs = dbi.cursor(conn)
             try:
                 curs.execute('''INSERT INTO Users(uid,fullname,email,username,hashed, biotxt, profpicPath)
-                                VALUES(null,%s,%s,%s,%s, null, null)''',
-                            [fullname, email, username, hashed_str])
+                                VALUES(null,%s,%s,%s,%s, null, %s)''',
+                            [fullname, email, username, hashed_str, profpicPath])
             except Exception as err:
                 flash('That username is taken: {}'.format(repr(err)))
                 return redirect(url_for('index'))
@@ -89,6 +87,7 @@ def signUp():
             session['username'] = username
             session['uid'] = uid
             session['logged_in'] = True
+            session['fullname'] = fullname
             #session['visits'] = 1
             return redirect(url_for('user', username=username) )
         except Exception as err:
@@ -132,6 +131,7 @@ def login():
                 session['uid'] = row['uid']
                 session['logged_in'] = True
                 session['fullname'] = row['fullname'] #add other stuff in the table so the profile.html can get this stuff
+                
                 #session['visits'] = 1
                 return redirect(url_for('user', username=username) ) #add full name, biotext...etc so user() can get them
             else:
@@ -146,27 +146,35 @@ def login():
 def user(username):
     try:
         # don't trust the URL; it's only there for decoration
+        conn = getConn()
         if 'username' in session:
             username = session['username']
             uid = session['uid']
+            fullName = session['fullname']
+            #session['visits'] = 1+int(session['visits'])
+            bioText = db.getBioText(conn, uid)
+            
 
+            profPic = db.getPPic(conn, uid)
+            print(profPic['profpicPath'])
             #session['visits'] = 1+int(session['visits'])
             return render_template('profile.html', 
-                                   name=username,
-                                   uid=uid
+                                   profName=username,
+                                   uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
                                    ) #make sure to add the otherstuff so profile.html knows
         #visits=session['visits'], #page_title='My App: Welcome {}'.format(username)
 
         else:
             flash('You are not logged in. Please login or join')
-            return redirect( url_for('index') )
+            return redirect(url_for('index') )
     except Exception as err:
         flash('some kind of error '+str(err))
-        return redirect( url_for('index') )
+        return redirect(url_for('index') )
 
 @app.route('/logout/')
 def logout():
     try:
+        
         if 'username' in session:
             username = session['username']
             session.pop('username')

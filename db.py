@@ -12,6 +12,15 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def getBioText(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select biotxt from Users where uid=%s''', [uid])
+    return curs.fetchone()
+
+def getPPic(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select profpicPath from Users where uid=%s''', [uid])
+    return curs.fetchone()
 
 def getAllPosts(conn):
     curs = dbi.dictCursor(conn)

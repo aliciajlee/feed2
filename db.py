@@ -19,7 +19,7 @@ def getAllPosts(conn):
     return curs.fetchall() # change this later
 
 # returns posts where query matches post name, tag, restaurant,
-def getQueryAll(conn, query):
+def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''(select * from Posts where pname like %s 
                                             or restaurant like %s
@@ -32,3 +32,5 @@ def getQueryAll(conn, query):
                                             where Tags.ttype like %s) as p 
                                             on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', '%'+query+'%', query])
     return curs.fetchall() # change to limit x offset y order by time
+
+# def getQueryUsers

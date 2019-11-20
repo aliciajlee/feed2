@@ -12,6 +12,11 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def getNumPosts(conn):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Posts''')
+    result = curs.fetchone()
+    return result['count(*)']
 
 def getAllPosts(conn):
     curs = dbi.dictCursor(conn)

@@ -1,16 +1,22 @@
 from flask import (Flask, render_template, make_response, url_for, request,
-                   redirect, flash, session, send_from_directory)
+                   redirect, flash, session, send_from_directory, Response)
 from werkzeug import secure_filename
 app = Flask(__name__)
 
 import os
 import dbi
+import imghdr
 import bcrypt
 import db # database stuff
 
+# for file uploads
+app.config['UPLOADS'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
+
+
 app.secret_key = 'able baker charlie'
 
-DB = 'sxu5_db' #CHANGE
+DB = 'alee31_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -23,6 +29,7 @@ def getConn():
     if DSN is None:
         DSN = dbi.read_cnf()
     return dbi.connect(DSN)
+
 
 # display all posts
 # change to only following posts later or maybe another route for follwing posts
@@ -55,13 +62,6 @@ def search():
 
 
     return render_template("home.html", page_title = "Results • Feed", posts=posts)
-
-@app.route('/post/<pid>')
-def post(pid):
-
-
-    return render_template("post.html", post=post)
-
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -185,6 +185,61 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
+@app.route('/upload/', methods=["GET", "POST"])
+def upload():
+    if 'username' in session:
+        if request.method == 'GET':
+            print ('in get!')
+            return render_template('upload.html')
+        if request.method == 'POST':
+            print('in post!')
+            try:
+                uid = session['uid']
+                postconn = db.getConn(DB)
+                pid = db.getNumPosts(postconn) + 1
+                name = request.form['name'] 
+                rating = request.form['rating']
+                review = request.form['review']
+                restaurant = request.form['restaurant']
+                location = request.form['location']
+                price = request.form['price']
+                f = request.files['pic']
+                #make sure image is not too big
+                fsize = os.fstat(f.stream.fileno()).st_size
+                print('file size is {} '.format(fsize))
+                if fsize > app.config['MAX_CONTENT_LENGTH']:
+                    raise Exception('File is too big')
+                #make sure image is right type
+                mime_type = imghdr.what(f)
+                print('mime type is {}'.format(mime_type))
+                if not mime_type or mime_type.lower() not in ['jpeg','gif','png']:
+                    raise Exception('Not recognized as JPEG, GIF or PNG: {}'
+                                    .format(mime_type))                
+                ext = f.filename.split('.')[-1]
+                filename = secure_filename('{}.{}'.format(pid,ext))
+                user_folder = os.path.join(app.config['UPLOADS'],str(uid))
+
+                #if user folder doesn't exist, create it. Otherwise, upload it
+                if not(os.path.isdir(user_folder)):
+                    os.mkdir(user_folder)
+                pathname = os.path.join(user_folder,filename)
+                
+                f.save(pathname)
+                conn = getConn()
+                curs = dbi.cursor(conn)
+                curs.execute(
+                    '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
+                    values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
+                    [uid, name, rating, price, review, restaurant, location, filename])
+                flash('Upload successful')
+                return render_template('upload.html')
+            except Exception as err:
+                print("upload failed because " + str(err))
+                flash('Upload failed {why}'.format(why=err))
+                return render_template('upload.html')
+    else:
+            flash('You are not logged in. Please login or join')
+            return redirect( url_for('index') )
 
 if __name__ == '__main__':
     import sys,os

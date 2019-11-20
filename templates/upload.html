@@ -1,0 +1,62 @@
+{% extends "nav.html" %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name=author content="Sandra Xu">  
+        <title>Home • Feed</title>
+        <link rel="stylesheet" type="text/css"
+              href="/static/home.css">
+        <link rel="stylesheet" 
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+    {% block nav %}
+        {{ super() }}
+    {% endblock %}
+    
+    
+    
+    {% block content %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="messages">
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+    
+    <p>Form to upload a file:
+        <form method="POST" action="/upload/" enctype="multipart/form-data">
+            <p><label>Dish Name: <input type="text" name="name"></label></p>
+            <p><label>Rating: <input type="radio" name="rating" value="1"> 1 
+                <input type="radio" name="rating" value="2"> 2
+                <input type="radio" name="rating" value="3"> 3 
+                <input type="radio" name="rating" value="4"> 4
+                <input type="radio" name="rating" value="5"> 5</p>
+            <p><label>Review: <input type="text" name="review"></label></p>
+            <p><label>Restaurant: <input type="text" name="restaurant"></label></p>
+            <p><label>Location: <input type="text" name="location"></label></p>
+            <p><label>Pic: <input type="file" name="pic"></label></p>
+            <p><label>Price: <input type="radio" name="price" value="1"> 1 
+                <input type="radio" name="price" value="2"> 2
+                <input type="radio" name="price" value="3"> 3 
+                <input type="radio" name="price" value="4"> 4 </p>
+            <p><input type="submit" value="upload"></p>
+        </form>
+    {% endblock %}
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    
+    <script src="{{url_for('static',filename='home.js')}}"></script>
+    
+</body>
+
+
+</html>
+
+    

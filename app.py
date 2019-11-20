@@ -42,12 +42,12 @@ def home():
     return render_template("home.html", page_title="Home • Feed", posts=posts)
 
 # for now return all results where post name, tag, restaurant match
-@app.route("/search/", methods=["POST"])
+@app.route("/search/", methods=["GET"])
 def search():
     query = request.values.get('query')
     print(query)
     conn = db.getConn(DB)
-    posts = db.getQueryAll(conn, query)
+    posts = db.getQueryPosts(conn, query)
 
     print(posts)
 

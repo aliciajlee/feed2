@@ -1,3 +1,5 @@
+{% extends "nav.html" %}
+
 <!doctype html>
 <html lang='en'>
 <head>
@@ -7,11 +9,15 @@
 	<title>{{proName}}</title>
 	<h1> Feed </h1>
 
-	<link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}">
+	
     </head>
 
 <header>
- 
+	{% block nav %} 
+            {{super()}}
+
+		{% endblock %}
+		{% block content %}
 	<div class="container">
 
 		<div class="profile">
@@ -94,4 +100,5 @@
 	 // document.getElementById("editForm").style.display = "none";
 	//}
 	</script>
+	 {% endblock %}
     </html>

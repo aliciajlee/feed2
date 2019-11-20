@@ -6,6 +6,7 @@
         <title>Home</title>
         <link rel="stylesheet" type="text/css"
               href="/static/home.css">
+        <link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}"> 
         <link rel="stylesheet" 
               href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
@@ -42,27 +43,9 @@
             <a class="navbar" href="#"><i class="far fa-plus-square icon fa-2x"></i></a>
 
             <!-- Added by Rachel, trying to get a drop down menu on the profil button that will allowing logging out and going to the profile page, it's not working right now and I think it ruined signing in/signing up. It was working before I decided to added drop down feature.....-->
-
-            <a class = "navbar">
-                    <form action="{{url_for('profile', {{username}})}}">
-                        <input class="far fa-user-circle fa-2x" type="submit" />
-                    </form>
-                <!-- <button class="far fa-user-circle fa-2x" href="{{url_for('profile')}}"></button> -->
-                         
-
-
-             <!-- added sandra, just added url for profile in the old profile icon-->
-                  <!-- also added bootstrp scripts so dropdown should work now -->
-            <a class = "navbar drop-toggle" href="{{url_for('profile')}}">
-                <i class="far fa-user-circle fa-2x"></i>
-
-            </a>
-
-                <!--  -->
-                    <!-- <form action="{{url_for('profile')}}">
-                        <input class="far fa-user-circle fa-2x" type="submit" />
-                    </form> -->
             
+            <a class="navbar" href="/home/"><i class="far fa-user-circle fa-2x"></i></a>
+             
         </nav>
 
     {% endblock %}

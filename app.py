@@ -34,11 +34,11 @@ def home():
     
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
-
+    username = session['username']
     # how should they be sorted -- bootstrap card thing inserts by column and not row
 
 
-    return render_template("home.html", page_title="Home", posts=posts)
+    return render_template("home.html", page_title="Home", posts=posts, username = username)
 
 # for now return all results where post name, tag, restaurant match
 @app.route("/search/", methods=["POST"])
@@ -160,8 +160,8 @@ def user(username):
             profPic = db.getPPic(conn, uid)
             #print(profPic['profpicPath'])
             #session['visits'] = 1+int(session['visits'])
-            #return render_template('home.html') #THIS DOESN'T WORK
-            return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) #THIS WORKS
+            return redirect(url_for('profile', username= username))
+            #return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) #THIS WORKS
         
 
         else:
@@ -191,7 +191,7 @@ def logout():
 
 
 @app.route('/profile/<username>')
-def profile(username):
+def profile(username): 
      conn = getConn()
      username = session['username']
      uid = session['uid']

@@ -16,13 +16,23 @@
     {% block nav %}
         {{ super() }}
     {% endblock %}
-
+    
+    
     
     {% block content %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="messages">
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+    
     <p>Form to upload a file:
-        <form method="post" action="/post/" enctype="multipart/form-data">
+        <form method="POST" action="/upload/" enctype="multipart/form-data">
             <p><label>Dish Name: <input type="text" name="name"></label></p>
-            <p><label>Rating: <input type="int" name="rating"></label></p>
             <p><label>Rating: <input type="radio" name="rating" value="1"> 1 
                 <input type="radio" name="rating" value="2"> 2
                 <input type="radio" name="rating" value="3"> 3 

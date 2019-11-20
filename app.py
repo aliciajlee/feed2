@@ -90,6 +90,8 @@ def signUp():
             session['uid'] = uid
             session['logged_in'] = True
             session['fullname'] = fullname
+
+            os.mkdir('static/img/{}'.format(uid)) #this doesn't work, fix how to make directories using OS
             #session['visits'] = 1
             return redirect(url_for('user', username=username) )
         except Exception as err:
@@ -156,14 +158,11 @@ def user(username):
             #session['visits'] = 1+int(session['visits'])
             bioText = db.getBioText(conn, uid)
             profPic = db.getPPic(conn, uid)
-            print(profPic['profpicPath'])
-            os.mkdir('img/{}'.format(uid)) #this doesn't work, fix how to make directories using OS
+            #print(profPic['profpicPath'])
             #session['visits'] = 1+int(session['visits'])
-            return render_template('profile.html', 
-                                   profName=username,
-                                   uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
-                                   ) #make sure to add the otherstuff so profile.html knows
-        #visits=session['visits'], #page_title='My App: Welcome {}'.format(username)
+            return render_template('home.html') #THIS DOESN'T WORK
+            #return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) THIS WORKS
+        
 
         else:
             flash('You are not logged in. Please login or join')
@@ -191,58 +190,58 @@ def logout():
         return redirect( url_for('index') )
 
 
-
-
-
-
-
 @app.route('/profile/<username>')
-def profile():
+def profile(username):
+     conn = getConn()
      username = session['username']
      uid = session['uid']
+     fullName = db.getFullName(conn, uid)
+     bioText = db.getBioText(conn, uid)
+     profPic = db.getPPic(conn, uid)
      #add a way to get fullname and bio text, image file
-     return render_template('profile.html',name=username, uid=uid)
+     return render_template('profile.html', profName=username,
+                                   uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
+                                   )
      
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():
     uid = session['uid']
-    
-    UPLOAD_FOLDER = 'img/{}'.format(uid)
+    username = session['username']
+    conn = getConn()
+
+    #upload folder path, and allowed extension of file images
+    UPLOAD_FOLDER = 'static/img/{}/'.format(uid)
     ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER 
+
+    #check allowed files 
     def allowed_file(filename):
         return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    conn = getConn()
-    #if 'file' not in request.files:
+    
+    #if 'file' not in request.files: ADD LATER WHERE PEOPLE CAN SPECIFY WHAT INPUT FIELDS THEY WOULD LIKE TO UPDATE, NOT REQUIRED TO UPDATE ALL OF THE FIELDS
             #flash('No file part')
             #return redirect('')
+        
     file = request.files['pic']
     filePath = None
     if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            filename = secure_filename(file.filename) #get the filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #save the file to the upload folder destination
+            filePath = os.path.join('img/{}/'.format(uid), filename) #make a modified path so the profile.html can read it
+            #print("filePath " + filePath)
             #return redirect(url_for('uploaded_file',
                                     #filename=filename))
     else:
-        flash('not valid file type')
-        # redirect to profile() function
-    uid = session['uid']
-    username = session['username']
+        flash('not valid file type') #flash a message for errors of file uploads
+        return redirect(url_for('profile', username = username))
+    
+    #requests from the form
     fullName = request.form['fName']
-    #image = request.form['pic']
-    #print(image)
     biotext = request.form['bioText']
-    db.updateProfile(conn, uid, fullName, biotext)
-    bioText = db.getBioText(conn, uid)
-    
-    profPic = db.getPPic(conn, uid)
-    
-    #add upload pic option
-    return render_template('profile.html', 
-                                   profName=username,
-                                   uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = filename)
+    db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
+
+    return redirect(url_for('profile', username = username))
 
 if __name__ == '__main__':
     import sys,os

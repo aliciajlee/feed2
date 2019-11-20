@@ -13,20 +13,30 @@ def getConn(DB):
     return conn
 
 def getBioText(conn, uid):
+    '''get the bio text from the database '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select biotxt from Users where uid=%s''', [uid])
     return curs.fetchone()
 
 def getPPic(conn, uid):
+    ''' get the pic path from the database '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select profpicPath from Users where uid=%s''', [uid])
     return curs.fetchone()
 
-def updateProfile(conn, uid, fname, text):
+def getFullName(conn, uid):
+    ''' get the full name from the database '''
     curs = dbi.dictCursor(conn)
-    curs.execute('''update Users set fullname=%s, biotxt=%s where uid=%s''', [fname, text, uid])
+    curs.execute('''select fullname from Users where uid=%s''', [uid])
+    return curs.fetchone()
+
+def updateProfile(conn, uid, fname, text, path):
+    '''update the profile of a given user '''
+    curs = dbi.dictCursor(conn)
+    curs.execute('''update Users set fullname=%s, biotxt=%s, profpicPath=%s where uid=%s''', [fname, text, path, uid])
 
 def getAllPosts(conn):
+    '''select all the posts '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''')
     return curs.fetchall() # change this later

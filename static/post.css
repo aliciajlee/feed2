@@ -1,0 +1,39 @@
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    /* background-color: black; */
+}
+
+.indv-post{
+    top: 10px;
+    bottom: 15px;
+    width: 60%;
+
+    
+}
+img{
+    max-width:450px;
+    max-height:450px;
+}
+
+.desc{
+    word-wrap: normal;
+}
+
+.right {
+    overflow: hidden;
+}
+
+.left{
+    float: left
+}
+
+/* .container {
+    width: 120px;
+  }
+
+.container img{
+    max-height: 100%;
+    max-width: 100%;
+} */

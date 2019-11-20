@@ -20,11 +20,11 @@ p {
     margin-bottom:60px;
 }
   
-h4{
+/* h4{
     text-align:center; 
     line-height:80px;
     font-weight:normal; 
-}
+} */
 
 #search {
     width: 450px !important;
@@ -33,6 +33,13 @@ h4{
 a.custom-card,
 a.custom-card:hover {
   color: inherit;
+}
+
+.indv-post {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 10px; /* Added */
+    /* background-color: black; */
 }
 
 @media (max-width: 320px) {

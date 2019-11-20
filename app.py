@@ -58,8 +58,11 @@ def search():
 
 @app.route('/post/<pid>')
 def post(pid):
-
-
+    conn = db.getConn(DB)
+    post = db.getSinglePost(conn, pid)
+    if not post:
+        flash("Post not found")
+    print(str(post))
     return render_template("post.html", post=post)
 
 

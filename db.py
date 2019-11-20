@@ -12,11 +12,17 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
-
+# for displaying posts in feed
 def getAllPosts(conn):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select * from Posts''')
+    curs.execute('''select * from Posts''') # we don't need to get all change later
     return curs.fetchall() # change this later
+
+# get single post
+def getSinglePost(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select * from Posts where pid = %s''', [pid])
+    return curs.fetchone()
 
 # returns posts where query matches post name, tag, restaurant,
 def getQueryPosts(conn, query):

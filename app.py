@@ -1,6 +1,8 @@
+
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory)
 from werkzeug import secure_filename
+
 app = Flask(__name__)
 
 import os
@@ -153,10 +155,9 @@ def user(username):
             fullName = session['fullname']
             #session['visits'] = 1+int(session['visits'])
             bioText = db.getBioText(conn, uid)
-            
-
             profPic = db.getPPic(conn, uid)
             print(profPic['profpicPath'])
+            os.mkdir('img/{}'.format(uid)) #this doesn't work, fix how to make directories using OS
             #session['visits'] = 1+int(session['visits'])
             return render_template('profile.html', 
                                    profName=username,
@@ -189,6 +190,12 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
+
+
+
+
+
+
 @app.route('/profile/<username>')
 def profile():
      username = session['username']
@@ -198,10 +205,44 @@ def profile():
      
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():
+    uid = session['uid']
+    
+    UPLOAD_FOLDER = 'img/{}'.format(uid)
+    ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    def allowed_file(filename):
+        return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    conn = getConn()
+    #if 'file' not in request.files:
+            #flash('No file part')
+            #return redirect('')
+    file = request.files['pic']
+    filePath = None
+    if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            #return redirect(url_for('uploaded_file',
+                                    #filename=filename))
+    else:
+        flash('not valid file type')
+        # redirect to profile() function
+    uid = session['uid']
+    username = session['username']
     fullName = request.form['fName']
+    #image = request.form['pic']
+    #print(image)
     biotext = request.form['bioText']
-    #make db edit for this info
-    #redirect to profile
+    db.updateProfile(conn, uid, fullName, biotext)
+    bioText = db.getBioText(conn, uid)
+    
+    profPic = db.getPPic(conn, uid)
+    
+    #add upload pic option
+    return render_template('profile.html', 
+                                   profName=username,
+                                   uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = filename)
 
 if __name__ == '__main__':
     import sys,os

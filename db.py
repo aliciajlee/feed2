@@ -22,6 +22,10 @@ def getPPic(conn, uid):
     curs.execute('''select profpicPath from Users where uid=%s''', [uid])
     return curs.fetchone()
 
+def updateProfile(conn, uid, fname, text):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''update Users set fullname=%s, biotxt=%s where uid=%s''', [fname, text, uid])
+
 def getAllPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''')

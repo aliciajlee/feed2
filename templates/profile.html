@@ -1,12 +1,16 @@
+
 <!doctype html>
 <html lang='en'>
 <head>
+
     <meta charset='utf-8'>
 	<meta name=author content="Rachel Navarrette">
 	<title>{{proName}}</title>
 	<h1> Feed </h1>
-<link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}">
-</head>
+
+	<link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}">
+    </head>
+
 <header>
 
 	<div class="container">
@@ -15,7 +19,7 @@
 
 			<div class="profile-image">
 
-				<img src="{{ppic}}"  style= "width: 100%
+				<img src="{{url_for('static', filename = ppic)}}"  style= "width: 100%
 				; height: 150%; border-radius: 50%;"  alt="profile_pic">
 
 			</div>
@@ -27,7 +31,7 @@
 				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profile</button>
 
 				<div class="form-popup" id="editForm">
-  				<form methods= "POST" action="{{url_for('editProf')}}" class="form-container">
+  				<form method=POST action="{{url_for('editProf')}}" class="form-container" enctype=multipart/form-data>
     			<h1>Edit Profile</h1>
 
     			<label for="full_name"><b>Name</b></label>
@@ -35,7 +39,12 @@
 				
     			<label for="bio_text"><b>Edit Bio</b></label>
    			    <input type="text" placeholder="Bio: " name="bioText" required>
-
+				
+				
+					<label for="profile_pic"><b>Upload Profile Picture</b></label>
+					<input type="file" placeholder="Upload File" name="pic" required>
+				
+				
     			<button type="submit" class="btn">Save Changes</button>
     			<!-- <button type="button" class="btn cancel" onclick="closeFor()">Close</button> --> 
   				</form>
@@ -86,4 +95,4 @@
 	 // document.getElementById("editForm").style.display = "none";
 	//}
 	</script>
-</html>
+    </html>

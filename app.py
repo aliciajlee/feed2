@@ -71,7 +71,7 @@ def search():
 
         return render_template("home.html", page_title="Results", users=users)
 
-@app.route('/post/<pid>')
+@app.route('/post/<pid>/')
 def post(pid):
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
@@ -280,17 +280,30 @@ def redirProfile():
 
 @app.route('/profile/<username>')
 def profile(username): 
-     conn = getConn()
+    conn = getConn()
+    print(username)
     #  username = session['username']
-     uid = session['uid']
-     uid = db.getUid(conn, username)
-     fullName = db.getFullName(conn, uid)
-     bioText = db.getBioText(conn, uid)
-     profPic = db.getPPic(conn, uid)
-     #add a way to get fullname and bio text, image file
-     return render_template('profile.html', profName=username,
-                                   uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
-                                   )
+    try:
+        uid = db.getUid(conn, username)
+        print(uid)
+
+        if not uid:
+
+            print("here")
+            flash("User not found")
+            return render_template("home.html")
+
+        uid=uid['uid']
+        fullName = db.getFullName(conn, uid)
+        bioText = db.getBioText(conn, uid)
+        profPic = db.getPPic(conn, uid)
+        #add a way to get fullname and bio text, image file
+        return render_template('profile.html', profName=username,
+                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
+                                    )
+    except Exception as err:
+        flash("user not found")
+        return redirect(request.referrer)
      
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():

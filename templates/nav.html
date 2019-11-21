@@ -23,16 +23,20 @@
             <a class="navbar-brand nav-link font-large" href="/home/">Feed</a>
             <div class="flex-grow-1 d-flex">
                 <form method=GET action="/search/" class="form-inline flex-nowrap bg-light mx-0 mx-lg-auto rounded p-1">
-                    <!-- <input name="query" class="form-control mr-sm-2" id="search" type="search" placeholder="Search" aria-label="Search">
-                    <button name="submit-btn"class="btn btn-outline-success" type="submit"><i class="fa fa-search"></i></button> -->
                     <div class="input-group">
-                            <input type="search" name="query" id="search" class="form-control border border-right-0" placeholder="Search...">
-                            <span class="input-group-append">
+                        <input type="search" name="query" id="search" class="form-control border border-right-0" placeholder="Search...">
+                        <span class="input-group-append">
                             <button class="btn btn-outline-secondary border border-left-0" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                           </span>
-                        </div>
+                    </div>
+                    <select name="type" id="type" onchange="this.form.submit()">
+                        <option value="posts" selected>Posts</option>
+                        <option value="users">Users</option>
+
+                    </select>
+
                 
                 </form>
             </div>

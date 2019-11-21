@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory, Response)
@@ -45,22 +46,30 @@ def home():
     # how should they be sorted -- bootstrap card thing inserts by column and not row
 
 
-    return render_template("home.html", page_title="Home", posts=posts, username = username)
+    return render_template("home.html", page_title="Home • Feed", posts=posts, username = username)
 
 # for now return all results where post name, tag, restaurant match
 @app.route("/search/", methods=["GET"])
 def search():
     query = request.values.get('query')
+    type_ = request.values.get('type')
+    print(type_)
     print(query)
     conn = db.getConn(DB)
-    posts = db.getQueryPosts(conn, query)
+    if type_ == 'posts':
+        posts = db.getQueryPosts(conn, query)
 
-    print(posts)
+        if not posts:
+            flash ("no posts found")
+        return render_template("home.html", page_title = "Results", posts=posts)
+    else:
+        users = db.getQueryUsers(conn, query)
+        print(users)
 
-    # if no posts flash
+        if not users:
+            flash("no users found")
 
-
-    return render_template("home.html", page_title = "Search Results", posts=posts)
+        return render_template("home.html", page_title="Results", users=users)
 
 @app.route('/post/<pid>')
 def post(pid):

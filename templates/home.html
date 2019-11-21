@@ -21,7 +21,7 @@
 
 
         {% block content %}
-            <div class="masonry card-columns">
+            <div id="posts" class="masonry card-columns">
             {% for post in posts %}
             <a href="/post/{{post['pid']}}" class = "custom-card"> 
                 <div class="item card">
@@ -36,8 +36,30 @@
                     </div>
                 </div>
             </a>
+
             {% endfor %}
             </div>
+
+            <div id="users" class="masonry card-columns">
+            {% for user in users %}
+            <a href="/profile/{{user['username']}}" class = "custom-card"> 
+                <div class="item card">
+                 {# ... 
+                    <!-- <img src="{{post['imgPath']}}"> -->
+                    <!-- <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
+                     -->#}
+                    <div class="card-body">
+                        <h5 class="card-title">{{user['username']}}</h5>
+                        {#
+                        <!-- rating -->
+                        <!-- <p class="card-text rating" data-rating="{{post['rating']}}"></p>
+                        <p class="card-text">{{post['review'] | truncate(150)}}</p> -->#}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+            </div>
+           
             <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     
         <script src="{{url_for('static',filename='home.js')}}"></script>

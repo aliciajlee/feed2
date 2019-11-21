@@ -69,4 +69,8 @@ def getQueryPosts(conn, query):
                                             on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', '%'+query+'%', query])
     return curs.fetchall() # change to limit x offset y order by time
 
-# def getQueryUsers
+# return users where query matches username
+def getQueryUsers(conn, query):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select * from Users where username like %s''', ["%"+query+"%"])
+    return curs.fetchall()

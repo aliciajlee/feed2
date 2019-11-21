@@ -56,20 +56,6 @@
 
     {% endblock %}
 
-    {% block flash %}
-    <div id="flashes">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="flash">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %} 
-        {% endwith %}  
-      </div>
-    {% endblock %}
-
     {% block content %}
 
     {% endblock %}

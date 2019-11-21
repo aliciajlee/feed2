@@ -51,16 +51,18 @@ def home():
 @app.route("/search/", methods=["GET"])
 def search():
     query = request.values.get('query')
+    type_ = request.values.get('type')
+    print(type_)
     print(query)
     conn = db.getConn(DB)
-    posts = db.getQueryPosts(conn, query)
+    if type_ == 'posts':
+        posts = db.getQueryPosts(conn, query)
 
-    print(posts)
+        if not posts:
+            flash ("no posts found")
 
-    # if no posts flash
 
-
-    return render_template("home.html", page_title = "Search Results", posts=posts)
+        return render_template("home.html", page_title = "Search Results", posts=posts)
 
 @app.route('/post/<pid>')
 def post(pid):

@@ -46,21 +46,18 @@
           <div class="right">
                 <h4 class="card-title">{{post.pname}}</h4>
                 <a href="/profile/{{post['username']}}">{{post.username}}</a>
-                <p>{{post.rating}}</p>
+                <p class="rating" data-rating="{{post['rating']}}"></p>
                 <p class="card-text">{{post.review}}</p>
           </div>
       </div>
         </div>
     <!-- </div> -->
-
-    {% endblock %}
-
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="{{url_for('static',filename='home.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    
-    <script src="{{url_for('static',filename='home.js')}}"></script>
-    
+    {% endblock %}
+
 </body>
 
 

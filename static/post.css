@@ -23,6 +23,7 @@ img{
 
 .right {
     overflow: hidden;
+    padding-left: 8px;
 }
 
 .left{

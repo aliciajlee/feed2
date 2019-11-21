@@ -282,8 +282,8 @@ def redirProfile():
 def profile(username): 
      conn = getConn()
     #  username = session['username']
-    #  uid = session['uid']
-    uid = db.getUid(conn, username)
+     uid = session['uid']
+     uid = db.getUid(conn, username)
      fullName = db.getFullName(conn, uid)
      bioText = db.getBioText(conn, uid)
      profPic = db.getPPic(conn, uid)

@@ -45,34 +45,11 @@
           </div>
           <div class="right">
                 <h4 class="card-title">{{post.pname}}</h4>
+                <a href="/profile/{{post['username']}}">{{post.username}}</a>
                 <p>{{post.rating}}</p>
                 <p class="card-text">{{post.review}}</p>
           </div>
       </div>
-      <!-- <div class="card indv-post flex-row flex-wrap">
-            <div class="left card-header border-0">
-                <img src="{{url_for('static',filename=post['imgPath'])}}" alt="">
-            </div>
-            <div class="right card-block px-2 desc">
-                <h4 class="card-title">{{post.pname}}</h4>
-                <p class="card-text">{{post.review}}</p>
-            </div>
-        </div> -->
-      <!-- <div class="card indv-post .mx-auto flex-row flex-wrap"> -->
-            <!-- <div class="flex-row flex-wrap"> -->
-                <!-- <div class="col-auto">
-                <img src="{{url_for('static',filename=post['imgPath'])}}" alt="">
-                </div> -->
-            <!-- </div> -->
-            <!-- <div class="card-block px-2">
-                <h4 class="card-title">{{post.pname}}</h4>
-                <p class="card-text">{{post.review}}</p> -->
-                <!-- <a href="#" class="btn btn-primary">BUTTON</a> -->
-            <!-- </div> -->
-            <!-- <div class="w-100"></div> -->
-            <!-- <div class="card-footer w-100 text-muted">
-                Footer stating cats are CUTE little animals
-            </div> -->
         </div>
     <!-- </div> -->
 

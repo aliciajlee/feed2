@@ -51,7 +51,8 @@ def getAllPosts(conn):
 # get single post
 def getSinglePost(conn, pid):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select * from Posts where pid = %s''', [pid])
+    curs.execute('''select pname, rating, price, review, restaurant, location, imgPath, time, username
+                     from Posts inner join Users on Users.uid=Posts.uid where Posts.pid = %s''', [pid])
     return curs.fetchone()
 
 # returns posts where query matches post name, tag, restaurant,

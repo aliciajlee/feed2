@@ -62,6 +62,14 @@ def getSinglePost(conn, pid):
                      from Posts inner join Users on Users.uid=Posts.uid where Posts.pid = %s''', [pid])
     return curs.fetchone()
 
+# get all tags of a post
+def getTagsofPost(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select ttype from Tags inner join (select tid from Tagpost where
+                                                            pid = %s) as t on t.tid = Tags.tid''',
+                                                            [pid])
+    return curs.fetchall()
+    
 # returns posts where query matches post name, tag, restaurant,
 def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)

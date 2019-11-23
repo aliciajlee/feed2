@@ -8,14 +8,18 @@
 .indv-post{
     top: 10px;
     bottom: 15px;
-    width: 60%;
-
-    
+    width: 60%;  
 }
+
 img{
     max-width:450px;
     max-height:450px;
 }
+
+#title {
+    margin-bottom: 0px;
+}
+
 
 .desc{
     word-wrap: normal;
@@ -28,6 +32,20 @@ img{
 
 .left{
     float: left
+}
+
+.rating {
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.right .price {
+    margin-left: 2px;
+    margin-right: 4px;
+}
+
+#review {
+    margin-top: 10px;
 }
 
 /* .container {

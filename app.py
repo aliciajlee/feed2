@@ -75,10 +75,12 @@ def search():
 def post(pid):
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
+    tags = db.getTagsofPost(conn, pid)
+    print(tags)
     if not post:
         flash("Post not found")
     print(str(post))
-    return render_template("post.html", post=post)
+    return render_template("post.html", post=post, tags=tags)
 
 
 @app.route('/signUp/', methods=["GET","POST"])

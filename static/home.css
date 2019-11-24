@@ -1,3 +1,6 @@
+html {
+    font-size: 14px;
+}
 body{
     padding: 70px 10px 0px 10px;
 }
@@ -41,6 +44,16 @@ a.custom-card:hover {
     margin-bottom: 10px; /* Added */
     /* background-color: black; */
 }
+
+.post-image {
+    object-fit: cover;
+    /* max-height: 400px; */
+}
+
+/* img{
+    display: block;
+    width: 100%;
+} */
 
 @media (max-width: 320px) {
     .card-columns {

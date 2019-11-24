@@ -22,12 +22,23 @@
     {% endblock %}
   
     {% block content %}
-      <div class="indv-post">
+      <div class="indv-post rounded border border-light">
           <div class="left">
-            <img src="{{url_for('static',filename=post['imgPath'])}}" alt="">
+            <img class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="">
           </div>
           <div class="right">
+              {% if posted is sameas true %}
+              <div class="edit-delete">
+                <span id="edit">
+                  <a href="#"><i class="far fa-lg fa-edit"></i></a>
+                </span>
+                <span>
+                  <a href="#"><i class="far fa-lg fa-trash-alt"></i></a>
+                </span>
+              </div>
+            {% endif %}
             <h4 id="title" class="card-title">{{post.pname}}</h4>
+            
             <a href="/profile/{{post['username']}}">{{post.username}}</a>
             <p class="rating" data-rating="{{post['rating']}}"></p>
             <span class="price" data-price="{{post['price']}}"></span>

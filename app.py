@@ -38,8 +38,6 @@ def getConn():
 # change to only following posts later or maybe another route for follwing posts
 @app.route("/home/") # users don't have to be logged in right to see home feed right?
 def home():
-    print("clicked home")
-    
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
     username = session['username']
@@ -52,34 +50,38 @@ def home():
 def search():
     query = request.values.get('query')
     type_ = request.values.get('type')
-    print(type_)
-    print(query)
     conn = db.getConn(DB)
+
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)
-
         if not posts:
             flash ("no posts found")
         return render_template("home.html", page_title = "Results", posts=posts)
+   
     else:
         users = db.getQueryUsers(conn, query)
-        print(users)
-
         if not users:
             flash("no users found")
-
         return render_template("home.html", page_title="Results", users=users)
 
 @app.route('/post/<pid>/')
 def post(pid):
+    # can people see posts without logging in
+    user = None
+    if "username" in session:
+        user = session['username']
+    
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
     tags = db.getTagsofPost(conn, pid)
-    print(tags)
+    if not user or user != post['username']:
+        posted = False
+    else:
+        posted = True
+    print(posted)
     if not post:
         flash("Post not found")
-    print(str(post))
-    return render_template("post.html", post=post, tags=tags)
+    return render_template("post.html", post=post, tags=tags, posted=posted)
 
 
 @app.route('/signUp/', methods=["GET","POST"])

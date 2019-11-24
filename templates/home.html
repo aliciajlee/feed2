@@ -28,7 +28,10 @@
             <a href="/post/{{post['pid']}}" class = "custom-card"> 
                 <div class="item card">
                     <!-- <img src="{{post['imgPath']}}"> -->
-                    <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
+
+                    <!-- <div class="card-image-top img-fluid post-image"> -->
+                    <img class="card-image-top img-fluid post-image rounded-top" src="{{url_for('static',filename=post['imgPath'])}}">
+                    <!-- </div> -->
                     
                     <div class="card-body">
                         <h5 class="card-title">{{post['pname']}}</h5>

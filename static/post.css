@@ -9,6 +9,9 @@
     top: 10px;
     bottom: 15px;
     width: 60%;  
+    /* display: inline-block; */
+    overflow: hidden;
+    padding: 10px;
 }
 
 img{
@@ -27,11 +30,22 @@ img{
 
 .right {
     overflow: hidden;
-    padding-left: 8px;
+    padding-left: 10px;
+    position: relative;
 }
 
 .left{
     float: left
+}
+
+.edit-delete {
+    position: absolute;
+    right: 0px;
+    
+}
+
+#edit {
+    margin-right:2px;
 }
 
 .rating {

@@ -90,3 +90,8 @@ def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Users where username like %s''', ["%"+query+"%"])
     return curs.fetchall()
+
+def getPostsByUser(conn, uid):
+    curs = dbi.dictCursor(conn)
+
+    return curs.fetchall()

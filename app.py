@@ -13,7 +13,7 @@ import bcrypt
 import db # database stuff
 
 # for file uploads
-app.config['UPLOADS'] = 'uploads'
+app.config['UPLOADS'] = 'static/images/'
 app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 
@@ -228,10 +228,8 @@ def logout():
 def upload():
     if 'username' in session:
         if request.method == 'GET':
-            print ('in get!')
             return render_template('upload.html')
         if request.method == 'POST':
-            print('in post!')
             try:
                 uid = session['uid']
                 postconn = db.getConn(DB)
@@ -262,15 +260,15 @@ def upload():
                 if not(os.path.isdir(user_folder)):
                     os.mkdir(user_folder)
                 pathname = os.path.join(user_folder,filename)
-                
-                
                 f.save(pathname)
+                #what gets put into the database
+                filePath = os.path.join('images/{}/'.format(uid), filename)
                 conn = getConn()
                 curs = dbi.cursor(conn)
                 curs.execute(
                     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
                     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-                    [uid, name, rating, price, review, restaurant, location, pathname])
+                    [uid, name, rating, price, review, restaurant, location, filePath])
                 flash('Upload successful')
                 return render_template('upload.html')
             except Exception as err:

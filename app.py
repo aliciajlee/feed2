@@ -19,7 +19,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -120,7 +120,7 @@ def signUp():
             session['logged_in'] = True
             session['fullname'] = fullname
 
-            os.mkdir('static/img/{}'.format(uid)) #this doesn't work, fix how to make directories using OS
+            os.mkdir('static/img/{}'.format(uid)) 
             #session['visits'] = 1
             return redirect(url_for('user', username=username) )
         except Exception as err:
@@ -258,13 +258,14 @@ def upload():
                     os.mkdir(user_folder)
                 pathname = os.path.join(user_folder,filename)
                 
+                
                 f.save(pathname)
                 conn = getConn()
                 curs = dbi.cursor(conn)
                 curs.execute(
                     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
                     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-                    [uid, name, rating, price, review, restaurant, location, filename])
+                    [uid, name, rating, price, review, restaurant, location, pathname])
                 flash('Upload successful')
                 return render_template('upload.html')
             except Exception as err:
@@ -304,7 +305,7 @@ def profile(username):
         #add a way to get fullname and bio text, image file
         return render_template('profile.html', profName=username,
                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
-                                    )
+                                    ,posts = posts)
     except Exception as err:
         flash("user not found")
         return redirect(request.referrer)

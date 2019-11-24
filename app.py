@@ -23,6 +23,8 @@ DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
+    if "username" in session:
+        return redirect(url_for("home"))
     return render_template('signup.html', page_title='Feed')
 
 DSN = None

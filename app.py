@@ -24,7 +24,7 @@ DB = 'feed2019_db' #CHANGE
 @app.route('/')
 def index():
     if "username" in session:
-        return redirect(url_for("home"))
+       return redirect(url_for("home"))
     return render_template('signup.html', page_title='Feed')
 
 DSN = None
@@ -42,6 +42,8 @@ def getConn():
 def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
+    #print(posts)
+    print(session["username"])
     if "username" not in session:
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))

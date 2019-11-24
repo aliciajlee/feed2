@@ -23,7 +23,7 @@ DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
-    return render_template('signup.html', page_title='Home')
+    return render_template('signup.html', page_title='Feed')
 
 DSN = None
 

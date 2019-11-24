@@ -23,7 +23,7 @@ DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
-    return render_template('signup.html', page_title='Feed')
+    return render_template('signup.html', page_title='Home')
 
 DSN = None
 
@@ -44,8 +44,7 @@ def home():
     posts = db.getAllPosts(conn)
     username = session['username']
     # how should they be sorted -- bootstrap card thing inserts by column and not row
-
-
+    
     return render_template("home.html", page_title="Home • Feed", posts=posts, username = username)
 
 # for now return all results where post name, tag, restaurant match
@@ -299,6 +298,7 @@ def profile(username):
         fullName = db.getFullName(conn, uid)
         bioText = db.getBioText(conn, uid)
         profPic = db.getPPic(conn, uid)
+        posts = db.getPostsByUser(conn, uid)
         #add a way to get fullname and bio text, image file
         return render_template('profile.html', profName=username,
                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 

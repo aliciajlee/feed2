@@ -23,7 +23,6 @@ img{
     margin-bottom: 0px;
 }
 
-
 .desc{
     word-wrap: normal;
 }
@@ -41,7 +40,6 @@ img{
 .edit-delete {
     position: absolute;
     right: 0px;
-    
 }
 
 #edit {

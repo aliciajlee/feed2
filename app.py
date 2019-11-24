@@ -19,7 +19,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -42,6 +42,9 @@ def getConn():
 def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
+    if "username" not in session:
+        flash("Please log in or sign up to continue")
+        return redirect(url_for("index"))
     username = session['username']
     # how should they be sorted -- bootstrap card thing inserts by column and not row
     

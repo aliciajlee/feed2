@@ -38,7 +38,7 @@ def getConn():
 
 # display all posts
 # change to only following posts later or maybe another route for follwing posts
-@app.route("/home/") # users don't have to be logged in right to see home feed right?
+@app.route("/home/") 
 def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
@@ -71,9 +71,10 @@ def search():
             flash("no users found")
         return render_template("home.html", page_title="Results", users=users)
 
+# individual post
 @app.route('/post/<pid>/')
 def post(pid):
-    # can people see posts without logging in
+    # can people see posts without logging in -- for now, don't need to be logged in
     user = None
     if "username" in session:
         user = session['username']
@@ -89,7 +90,6 @@ def post(pid):
     if not post:
         flash("Post not found")
     return render_template("post.html", post=post, tags=tags, posted=posted)
-
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -281,6 +281,7 @@ def upload():
             flash('You are not logged in. Please login or join')
             return redirect( url_for('index') )
 
+# i think we can combine the 2 profiles
 @app.route('/profile/')
 def redirProfile():
     username = session['username']

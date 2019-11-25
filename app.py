@@ -19,7 +19,11 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
+<<<<<<< HEAD
+DB = 'alee31_db' #CHANGE
+=======
 DB = 'feed2019_db' #CHANGE
+>>>>>>> d256323ba5f96b86f4456b6c45010d10d85879c6
 
 @app.route('/')
 def index():

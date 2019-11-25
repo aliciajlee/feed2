@@ -14,9 +14,9 @@ def getConn(DB):
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select count(*) from Posts''')
+    curs.execute('''select max(pid) from Posts''')
     result = curs.fetchone()
-    return result['count(*)']
+    return result['max(pid)']
     
 def getBioText(conn, uid):
     '''get the bio text from the database '''

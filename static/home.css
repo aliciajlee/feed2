@@ -22,6 +22,11 @@ body{
 p {
     margin-bottom:60px;
 }
+
+#options span{
+    vertical-align: top;
+    display: inline-block;
+}
   
 /* h4{
     text-align:center; 

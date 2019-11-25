@@ -19,12 +19,16 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
+<<<<<<< HEAD
 DB = 'alee31_db' #CHANGE
+=======
+DB = 'feed2019_db' #CHANGE
+>>>>>>> d256323ba5f96b86f4456b6c45010d10d85879c6
 
 @app.route('/')
 def index():
     if "username" in session:
-        return redirect(url_for("home"))
+       return redirect(url_for("home"))
     return render_template('signup.html', page_title='Feed')
 
 DSN = None
@@ -38,10 +42,15 @@ def getConn():
 
 # display all posts
 # change to only following posts later or maybe another route for follwing posts
-@app.route("/home/") # users don't have to be logged in right to see home feed right?
+@app.route("/home/") 
 def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
+    #print(posts)
+    print(session["username"])
+    if "username" not in session:
+        flash("Please log in or sign up to continue")
+        return redirect(url_for("index"))
     username = session['username']
     # how should they be sorted -- bootstrap card thing inserts by column and not row
     
@@ -66,9 +75,10 @@ def search():
             flash("no users found")
         return render_template("home.html", page_title="Results", users=users)
 
+# individual post
 @app.route('/post/<pid>/')
 def post(pid):
-    # can people see posts without logging in
+    # can people see posts without logging in -- for now, don't need to be logged in
     user = None
     if "username" in session:
         user = session['username']
@@ -84,7 +94,6 @@ def post(pid):
     if not post:
         flash("Post not found")
     return render_template("post.html", post=post, tags=tags, posted=posted)
-
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -276,6 +285,7 @@ def upload():
             flash('You are not logged in. Please login or join')
             return redirect( url_for('index') )
 
+# i think we can combine the 2 profiles
 @app.route('/profile/')
 def redirProfile():
     username = session['username']

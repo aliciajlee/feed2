@@ -21,6 +21,41 @@
 
         {% endblock %}
 
+        {% block options %}
+
+            <div id="options">
+                <span id="sort-by">
+                    <form>
+                        <label>Sort by</label>
+                        <select name="sort-by">
+                            <option>Most Recent</option>
+                            <option>Rating</option>
+                            <option>Price</option>
+                        </select>
+                    </form>
+                </span>
+                <span id="tag">
+                    <label>Category</label>
+                    <select name="tag">
+                        <option selected disabled>Choose</option>
+                        <option>Tag 1</option>
+                        <option>Tag 2</option>
+                    </select>
+                </span>
+            
+
+                <!-- <span id="filter-tag"></span> -->
+
+            </div>
+
+
+        {% endblock %}
+
+        {% block flash %}
+            {{super()}}
+
+        {%endblock %}
+
 
         {% block content %}
             <div id="posts" class="masonry card-columns">

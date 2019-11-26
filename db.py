@@ -81,14 +81,19 @@ def getQueryPosts(conn, query):
                                             from Posts inner join 
                                             (select pid from Tagpost inner join Tags 
                                             on Tags.tid = Tagpost.tid 
-                                            where Tags.ttype like %s) as p 
-                                            on Posts.pid = p.pid)''', ['%'+query+'%', '%'+query+'%', '%'+query+'%', query])
+                                            where Tags.ttype = %s) as p 
+                                            on Posts.pid = p.pid)
+                    union
+                    (select Posts.* from Posts inner join (select uid from Users 
+                                            where username like %s or fullname like %s) as u
+                                            on Posts.uid = u.uid)''',
+                    ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, '%'+query+'%', '%'+query+'%'])
     return curs.fetchall() # change to limit x offset y order by time
 
 # return users where query matches username
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select * from Users where username like %s''', ["%"+query+"%"])
+    curs.execute('''select * from Users where username like %s or fullname like %s''', ["%"+query+"%", "%"+query+"%"])
     return curs.fetchall()
 
 # gets all posts by a user

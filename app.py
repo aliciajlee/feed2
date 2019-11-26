@@ -29,6 +29,7 @@ def index():
 
 DSN = None
 
+# we should move this to db
 def getConn():
     global DSN
     if DSN is None:
@@ -42,34 +43,34 @@ def getConn():
 def home():
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
-    #print(posts)
-    print(session["username"])
     if "username" not in session:
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))
     username = session['username']
     # how should they be sorted -- bootstrap card thing inserts by column and not row
-    
-    return render_template("home.html", page_title="Home • Feed", posts=posts, username = username)
+    return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
+                            options=True)
 
-# for now return all results where post name, tag, restaurant match
+
+# for now return all results where post name, tag, restaurant, username, fullname match
 @app.route("/search/", methods=["GET"])
 def search():
     query = request.values.get('query')
     type_ = request.values.get('type')
     conn = db.getConn(DB)
-
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)
         if not posts:
             flash ("no posts found")
-        return render_template("home.html", page_title = "Results", posts=posts)
-   
+        flash("Post results for '{}'".format(query))
+        return render_template("home.html", page_title="Results", posts=posts, options=True)
     else:
         users = db.getQueryUsers(conn, query)
         if not users:
             flash("no users found")
-        return render_template("home.html", page_title="Results", users=users)
+        flash("User results for '{}'".format(query))
+        return render_template("home.html", page_title="Results",users=users, options=False)
+
 
 # individual post
 @app.route('/post/<pid>/')
@@ -78,7 +79,6 @@ def post(pid):
     user = None
     if "username" in session:
         user = session['username']
-    
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
     tags = db.getTagsofPost(conn, pid)
@@ -86,7 +86,6 @@ def post(pid):
         posted = False
     else:
         posted = True
-    print(posted)
     if not post:
         flash("Post not found")
     return render_template("post.html", post=post, tags=tags, posted=posted)

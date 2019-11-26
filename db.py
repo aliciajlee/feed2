@@ -70,27 +70,24 @@ def getTagsofPost(conn, pid):
                                                             [pid])
     return curs.fetchall()
     
-# returns posts where query matches post name, tag, restaurant,
+# returns posts where query matches post name, tag, restaurant, username, fullname
 def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''(select * from Posts where pname like %s 
-                                            or restaurant like %s
-                                            or location like %s)
+                                    or restaurant like %s or location like %s)
                     union
-                    (select Posts.pid, uid, pname, rating, price, review, restaurant, location, imgPath, time 
-                                            from Posts inner join 
-                                            (select pid from Tagpost inner join Tags 
-                                            on Tags.tid = Tagpost.tid 
-                                            where Tags.ttype = %s) as p 
-                                            on Posts.pid = p.pid)
+                    (select Posts.* from Posts inner join 
+                                    (select pid from Tagpost inner join Tags 
+                                    on Tags.tid = Tagpost.tid where Tags.ttype = %s) as p 
+                                    on Posts.pid = p.pid)
                     union
                     (select Posts.* from Posts inner join (select uid from Users 
-                                            where username like %s or fullname like %s) as u
-                                            on Posts.uid = u.uid)''',
+                                    where username like %s or fullname like %s) as u
+                                    on Posts.uid = u.uid)''',
                     ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, '%'+query+'%', '%'+query+'%'])
     return curs.fetchall() # change to limit x offset y order by time
 
-# return users where query matches username
+# return users where query matches username, fullname
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Users where username like %s or fullname like %s''', ["%"+query+"%", "%"+query+"%"])

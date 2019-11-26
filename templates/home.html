@@ -18,11 +18,10 @@
     <body>
         {% block nav %} 
             {{super()}}
-
         {% endblock %}
 
         {% block options %}
-
+            {% if options is sameas true %}
             <div id="options">
                 <span id="sort-by">
                     <form>
@@ -42,32 +41,28 @@
                         <option>Tag 2</option>
                     </select>
                 </span>
-            
-
                 <!-- <span id="filter-tag"></span> -->
-
             </div>
-
-
+            {% endif %}
         {% endblock %}
-
+        
+        <!-- WHY are flashes showing up before options -->
         {% block flash %}
             {{super()}}
-
         {%endblock %}
-
 
         {% block content %}
             <div id="posts" class="masonry card-columns">
             {% for post in posts %}
             <a href="/post/{{post['pid']}}" class = "custom-card"> 
                 <div class="item card">
-                    <!-- <img src="{{post['imgPath']}}"> -->
+                    <!-- image -->
 
                     <!-- <div class="card-image-top img-fluid post-image"> -->
-                    <img class="card-image-top img-fluid rounded-top post-image" src="{{url_for('static',filename=post['imgPath'])}}">
+                    <img class="card-image-top img-fluid rounded-top post-image" 
+                        src="{{url_for('static',filename=post['imgPath'])}}">
                     <!-- </div> -->
-                    
+                 
                     <div class="card-body">
                         <h5 class="card-title">{{post['pname']}}</h5>
                         <!-- rating -->
@@ -99,18 +94,15 @@
             </a>
             {% endfor %}
             </div>
+
+            
            
             <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-    
         <script src="{{url_for('static',filename='home.js')}}"></script>
 
-        {% endblock %}
-
-    
+        {% endblock %}   
     
 </body>
-
-
 </html>
 
 

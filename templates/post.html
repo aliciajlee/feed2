@@ -6,13 +6,9 @@
         <meta charset="utf-8">
         <meta name=author content="Sandra Xu">  
         <title>{{post.pname}}</title>
-        <link rel="stylesheet" type="text/css"
-              href="{{url_for('static', filename='post.css')}}">
-        <link rel="stylesheet" type="text/css"
-              href="{{url_for('static', filename='home.css')}}">
-        <link rel="stylesheet" 
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='post.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='home.css')}}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         {% endblock %}
     </head>
 
@@ -24,21 +20,25 @@
     {% block content %}
       <div class="indv-post rounded border border-light">
           <div class="left">
-            <img class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="">
+            <img class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
           <div class="right">
-              {% if posted is sameas true %}
+            {% if posted is sameas true %}
               <div class="edit-delete">
                 <span id="edit">
-                  <a href="#"><i class="far fa-lg fa-edit"></i></a>
+                  <a href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+                    <i class="far fa-lg fa-edit"></i>         
+                  </a>
                 </span>
                 <span>
-                  <a href="#"><i class="far fa-lg fa-trash-alt"></i></a>
+                  <a href="#" data-toggle="tooltip" data-placement="bottom" title="Delete">
+                    <i class="far fa-lg fa-trash-alt"></i>
+                  </a>
                 </span>
               </div>
             {% endif %}
+
             <h4 id="title" class="card-title">{{post.pname}}</h4>
-            
             <a href="/profile/{{post['username']}}">{{post.username}}</a>
             <p class="rating" data-rating="{{post['rating']}}"></p>
             <span class="price" data-price="{{post['price']}}"></span>
@@ -54,13 +54,13 @@
     <!-- </div> -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
     <script src="{{url_for('static',filename='home.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
     {% endblock %}
 
 </body>
-
-
 </html>
 
     

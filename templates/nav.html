@@ -18,7 +18,7 @@
     {% block nav %} 
         <!-- make navbar look nicer later -->
         <nav class="navbar fixed-top navbar-light bg-light justify-content-between">
-            <!-- do fix at top -->
+            <!-- fix at top -->
             <a class="navbar-brand nav-link font-large" href="/home/">Feed</a>
             <div class="flex-grow-1 d-flex">
                 <form id="searchbar" method=GET action="/search/" class="form-inline flex-nowrap bg-light mx-0 mx-lg-auto rounded p-1">
@@ -28,16 +28,13 @@
                             <button class="btn btn-outline-secondary border border-left-0" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
-                          </span>
+                        </span>
                     </div>
                     <select name="type" id="type" class="form-control">
                         <option selected disabled>Show...</option>
                         <option  id="option-post"value="posts">Posts</option>
                         <option od="option-user"value="users">Users</option>
-
                     </select>
-
-                
                 </form>
             </div>
 
@@ -93,6 +90,4 @@
     // $("#option-user").attr("selected", true)
 </script>
 </body>
-
-
 </html>

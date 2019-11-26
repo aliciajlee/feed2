@@ -288,22 +288,16 @@ def redirProfile():
     username = session['username']
     return redirect(url_for('profile', username = username))
 
-
 @app.route('/profile/<username>')
 def profile(username): 
     conn = getConn()
     print(username)
-    #  username = session['username']
     try:
         uid = db.getUid(conn, username)
         print(uid)
-
         if not uid:
-
-            print("here")
             flash("User not found")
             return render_template("home.html")
-
         uid=uid['uid']
         fullName = db.getFullName(conn, uid)
         bioText = db.getBioText(conn, uid)
@@ -311,8 +305,8 @@ def profile(username):
         posts = db.getPostsByUser(conn, uid)
         #add a way to get fullname and bio text, image file
         return render_template('profile.html', profName=username,
-                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], ppic = profPic['profpicPath'] 
-                                    ,posts = posts)
+                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+                                    ppic = profPic['profpicPath'], posts = posts)
     except Exception as err:
         flash("user not found")
         return redirect(request.referrer)

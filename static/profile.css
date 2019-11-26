@@ -82,7 +82,13 @@ img {
 }
 
 .profile-image img {
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
+    margin: 20px;
+  
+    object-fit: cover;
+    object-position: center;
 }
 
 .profile-user-settings,
@@ -241,7 +247,8 @@ img {
     }
 
     .profile-image img {
-        width: 7.7rem;
+        max-width: 2rem;
+        max-height: 2rem;
     }
 
     .profile-user-settings {

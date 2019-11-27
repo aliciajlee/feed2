@@ -10,7 +10,7 @@ create table Users(
        uid int auto_increment,
        fullname varchar(50) not null,
        email varchar(50) not null,
-       username varchar(50) not null,
+       username varchar(20) not null,
        hashed char(60),
        biotxt varchar(350),
        profpicPath varchar(50),

@@ -7,10 +7,10 @@
     <meta charset='utf-8'>
 	<meta name=author content="Rachel Navarrette">
 	<link rel="stylesheet" type="text/css"
-              href="{{url_for('static', filename='home.css')}}">
+            href="{{url_for('static', filename='home.css')}}">
 	<link rel='stylesheet' href="{{url_for('static', filename = 'profile.css')}}">
 	<link rel="stylesheet" 
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><title>{{proName}}</title>
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><title>{{proName}}</title>
 	
 	{% endblock %}
 	
@@ -23,18 +23,13 @@
 		{% endblock %}
 		{% block content %}
 
-		<!-- something weird is happening to this dumb template thing!! -->
-		{%block options %}
-
-		{% endblock %}
 	<div class="container">
 
 		<div class="profile">
 
 			<div class="profile-image">
 
-				<img src="{{url_for('static', filename = ppic)}}"  style= "width: 100%
-				; height: 150%; border-radius: 50%;"  alt="profile_pic">
+				<img src="{{url_for('static', filename = ppic)}}"    alt="profile_pic">
 
 			</div>
 			<!-- Edit profile form -->

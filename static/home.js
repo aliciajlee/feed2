@@ -1,4 +1,4 @@
-(function () {
+$(document).ready(function () {
     $(".rating").each(function () {
         let rating = $(this).attr("data-rating");
         // console.log(rating);
@@ -12,6 +12,10 @@
         console.log(price)
         $(this).text(String.fromCodePoint(0x0024).repeat(txt)); // dollar sign emoji
     })
-})();
+  });
+
+// (function () {
+    
+// })();
 
 

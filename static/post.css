@@ -28,9 +28,11 @@ img{
 }
 
 .right {
-    overflow: hidden;
+    /* overflow: hidden;
     padding-left: 10px;
-    position: relative;
+    position: relative; */
+    display: flex;
+    flex-direction: column;
 }
 
 .left{
@@ -58,6 +60,12 @@ img{
 
 #review {
     margin-top: 10px;
+}
+
+.time{
+    /* position: absolute;
+    bottom: 0px; */
+    margin-top: auto;
 }
 
 /* .container {

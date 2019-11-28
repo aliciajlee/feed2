@@ -22,8 +22,10 @@
           <div class="left">
             <img class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
-          <div class="right">
+           <div class="right">
+              <div class="top-container">
             {% if posted is sameas true %}
+            
               <div class="edit-delete">
                 <span id="edit">
                   <!-- tooltips are f-ed up fix later -->
@@ -38,20 +40,42 @@
                 </span>
               </div>
             {% endif %}
-
+            <!-- <table id="right-container"> -->
+              <!-- <tr id="top"> -->
+                <!-- <td valign="top"> -->
             <h4 id="title" class="card-title">{{post.pname}}</h4>
-            <a href="/profile/{{post['username']}}">{{post.username}}</a>
-            <p class="rating" data-rating="{{post['rating']}}"></p>
+            <p><a href="/profile/{{post['username']}}">{{post.username}}</a></p>
+            <div class="restaurant">
+              <span><i class="fas fa-utensils"></i></span>
+              <span>{{post.restaurant}}</span>
+            
+            </div>
+            <p class="location">
+              <span><i class="fas fa-map-marker-alt"></i></span>
+              <span>{{post.location}}</span>
+            </p>
+            <p class="rating" data-rating="{{post.rating}}"></p>
             <span class="price" data-price="{{post['price']}}"></span>
+            
             {% for tag in tags %}
               <span>
                 <a href="#"> {{tag.ttype}} </a>
               </span>
             {% endfor %}
             <p id="review" class="card-text">{{post.review}}</p>
+            </div>
+          <!-- </td>
+           </tr> -->
+           <!-- <tr> -->
+             <!-- <td id="bottom" valign="bottom"> -->
+            <div class="time"><small class="text-muted">{{post.time}}</small></p>
+          <!-- </td>
+          </tr>
+          </table> -->
           </div>
-      </div>
+          
         </div>
+      </div>
     <!-- </div> -->
     {% endblock %}
     {% block scripts %}

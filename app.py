@@ -58,6 +58,7 @@ def home():
 def search():
     query = request.values.get('query')
     type_ = request.values.get('type')
+    print(type_)
     conn = db.getConn(DB)
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)

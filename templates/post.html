@@ -20,14 +20,14 @@
     {% block content %}
       <div class="indv-post rounded border border-light">
           <div class="left">
-            <img class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
+            <img id="post-image" class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
-           <div class="right">
-              <div class="top-container">
+           <div id="flex-right" class="right">
+              <!-- <div class="top-container"> -->
             {% if posted is sameas true %}
             
               <div class="edit-delete">
-                <span id="edit">
+                <span id="edit"> 
                   <!-- tooltips are f-ed up fix later -->
                   <a href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
                     <i class="far fa-lg fa-edit"></i>         
@@ -40,9 +40,9 @@
                 </span>
               </div>
             {% endif %}
-            <!-- <table id="right-container"> -->
-              <!-- <tr id="top"> -->
-                <!-- <td valign="top"> -->
+            <!-- <table id="right-container">
+              <tr id="top">
+                <td valign="top"> -->
             <h4 id="title" class="card-title">{{post.pname}}</h4>
             <p><a href="/profile/{{post['username']}}">{{post.username}}</a></p>
             <div class="restaurant">
@@ -50,20 +50,22 @@
               <span>{{post.restaurant}}</span>
             
             </div>
-            <p class="location">
+            <div class="location">
               <span><i class="fas fa-map-marker-alt"></i></span>
               <span>{{post.location}}</span>
-            </p>
+            </div>
             <p class="rating" data-rating="{{post.rating}}"></p>
-            <span class="price" data-price="{{post['price']}}"></span>
+            <div>
+            <span class="price" data-price="{{post['price']}}"></span> 
             
             {% for tag in tags %}
               <span>
                 <a href="#"> {{tag.ttype}} </a>
               </span>
             {% endfor %}
-            <p id="review" class="card-text">{{post.review}}</p>
             </div>
+            <p id="review" class="card-text">{{post.review}}</p>
+            <!-- </div> -->
           <!-- </td>
            </tr> -->
            <!-- <tr> -->
@@ -85,6 +87,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+    <script>
+      var imgHeight = $("#post-image").height();
+      console.log(imgHeight);
+      $("#flex-right").height(imgHeight);
+    </script>
     {% endblock %}
 
 </body>

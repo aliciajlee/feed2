@@ -28,9 +28,9 @@ img{
 }
 
 .right {
-    /* overflow: hidden;
+    /* overflow: hidden; */
+    position: relative; 
     padding-left: 10px;
-    position: relative; */
     display: flex;
     flex-direction: column;
 }
@@ -66,6 +66,10 @@ img{
     /* position: absolute;
     bottom: 0px; */
     margin-top: auto;
+}
+
+span{
+    display: inline-block;
 }
 
 /* .container {

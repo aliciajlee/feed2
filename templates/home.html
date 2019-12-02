@@ -9,6 +9,8 @@
         <title>Home • Feed</title>
         <link rel="stylesheet" type="text/css"
               href="{{url_for('static', filename='home.css')}}">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
         <link rel="stylesheet" 
               href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
@@ -23,23 +25,25 @@
         {% block options %}
             {% if options is sameas true %}
             <div id="options">
-                <span id="sort-by">
-                    <form>
+                <span>
+                    <!-- <form id="sort-by-form" method=GET action="/home/"> -->
                         <label>Sort by</label>
-                        <select name="sort-by">
-                            <option>Most Recent</option>
-                            <option>Rating</option>
-                            <option>Price</option>
+                        <select name="sort-by" id="sort-by">
+                            <option value="recent">Most Recent</option>
+                            <option value="rating">Rating</option>
+                            <option value="price">Price</option>
+                        </select>
+                    <!-- </form> -->
+                </span>
+                <span>
+                    <form id="tag-form">
+                        <label>Category</label>
+                        <select name="tag" id="tag" onchange="this.form.submit()">
+                            <option selected disabled>Choose</option>
+                            <option>Tag 1</option>
+                            <option>Tag 2</option>
                         </select>
                     </form>
-                </span>
-                <span id="tag">
-                    <label>Category</label>
-                    <select name="tag">
-                        <option selected disabled>Choose</option>
-                        <option>Tag 1</option>
-                        <option>Tag 2</option>
-                    </select>
                 </span>
                 <!-- <span id="filter-tag"></span> -->
             </div>

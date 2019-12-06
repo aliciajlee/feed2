@@ -61,9 +61,9 @@
     {% block flash %}
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div id="messages">
+            <div id="flash">
             {% for msg in messages %}
-                <p>{{msg}}</p>
+                <p class="message">{{msg}}</p>
             {% endfor %}
             </div>
         {% endif %}

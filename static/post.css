@@ -44,7 +44,7 @@ img{
     right: 0px;
 }
 
-#edit {
+#edit_ {
     margin-right:2px;
 }
 
@@ -71,6 +71,7 @@ img{
 span{
     display: inline-block;
 }
+
 
 /* .container {
     width: 120px;

@@ -77,6 +77,7 @@ def search():
 # individual post
 @app.route('/post/<pid>/')
 def post(pid):
+
     # can people see posts without logging in -- for now, don't need to be logged in
     user = None
     if "username" in session:
@@ -84,13 +85,15 @@ def post(pid):
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
     tags = db.getTagsofPost(conn, pid)
+    if not post:
+        flash("Post not found")
+        return redirect(request.referrer)
     if not user or user != post['username']:
         posted = False
     else:
         posted = True
-    if not post:
-        flash("Post not found")
-    return render_template("post.html", post=post, tags=tags, posted=posted)
+    print(post)
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted)
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -352,6 +355,24 @@ def editProf():
     db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
 
     return redirect(url_for('profile', username = username))
+
+
+@app.route('/delete_post/<pid>', methods=['POST'])
+def delete_post(pid):
+    # might be good to check that user deleting post is valid
+    # if 
+    #     flash("post doesn't belong to user logged in")
+    try:
+        conn = db.getConn(DB)
+        db.deletePost(conn, pid)
+    except Exception as err:
+        flash("error deleting post")
+        print("error deleting post")
+        return redirect(request.referrer)
+
+    flash("Successfully deleted post")
+    return redirect(url_for("home"))
+
 
 if __name__ == '__main__':
     import sys,os

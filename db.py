@@ -98,3 +98,7 @@ def getPostsByUser(conn, uid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts where uid = %s''', [uid])
     return curs.fetchall()
+
+def deletePost(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''delete from Posts where pid = %s''', [pid])

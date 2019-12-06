@@ -373,6 +373,11 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
+@app.route('/edit_post/<pid>', methods=['POST'])
+def edit_post(pid):
+    
+    flash("Sucessfully edited post")
+    return redirect(request.referrer)
 
 if __name__ == '__main__':
     import sys,os

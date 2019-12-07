@@ -12,6 +12,11 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def numPostsUser(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Posts where uid=%s;''', [uid])
+    return curs['count(*)']
+
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select max(pid) from Posts''')

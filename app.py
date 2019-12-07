@@ -304,10 +304,11 @@ def profile(username):
         bioText = db.getBioText(conn, uid)
         profPic = db.getPPic(conn, uid)
         posts = db.getPostsByUser(conn, uid)
-        #add a way to get fullname and bio text, image file
+        numPosts = db.numPostsUser(conn, uid)
+        
         return render_template('profile.html', profName=username,
                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts)
+                                    ppic = profPic['profpicPath'], posts = posts, numPosts = numPosts)
     except Exception as err:
         flash("user not found")
         return redirect(request.referrer)

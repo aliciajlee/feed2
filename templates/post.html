@@ -20,8 +20,6 @@
             <img id="post-image" class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
            <div id="flex-right" class="right">
-              
-              <!-- <div class="top-container"> -->
             {% if posted is sameas true %}
             
               <div class="edit-delete">
@@ -33,20 +31,14 @@
                   </button>       
                 </span>
                 <span>
-                  <!-- <button id="delete" href="#" data-target="#exampleModal" data-toggle="tooltip modal" data-placement="bottom" title="Delete">
-                    <i class="far fa-lg fa-trash-alt"></i>
-                  </button> -->
                   <button type="button" class="btn btn-light" data-toggle="modal" data-target="#delete-modal">
                     <i class="far fa-lg fa-trash-alt"></i>
                   </button>
                 </span>
               </div>
             {% endif %}
-            <!-- <table id="right-container">
-              <tr id="top">
-                <td valign="top"> -->
+
             <h4 id="title" class="card-title">{{post.pname}}</h4>
-            <!-- "/profile/{{post['username']}}" -->
             <p><a href="{{url_for('profile', username=post.username)}}">{{post.username}}</a></p>
             <div class="restaurant">
               <span><i class="fas fa-utensils"></i></span>
@@ -68,15 +60,7 @@
             {% endfor %}
             </div>
             <p id="review" class="card-text">{{post.review}}</p>
-            <!-- </div> -->
-          <!-- </td>
-           </tr> -->
-           <!-- <tr> -->
-             <!-- <td id="bottom" valign="bottom"> -->
             <div class="time"><small class="text-muted">{{post.time}}</small></p>
-          <!-- </td>
-          </tr>
-          </table> -->
           </div>
           
         </div>
@@ -131,7 +115,7 @@
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                   <!-- <button type="button" class="btn btn-primary">Delete</button> -->
                   <!-- <form action="/edit_post/{{pid}}" method="post"> -->
-                  <button type="button" id = "edit-save" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                  <button type="button" id="edit-save" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                 <!-- </form> -->
                 </div> 
               

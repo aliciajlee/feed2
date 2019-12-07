@@ -377,17 +377,13 @@ def edit_post(pid):
 
     pname = request.form.get("pname")
     restaurant = request.form.get("restaurant")
-    
-    print(pname, restaurant)
+
     try:
         db.editPost(conn, pid, pname, restaurant)
-
-
     except Exception as err:
         print("error editing post")
         flash("error editing post")
         return redirect(request.referrer)
-
 
     flash("Sucessfully edited post")
     return redirect(request.referrer)

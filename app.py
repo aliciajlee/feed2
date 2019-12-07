@@ -12,6 +12,7 @@ import dbi
 import imghdr
 import bcrypt
 import db # database stuff
+import json
 
 # for file uploads
 app.config['UPLOADS'] = 'static/images/'
@@ -85,6 +86,7 @@ def post(pid):
         return redirect(request.referrer)
 
     tags = db.getTagsofPost(conn, pid)
+    rating = post['rating']
 
     user = None if 'username' not in session else session['username']
     posted = user == post['username']
@@ -370,16 +372,22 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
-
+# edit a post's name, resturant, location, rating, price, review
+# the timestamp of the post won't change after edit
 @app.route('/edit_post/<pid>', methods=['POST'])
 def edit_post(pid):
     conn = db.getConn(DB)
 
     pname = request.form.get("pname")
     restaurant = request.form.get("restaurant")
+    location = request.form.get("location")
+    rating = request.form.get("rating")
+    price = request.form.get("price")
+    review = request.form.get("review")
+    # implement tags later
 
     try:
-        db.editPost(conn, pid, pname, restaurant)
+        db.editPost(conn, pid, pname, restaurant, location, rating, price, review)
     except Exception as err:
         print("error editing post")
         flash("error editing post")

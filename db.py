@@ -66,25 +66,26 @@ def getSinglePost(conn, pid):
 def getTagsofPost(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select ttype from Tags inner join 
-                                    (select tid from Tagpost where
-                                    pid = %s) as t on t.tid = Tags.tid''',[pid])
+                            (select tid from Tagpost where
+                            pid = %s) as t on t.tid = Tags.tid''',[pid])
     return curs.fetchall()
     
 # returns posts where query matches post name, tag, restaurant, username, fullname
 def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)
     curs.execute('''(select * from Posts where pname like %s 
-                                    or restaurant like %s or location like %s)
+                            or restaurant like %s or location like %s)
                     union
                     (select Posts.* from Posts inner join 
-                                    (select pid from Tagpost inner join Tags 
-                                    on Tags.tid = Tagpost.tid where Tags.ttype = %s) as p 
-                                    on Posts.pid = p.pid)
+                            (select pid from Tagpost inner join Tags 
+                            on Tags.tid = Tagpost.tid where Tags.ttype = %s) as p 
+                            on Posts.pid = p.pid)
                     union
                     (select Posts.* from Posts inner join (select uid from Users 
-                                    where username like %s or fullname like %s) as u
-                                    on Posts.uid = u.uid)''',
-                    ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, '%'+query+'%', '%'+query+'%'])
+                            where username like %s or fullname like %s) as u
+                            on Posts.uid = u.uid)''',
+                ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, 
+                    '%'+query+'%', '%'+query+'%'])
     return curs.fetchall() # change to limit x offset y order by time
 
 # return users where query matches username, fullname
@@ -105,7 +106,9 @@ def deletePost(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''delete from Posts where pid = %s''', [pid])
 
-# edit a post by its pid. 
-def editPost(conn, pid, pname, restaurant):
+# edit a post by its pid. can edit pname, restaurant, review
+def editPost(conn, pid, pname, restaurant, location, rating, price, review):
     curs = dbi.dictCursor(conn)
-    curs.execute('''update Posts set pname = %s, restaurant = %s where pid = %s''', [pname, restaurant, pid])
+    curs.execute('''update Posts set pname = %s, restaurant = %s, location=%s,
+                        rating=%s, price=%s, review=%s where pid = %s''', 
+                        [pname, restaurant, location, rating, price, review, pid])

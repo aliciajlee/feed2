@@ -26,7 +26,7 @@
                 <span id="edit_"> 
                   <!-- tooltips are f-ed up fix later -->
                   <!-- <a id="edit" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit"> -->
-                  <button type="button" class="btn btn-light" data-toggle="modal" data-target="#edit-modal">
+                  <button type="button" id="edit-button" class="btn btn-light" data-toggle="modal" data-target="#edit-modal">
                     <i class="far fa-lg fa-edit"></i>  
                   </button>       
                 </span>
@@ -99,6 +99,7 @@
               </div>
               
               <div class="modal-body">
+                <!-- EDIT POST FORM -->
               <form id="edit-post-form" method=POST action="{{url_for('edit_post', pid=pid)}}">
                 <div class="form-group form-inline">
                   <label>Name</label>
@@ -109,7 +110,58 @@
                     <label>Restaurant</label>
                     <input type="text" id="edit-restaurant" class="form-control" name="restaurant" 
                             value="{{post.restaurant}}"placeholder="{{post.restaurant}}"> 
-                </div>                   
+                </div>
+                <div class="form-group form-inline">
+                    <label>Location</label>
+                    <input type="text" id="edit-location" class="form-control" name="location" 
+                            value="{{post.location}}"placeholder="{{post.location}}"> 
+                </div>  
+                <!-- rating -->
+                <div class="form-group form-inline">
+                    <label>Rating</label>
+                    <!-- <div class='rating-stars text-center'> -->
+                      <!-- <input class="hide" name="rating"> -->
+                        <!-- <ul id='stars'>
+                          <li class='star' title='Poor' data-value='1'>
+                            <i class='fa fa-star fa-fw'></i>
+                          </li>
+                          <li class='star' title='Fair' data-value='2'>
+                            <i class='fa fa-star fa-fw'></i>
+                          </li>
+                          <li class='star' title='Good' data-value='3'>
+                            <i class='fa fa-star fa-fw'></i>
+                          </li>
+                          <li class='star' title='Excellent' data-value='4'>
+                            <i class='fa fa-star fa-fw'></i>
+                          </li>
+                          <li class='star' title='WOW!!!' data-value='5'>
+                            <i class='fa fa-star fa-fw'></i>
+                          </li> -->
+                        <!-- </ul> -->
+                        <label class="radio-inline"><input type="radio" value="1" name="rating">1</label>
+                        <label class="radio-inline"><input type="radio" value="2" name="rating">2</label>
+                        <label class="radio-inline"><input type="radio" value="3" name="rating">3</label>
+                        <label class="radio-inline"><input type="radio" value="4" name="rating">4</label>
+                        <label class="radio-inline"><input type="radio" value="5" name="rating">5</label>
+                      <!-- </div> -->
+                   
+                </div>   
+                <!-- price -->
+                <div class="form-group form-inline">
+                  <label>Price</label>
+                  <label class="radio-inline"><input type="radio" value="1" name="price">1</label>
+                  <label class="radio-inline"><input type="radio" value="2" name="price">2</label>
+                  <label class="radio-inline"><input type="radio" value="3" name="price">3</label>
+                  <label class="radio-inline"><input type="radio" value="4" name="price">4</label>
+                </div>
+                <!-- do tags here later-->
+
+                <div class="form-group form-inline">
+                  <label>Review</label>
+                  <!-- make rows and cols dynamic later -->
+                  <textarea class="form-control" rows="5" cols="60" name="review" placeholder="{{post.review}}"></textarea>
+                </div>
+                    
               </form>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -138,13 +190,46 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
     <script>
-      var imgHeight = $("#post-image").height();
-      console.log(imgHeight);
-      $("#flex-right").height(imgHeight);
+      // Rating Initialization
+      $(document).ready(function() {
 
-      $("#edit-save").on("click", function() {
-        $("#edit-post-form").submit();
+        var imgHeight = $("#post-image").height();
+
+        $("#flex-right").height(imgHeight);
+
+        $("#edit-save").on("click", function() {
+          $("#edit-post-form").submit();
+        });
+
+        $("#edit-button").on("click", function() {
+          $('input[name=rating][value="{{post.rating}}"]').attr("checked", true);
+          $('input[name=price][value="{{post.price}}"]').attr("checked", true);
+        });
+
+
+
+        // $('#stars li').on('mouseover', function(){
+        //   var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
+   
+        // // Now highlight all the stars that's not after the current hovered star
+        //   $(this).parent().children('li.star').each(function(e){
+        //     if (e < onStar) {
+        //       $(this).addClass('hover');
+        //     }
+        //     else {
+        //       $(this).removeClass('hover');
+        //     }
+        //   });
+    
+        // }).on('mouseout', function(){
+        //   $(this).parent().children('li.star').each(function(e){
+        //     $(this).removeClass('hover');
+        //   });
+        // });
+  
+
       });
+      
 
       // $("#edit-post-form").on("submit", function(e) {
       // });

@@ -12,6 +12,23 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def addfollower(conn, sessionUid, profUid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''INSERT INTO Follows(follower_id, followee_id)
+                                VALUES(%s, %s)''', [sessionUid, profUid])
+
+def deletefollower(conn, sessionUid, profUid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''DELETE from Follows where follower_id == %s and profUid == %s''', [sessionUid, profUid])
+
+def numPostsUser(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Posts where uid=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)']
+
+def numFollowers(conn, uid):
+
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select max(pid) from Posts''')

@@ -20,7 +20,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -293,26 +293,49 @@ def redirProfile():
 @app.route('/profile/<username>')
 def profile(username): 
     conn = getConn()
-    print(username)
+    #print(username)
     try:
         uid = db.getUid(conn, username)
-        print(uid)
+        
         if not uid:
             flash("User not found")
             return render_template("home.html")
         uid=uid['uid']
+        
+        
+        
+        match = False
+        if session['uid'] == uid: #if the session user is on their profile or someone elses
+            match = True
+        
         fullName = db.getFullName(conn, uid)
         bioText = db.getBioText(conn, uid)
         profPic = db.getPPic(conn, uid)
         posts = db.getPostsByUser(conn, uid)
-        #add a way to get fullname and bio text, image file
+        numPosts = db.numPostsUser(conn, uid)
+       
+        
         return render_template('profile.html', profName=username,
                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts)
+                                    ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, match = match)
     except Exception as err:
         flash("user not found")
         return redirect(request.referrer)
-     
+
+@app.route('/follow/<username>', methods= ["POST"])   
+def follow(username):
+    conn = getConn()
+    profUID = db.getUID(conn, username)
+    db.addfollower(conn, session['uid'], profUID)
+    #return redirect(url_for returning ajax???
+
+@app.route('/unfollow/<username>', methods= ["POST"])   
+def follow(username):
+    conn = getConn()
+    profUID = db.getUID(conn, username)
+    db.deletefollower(conn, session['uid'], profUID)
+    #return redirect(url_for returning ajax???
+
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():
     uid = session['uid']

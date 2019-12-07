@@ -65,7 +65,7 @@
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">164</span> posts</li>
+					<li><span class="profile-stat-count">{{postNum}}</span> posts</li>
 					<li><span class="profile-stat-count">188</span> followers</li>
 					<li><span class="profile-stat-count">206</span> following</li>
 				</ul>
@@ -73,10 +73,17 @@
 			</div>
 
 			<div class="profile-bio">
-
+				
 				<p><span class="profile-real-name">{{fname}}</span> {{bio}}</p>
 
 			</div> 
+
+			{% if match is sameas false%}
+					<div>
+						<button id="follow-button">Follow</button>
+					</div>
+
+			{% endif %}
 
 		</div>
 		<!-- End of profile section -->
@@ -104,6 +111,26 @@
 	//function closeForm() {
 	 // document.getElementById("editForm").style.display = "none";
 	//}
+
+
+	var follow_on = false;
+
+	
+	$("#follow-button").on('click', function () {
+		
+        if(follow_on) {
+            // unfollow
+            $("#follow-button").text('Follow');
+            follow_on = false;
+        } else {
+            // turn it on
+            $("#follow-button").text('Following');
+            follow_on = true;
+        }
+    });
+
+
+
 	</script>
 
 <!-- <script src="{{url_for('static',filename='home.js')}}"></script>

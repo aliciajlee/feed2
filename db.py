@@ -41,14 +41,14 @@ def updateProfile(conn, uid, fname, text, path):
     curs = dbi.dictCursor(conn)
     curs.execute('''update Users set fullname=%s, biotxt=%s, profpicPath=%s where uid=%s''', [fname, text, path, uid])
 
-# get uid by username
+# get uid of a user by username
 def getUid(conn, username):
     curs = dbi.dictCursor(conn)
     print(username)
     curs.execute('''select uid from Users where username = %s''', [username])
     return curs.fetchone()
 
-# for displaying posts in feed
+# gets all posts for displaying posts in feed
 def getAllPosts(conn):
     '''select all the posts '''
     curs = dbi.dictCursor(conn)
@@ -65,9 +65,9 @@ def getSinglePost(conn, pid):
 # get all tags of a post
 def getTagsofPost(conn, pid):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select ttype from Tags inner join (select tid from Tagpost where
-                                                            pid = %s) as t on t.tid = Tags.tid''',
-                                                            [pid])
+    curs.execute('''select ttype from Tags inner join 
+                                    (select tid from Tagpost where
+                                    pid = %s) as t on t.tid = Tags.tid''',[pid])
     return curs.fetchall()
     
 # returns posts where query matches post name, tag, restaurant, username, fullname
@@ -90,7 +90,8 @@ def getQueryPosts(conn, query):
 # return users where query matches username, fullname
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select * from Users where username like %s or fullname like %s''', ["%"+query+"%", "%"+query+"%"])
+    curs.execute('''select * from Users where username like %s or fullname like %s''', 
+                        ["%"+query+"%", "%"+query+"%"])
     return curs.fetchall()
 
 # gets all posts by a user
@@ -99,6 +100,7 @@ def getPostsByUser(conn, uid):
     curs.execute('''select * from Posts where uid = %s''', [uid])
     return curs.fetchall()
 
+# delete a post in the db 
 def deletePost(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''delete from Posts where pid = %s''', [pid])

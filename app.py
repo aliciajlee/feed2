@@ -58,7 +58,6 @@ def home():
 def search():
     query = request.values.get('query')
     type_ = request.values.get('type')
-    print(type_)
     conn = db.getConn(DB)
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)
@@ -67,6 +66,7 @@ def search():
         flash("Post results for '{}'".format(query))
         return render_template("home.html", page_title="Results", posts=posts, options=True)
     else:
+        # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
         if not users:
             flash("no users found")
@@ -74,26 +74,23 @@ def search():
         return render_template("home.html", page_title="Results",users=users, options=False)
 
 
-# individual post
+# display info of an individual post
 @app.route('/post/<pid>/')
 def post(pid):
-
     # can people see posts without logging in -- for now, don't need to be logged in
-    user = None
-    if "username" in session:
-        user = session['username']
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
-    tags = db.getTagsofPost(conn, pid)
     if not post:
         flash("Post not found")
         return redirect(request.referrer)
-    if not user or user != post['username']:
-        posted = False
-    else:
-        posted = True
-    print(post)
+
+    tags = db.getTagsofPost(conn, pid)
+
+    user = None if 'username' not in session else session['username']
+    posted = user == post['username']
+
     return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted)
+
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -373,11 +370,13 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
+
 @app.route('/edit_post/<pid>', methods=['POST'])
 def edit_post(pid):
     
     flash("Sucessfully edited post")
     return redirect(request.referrer)
+
 
 if __name__ == '__main__':
     import sys,os

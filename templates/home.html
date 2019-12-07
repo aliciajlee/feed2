@@ -18,9 +18,6 @@
     </head>
 
     <body>
-        {% block nav %} 
-            {{super()}}
-        {% endblock %}
 
         {% block options %}
             {% if options is sameas true %}
@@ -58,7 +55,7 @@
         {% block content %}
             <div id="posts" class="masonry card-columns">
             {% for post in posts %}
-            <a href="/post/{{post['pid']}}" class = "custom-card"> 
+            <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 
                 <div class="item card">
                     <!-- image -->
 
@@ -81,7 +78,7 @@
 
             <div id="users" class="masonry card-columns">
             {% for user in users %}
-            <a href="/profile/{{user['username']}}" class = "custom-card"> 
+            <a href="{{url_for('profile', username=user.username)}}" class = "custom-card"> 
                 <div class="item card">
                  {# ... 
                     <!-- <img src="{{post['imgPath']}}"> -->

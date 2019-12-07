@@ -373,7 +373,18 @@ def delete_post(pid):
 
 @app.route('/edit_post/<pid>', methods=['POST'])
 def edit_post(pid):
-    
+    conn = db.getConn(DB)
+
+    pname = request.form.get("pname")
+    restaurant = request.form.get("restaurant")
+
+    try:
+        db.editPost(conn, pid, pname, restaurant)
+    except Exception as err:
+        print("error editing post")
+        flash("error editing post")
+        return redirect(request.referrer)
+
     flash("Sucessfully edited post")
     return redirect(request.referrer)
 

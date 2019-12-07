@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='post.css')}}">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='home.css')}}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet">
         {% endblock %}
     </head>
 
@@ -155,6 +156,14 @@
                   <label class="radio-inline"><input type="radio" value="4" name="price">4</label>
                 </div>
                 <!-- do tags here later-->
+                <div class="form-group form-inline">
+                  <label>Tags</label>
+                  <select class="js-example-basic-multiple select-tag" name="tags" multiple="multiple" style="width: 100%">
+                      <option value="AL">Alabama</option>
+                      <option value="WY">Wyoming</option>
+                  </select>
+
+                </div>
 
                 <div class="form-group form-inline">
                   <label>Review</label>
@@ -175,6 +184,10 @@
             </div>
           </div>
       </div>
+      <select class="js-example-basic-multiple select-tag" name="states" multiple="multiple" style="width:500px; display:block;">
+          <option value="AL">Alabama</option>
+          <option value="WY">Wyoming</option>
+        </select>
         
     
     {% endblock %}
@@ -189,9 +202,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+
     <script>
       // Rating Initialization
       $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+          width: "resolve"
+        });
+
+        $('#mySelect2').select2({
+          dropdownParent: $('#myModal')
+        });
+        $.fn.modal.Constructor.prototype.enforceFocus = function() {};
 
         var imgHeight = $("#post-image").height();
 
@@ -204,6 +227,7 @@
         $("#edit-button").on("click", function() {
           $('input[name=rating][value="{{post.rating}}"]').attr("checked", true);
           $('input[name=price][value="{{post.price}}"]').attr("checked", true);
+          $('.js-example-basic-multiple').select2();
         });
 
 

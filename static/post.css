@@ -76,6 +76,10 @@ span{
 
 }
 
+.select-tag{
+    /* width: 100%; */
+}
+
 .hide{
     display:none;
 }

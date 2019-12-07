@@ -384,8 +384,9 @@ def edit_post(pid):
     rating = request.form.get("rating")
     price = request.form.get("price")
     review = request.form.get("review")
+    tags = request.form.get("tags")
     # implement tags later
-
+    print(tags)
     try:
         db.editPost(conn, pid, pname, restaurant, location, rating, price, review)
     except Exception as err:

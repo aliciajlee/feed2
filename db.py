@@ -104,3 +104,8 @@ def getPostsByUser(conn, uid):
 def deletePost(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''delete from Posts where pid = %s''', [pid])
+
+# edit a post by its pid. 
+def editPost(conn, pid, pname, restaurant):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''update Posts set pname = %s, restaurant = %s where pid = %s''', [pname, restaurant, pid])

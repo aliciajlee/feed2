@@ -44,10 +44,6 @@ img{
     right: 0px;
 }
 
-#edit_ {
-    /* margin-right:2px; */
-}
-
 .rating {
     margin-bottom: 0px;
     margin-top: 10px;
@@ -70,6 +66,10 @@ img{
 
 span{
     display: inline-block;
+}
+
+.form-inline label {
+    margin-right: 4px;
 }
 
 

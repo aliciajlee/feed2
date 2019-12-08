@@ -12,6 +12,11 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def following_trueFalse(conn, sessionUid, profUid):
+    curs = dbi.cursor(conn)
+    curs.execute('''select * from Follows where follower_id=%s and followee_id=%s''', [sessionUid, profUid])
+    return True if curs.fetchone() else False
+
 def addfollower(conn, sessionUid, profUid):
     curs = dbi.dictCursor(conn)
     curs.execute('''INSERT INTO Follows(follower_id, followee_id)
@@ -19,7 +24,7 @@ def addfollower(conn, sessionUid, profUid):
 
 def deletefollower(conn, sessionUid, profUid):
     curs = dbi.dictCursor(conn)
-    curs.execute('''DELETE from Follows where follower_id == %s and profUid == %s''', [sessionUid, profUid])
+    curs.execute('''DELETE from Follows where follower_id = %s and followee_id = %s''', [sessionUid, profUid])
 
 def numPostsUser(conn, uid):
     curs = dbi.dictCursor(conn)
@@ -27,7 +32,17 @@ def numPostsUser(conn, uid):
     result = curs.fetchone()
     return result['count(*)']
 
+def numFollowing(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Follows where follower_id=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)'] 
+ 
 def numFollowers(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Follows where followee_id=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)']
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)

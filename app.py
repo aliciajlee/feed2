@@ -314,23 +314,37 @@ def profile(username):
         posts = db.getPostsByUser(conn, uid)
         numPosts = db.numPostsUser(conn, uid)
        
+        numFollowing = db.numFollowing(conn, uid)
+        numFollowers = db.numFollowers(conn, uid)
         
+        followingBoolean = db.following_trueFalse(conn, session[uid], uid)
+
+
+
         return render_template('profile.html', profName=username,
                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, match = match)
+                                    ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
+                                    match = match, numFing = numFollowing, numFers = numFollowers, fboolean = followingBoolean)
     except Exception as err:
+        print(err)
         flash("user not found")
         return redirect(request.referrer)
 
 @app.route('/follow/<username>', methods= ["POST"])   
-def follow(username):
+def following(username):
+    conn = getConn()
+    profUID = db.getUID(conn, username)
+    return db.following_trueFalse(conn, sessionUid, profUid)
+
+@app.route('/follow/<username>', methods= ["POST"])   
+def aFollow(username):
     conn = getConn()
     profUID = db.getUID(conn, username)
     db.addfollower(conn, session['uid'], profUID)
     #return redirect(url_for returning ajax???
 
 @app.route('/unfollow/<username>', methods= ["POST"])   
-def follow(username):
+def dFollow(username):
     conn = getConn()
     profUID = db.getUID(conn, username)
     db.deletefollower(conn, session['uid'], profUID)

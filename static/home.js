@@ -9,7 +9,6 @@ $(document).ready(function () {
     $(".price").each( function() {
         let price = $(this).attr("data-price");
         let txt = parseInt(price)
-        console.log(price)
         $(this).text(String.fromCodePoint(0x0024).repeat(txt)); // dollar sign emoji
     });
 

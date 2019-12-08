@@ -78,6 +78,12 @@ span{
 
 .select-tag{
     /* width: 100%; */
+    display: inline-block;
+}
+
+#edit-post-form label:not(.radio-inline){
+    width:68px;
+    justify-content: flex-start;
 }
 
 .hide{
@@ -109,6 +115,18 @@ span{
     color:#FF912C;
   }
 
+  .select2-selection {
+      width: 350px !important;
+  }
+
+  .select2-dropdown {
+      width: 350px !important;
+  }
+
+  .buttons {
+      padding-top: 12px;
+      padding-bottom: 12px;
+  }
 
 /* .container {
     width: 120px;

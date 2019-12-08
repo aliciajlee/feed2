@@ -89,6 +89,7 @@
           </div>
         </div>
       </div>
+      {% if posted is sameas true %}
       <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -101,21 +102,21 @@
               
               <div class="modal-body">
                 <!-- EDIT POST FORM -->
-              <form id="edit-post-form" method=POST action="{{url_for('edit_post', pid=pid)}}">
+              <form id="edit-post-form" method=POST action="{{url_for('edit_post', pid=pid, old_tags=tags)}}">
                 <div class="form-group form-inline">
                   <label>Name</label>
                   <input type="text" id = "edit-name" class="form-control" name="pname" 
-                        value="{{post.pname}}" placeholder="{{post.pname}}"> 
+                        value="{{post.pname}}" maxlength="30" required /> 
                 </div>   
                 <div class="form-group form-inline">
                     <label>Restaurant</label>
                     <input type="text" id="edit-restaurant" class="form-control" name="restaurant" 
-                            value="{{post.restaurant}}"placeholder="{{post.restaurant}}"> 
+                            value="{{post.restaurant}}" maxlength="30"> 
                 </div>
                 <div class="form-group form-inline">
                     <label>Location</label>
                     <input type="text" id="edit-location" class="form-control" name="location" 
-                            value="{{post.location}}"placeholder="{{post.location}}"> 
+                            value="{{post.location}}" maxlength="50"> 
                 </div>  
                 <!-- rating -->
                 <div class="form-group form-inline">
@@ -158,9 +159,11 @@
                 <!-- do tags here later-->
                 <div class="form-group form-inline">
                   <label>Tags</label>
-                  <select class="js-example-basic-multiple select-tag" name="tags" multiple="multiple" style="width: 100%">
-                      <option value="AL">Alabama</option>
-                      <option value="WY">Wyoming</option>
+                  <select class="js-example-basic-multiple select-tag form-control" name="tags" multiple="multiple">
+                      {% for tag in all_tags %}
+                      <option value={{tag.tid}}>{{tag.ttype}}</option>
+
+                      {% endfor %}
                   </select>
 
                 </div>
@@ -168,26 +171,18 @@
                 <div class="form-group form-inline">
                   <label>Review</label>
                   <!-- make rows and cols dynamic later -->
-                  <textarea class="form-control" rows="5" cols="60" name="review" placeholder="{{post.review}}"></textarea>
+                  <textarea class="form-control" rows="5" cols="56" name="review" maxlength="500">{{post.review}}</textarea>
                 </div>
-                    
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+                <button type="button submit" class="btn btn-primary" form="edit-post-form">Save changes</button>
               </form>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                  <!-- <button type="button" class="btn btn-primary">Delete</button> -->
-                  <!-- <form action="/edit_post/{{pid}}" method="post"> -->
-                  <button type="button" id="edit-save" class="btn btn-primary" data-dismiss="modal">Save changes</button>
-                <!-- </form> -->
-                </div> 
               
               </div>
             </div>
           </div>
       </div>
-      <select class="js-example-basic-multiple select-tag" name="states" multiple="multiple" style="width:500px; display:block;">
-          <option value="AL">Alabama</option>
-          <option value="WY">Wyoming</option>
-        </select>
+      {% endif %}
         
     
     {% endblock %}
@@ -205,32 +200,36 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 
     <script>
-      // Rating Initialization
       $(document).ready(function() {
-        $('.js-example-basic-multiple').select2({
-          width: "resolve"
-        });
-
-        $('#mySelect2').select2({
-          dropdownParent: $('#myModal')
-        });
-        $.fn.modal.Constructor.prototype.enforceFocus = function() {};
-
+        
+        // remove height for min width
         var imgHeight = $("#post-image").height();
-
         $("#flex-right").height(imgHeight);
 
-        $("#edit-save").on("click", function() {
-          $("#edit-post-form").submit();
-        });
+        // $("#edit-save").on("click", function() {
+        //   $("#edit-post-form").submit();
+        // });
+
+        $("#edit-post-form").on("submit", function(){
+
+        })
 
         $("#edit-button").on("click", function() {
+
           $('input[name=rating][value="{{post.rating}}"]').attr("checked", true);
           $('input[name=price][value="{{post.price}}"]').attr("checked", true);
-          $('.js-example-basic-multiple').select2();
+
+          $('.select-tag').select2();
+
+          $(".select2-container").css("width", "");
+
+          tags = []
+          {% for tag in tags %}
+            tags.push("{{tag.tid}}");
+          {% endfor %}
+          $('select').val(tags);
+          $('select').trigger('change');
         });
-
-
 
         // $('#stars li').on('mouseover', function(){
         //   var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
@@ -253,10 +252,6 @@
   
 
       });
-      
-
-      // $("#edit-post-form").on("submit", function(e) {
-      // });
 
     </script>
     {% endblock %}

@@ -86,12 +86,17 @@ def post(pid):
         return redirect(request.referrer)
 
     tags = db.getTagsofPost(conn, pid)
+
     rating = post['rating']
 
     user = None if 'username' not in session else session['username']
     posted = user == post['username']
+    
+    all_tags = []
+    if posted:
+        all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
 
-    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted)
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags)
 
 
 @app.route('/signUp/', methods=["GET","POST"])
@@ -373,10 +378,13 @@ def delete_post(pid):
     return redirect(url_for("home"))
 
 # edit a post's name, resturant, location, rating, price, review
-# the timestamp of the post won't change after edit
 @app.route('/edit_post/<pid>', methods=['POST'])
-def edit_post(pid):
-    conn = db.getConn(DB)
+
+# @Scott--can we pass variables from jinja to python function?
+# trying to pass tags of a post that we got when we rendered post.html
+def edit_post(pid, old_tags=None): 
+    
+    # conn = db.getConn(DB)
 
     pname = request.form.get("pname")
     restaurant = request.form.get("restaurant")
@@ -384,11 +392,22 @@ def edit_post(pid):
     rating = request.form.get("rating")
     price = request.form.get("price")
     review = request.form.get("review")
-    tags = request.form.get("tags")
-    # implement tags later
-    print(tags)
+    new_tags = request.form.getlist("tags")
+ 
+    # print("delete " + delete)
+    # print("insert " + insert)
+
     try:
-        db.editPost(conn, pid, pname, restaurant, location, rating, price, review)
+        db.editPost(db.getConn(DB), pid, pname, restaurant, location, rating, price, review)
+
+        # @Scott is it better to delete all tags of a Post and then add all new tags we get in the form,
+        # or find the new tags that should be added and the old tags that should be deleted
+        # and insert/delete them?
+        db.deleteAllTagsofPost(db.getConn(DB), pid)
+
+        for tid in new_tags:
+            db.insertTagPost(db.getConn(DB), pid, tid)
+
     except Exception as err:
         print("error editing post")
         flash("error editing post")

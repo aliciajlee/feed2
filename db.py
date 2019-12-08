@@ -65,7 +65,7 @@ def getSinglePost(conn, pid):
 # get all tags of a post
 def getTagsofPost(conn, pid):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select ttype from Tags inner join 
+    curs.execute('''select ttype,Tags.tid from Tags inner join 
                             (select tid from Tagpost where
                             pid = %s) as t on t.tid = Tags.tid''',[pid])
     return curs.fetchall()
@@ -106,9 +106,35 @@ def deletePost(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''delete from Posts where pid = %s''', [pid])
 
+# return all tag names in db
+def getAllTags(conn):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select * from Tags''')
+    return curs.fetchall()
+
 # edit a post by its pid. can edit pname, restaurant, review
 def editPost(conn, pid, pname, restaurant, location, rating, price, review):
     curs = dbi.dictCursor(conn)
     curs.execute('''update Posts set pname = %s, restaurant = %s, location=%s,
                         rating=%s, price=%s, review=%s where pid = %s''', 
                         [pname, restaurant, location, rating, price, review, pid])
+
+# add a tag to a post by pid and tag id
+def insertTagPost(conn, pid, tid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''insert into Tagpost(pid, tid) values(%s, %s)''', [pid, tid])
+
+# delete a tag from a post if in db
+def deleteTagPost(conn, pid, tag):
+    curs = dbi.dictCursor(conn)
+
+# get tag id of a tag by its tag type
+def getTid(conn,ttype):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select tid from Tagpost where ttype=%s''',[ttype])
+    return curs.fetchone()
+
+# delete all tags of a post by pid
+def deleteAllTagsofPost(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''delete from Tagpost where pid=%s''', [pid])

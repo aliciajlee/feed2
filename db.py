@@ -76,7 +76,6 @@ def updateProfile(conn, uid, fname, text, path):
 # get uid by username
 def getUid(conn, username):
     curs = dbi.dictCursor(conn)
-    print(username)
     curs.execute('''select uid from Users where username = %s''', [username])
     return curs.fetchone()
 

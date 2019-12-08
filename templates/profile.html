@@ -126,8 +126,8 @@
 	var info = $(this).closest("h1");
 	var username = info.find('.profile-user-name').text();
 	
-	var URL_add = "{{url_for('aFollow', username)}}"
-    var URL_delete = "{{url_for('dFollow', username)}}"
+	var URL_add = "{{url_for('aFollow', username=profName)}}"
+    var URL_delete = "{{url_for('dFollow', username = profName)}}"
 
 	
 	

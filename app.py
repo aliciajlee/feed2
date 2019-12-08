@@ -20,7 +20,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -291,44 +291,73 @@ def redirProfile():
     return redirect(url_for('profile', username = username))
 
 @app.route('/profile/<username>')
+# def profile(username): 
+#     conn = getConn()
+#     print(username)
+#     try:
+#         uid = db.getUid(conn, username)
+#         print(uid)
+#         if not uid:
+#             flash("User not found")
+#             return render_template("home.html")
+#         uid=uid['uid']
+#         fullName = db.getFullName(conn, uid)
+#         print(fullName)
+#         bioText = db.getBioText(conn, uid)
+#         print(bioText)
+#         profPic = db.getPPic(conn, uid)
+#         print(profPic)
+#         posts = db.getPostsByUser(conn, uid)
+#         print(posts)
+#         #add a way to get fullname and bio text, image file
+#         return render_template('profile.html', profName=username,
+#                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+#                                     ppic = profPic['profpicPath'], posts = posts)
+#     except Exception as err:
+#         print(err)
+#         return redirect(request.referrer)
 def profile(username): 
     conn = getConn()
     #print(username)
-    try:
-        uid = db.getUid(conn, username)
-        
-        if not uid:
-            flash("User not found")
-            return render_template("home.html")
-        uid=uid['uid']
-        
-        
-        
-        match = False
-        if session['uid'] == uid: #if the session user is on their profile or someone elses
-            match = True
-        
-        fullName = db.getFullName(conn, uid)
-        bioText = db.getBioText(conn, uid)
-        profPic = db.getPPic(conn, uid)
-        posts = db.getPostsByUser(conn, uid)
-        numPosts = db.numPostsUser(conn, uid)
-       
-        numFollowing = db.numFollowing(conn, uid)
-        numFollowers = db.numFollowers(conn, uid)
-        
-        followingBoolean = db.following_trueFalse(conn, session[uid], uid)
+    # try:
+    uid = db.getUid(conn, username)
+    print(uid)
 
+    if not uid:
+        flash("User not found")
+        return render_template("home.html")
+    uid=uid['uid']
+    
+    
+    
+    match = False
+    print(session['uid'])
+    print(uid)
+    if session['uid'] == uid: #if the session user is on their profile or someone elses
+        match = True
+    
+    fullName = db.getFullName(conn, uid)
+    bioText = db.getBioText(conn, uid)
+    profPic = db.getPPic(conn, uid)
+    posts = db.getPostsByUser(conn, uid)
+    numPosts = db.numPostsUser(conn, uid)
+    print(match)
+    numFollowing = db.numFollowing(conn, uid)
+    numFollowers = db.numFollowers(conn, uid)
 
+    # print(uid)
+    
+    followingBoolean = (session['uid'] == uid) or db.following_trueFalse(conn, session['uid'], uid)
+    print(followingBoolean)
 
-        return render_template('profile.html', profName=username,
-                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
-                                    match = match, numFing = numFollowing, numFers = numFollowers, fboolean = followingBoolean)
-    except Exception as err:
-        print(err)
-        flash("user not found")
-        return redirect(request.referrer)
+    return render_template('profile.html', profName=username,
+                                uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+                                ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
+                                match = match, numFing = numFollowing, numFers = numFollowers, fboolean = followingBoolean)
+    # except Exception as err:
+    #     print(err)
+    #     flash("user not found")
+    #     return redirect(request.referrer)
 
 @app.route('/follow/<username>', methods= ["POST"])   
 def following(username):

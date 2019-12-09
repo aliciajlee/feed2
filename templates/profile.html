@@ -65,9 +65,9 @@
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count">{{numFing}}</span> followers</li>
-					<li><span class="profile-stat-count">{{numFers}}</span> following</li>
+					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
+					<li><span class="profile-stat-count" id="followers">{{numFing}}</span> followers</li>
+					<li><span class="profile-stat-count" id="following">{{numFers}}</span> following</li>
 				</ul>
 
 			</div>
@@ -130,23 +130,50 @@
     var URL_delete = "{{url_for('dFollow', username = profName)}}"
 
 	
-	
+	var follow_on = false
 
 	$("#follow-button").on('click', function () {
-		console.log(follow_on)
+		
         
-            // turn it on
-            $("#follow-button").text('Following');
-            
+        // turn it on
+        $("#follow-button").text('Following');
+        var newFollowerCount = $.post(URL_add, {'followers': followers, 'following': following}, updateAddFollowers)    
         
     });
 
+	function updateAddFollowers(obj) {
+        console.log(obj);
+
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error')
+        } else {
+            $(this).closest('profile-stat-count').find("#followers").text(obj.followers);
+			$(this).closest('profile-stat-count').find("#following").text(obj.following);
+
+        }
+    }
+
+	function updateDeleteFollowers(obj) {
+        console.log(obj);
+
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error')
+        } else {
+            $(this).closest('profile-stat-count').find("#followers").text(obj.followers);
+			$(this).closest('profile-stat-count').find("#following").text(obj.following);
+
+        }
+    }
+
+
 	$("#following-button").on('click', function () {
-		console.log(follow_on)
+		
         
-            // unfollow
-            $("#follow-button").text('Follow');
-          
+         // unfollow
+        $("#follow-button").text('Follow');
+        var newFollowerCount = $.post(URL_delete, {'followers': followers, 'following': following}, updateDeleteFollowers)  
        
     });
 

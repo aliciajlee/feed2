@@ -20,7 +20,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -335,6 +335,8 @@ def profile(username):
     print(uid)
     if session['uid'] == uid: #if the session user is on their profile or someone elses
         match = True
+
+    print("match?: " + str(match))
     
     fullName = db.getFullName(conn, uid)
     bioText = db.getBioText(conn, uid)
@@ -348,7 +350,7 @@ def profile(username):
     # print(uid)
     
     followingBoolean = (session['uid'] == uid) or db.following_trueFalse(conn, session['uid'], uid)
-    print(followingBoolean)
+    print("followingBoolean" + str(followingBoolean))
 
     return render_template('profile.html', profName=username,
                                 uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
@@ -359,25 +361,40 @@ def profile(username):
     #     flash("user not found")
     #     return redirect(request.referrer)
 
+'''
 @app.route('/follow/<username>', methods= ["POST"])   
 def following(username):
     conn = getConn()
     profUID = db.getUID(conn, username)
     return db.following_trueFalse(conn, sessionUid, profUid)
+'''
 
 @app.route('/follow/<username>', methods= ["POST"])   
 def aFollow(username):
-    conn = getConn()
-    profUID = db.getUID(conn, username)
-    db.addfollower(conn, session['uid'], profUID)
-    #return redirect(url_for returning ajax???
+    try:
+        conn = getConn()
+        profUID = db.getUID(conn, username)
+        db.addfollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(followers = numFollowers, following= numFollowing)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
 
 @app.route('/unfollow/<username>', methods= ["POST"])   
 def dFollow(username):
-    conn = getConn()
-    profUID = db.getUID(conn, username)
-    db.deletefollower(conn, session['uid'], profUID)
-    #return redirect(url_for returning ajax???
+    try: 
+        conn = getConn()
+        profUID = db.getUID(conn, username)
+        db.deletefollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(updateFollowers = numFollowers, updateFollowing = numFollowing)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
 
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():

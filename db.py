@@ -77,7 +77,10 @@ def updateProfile(conn, uid, fname, text, path):
 def getUid(conn, username):
     curs = dbi.dictCursor(conn)
     curs.execute('''select uid from Users where username = %s''', [username])
-    return curs.fetchone()
+    result = curs.fetchone()
+    return result['uid']
+    
+    
 
 # for displaying posts in feed
 def getAllPosts(conn):

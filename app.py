@@ -326,7 +326,7 @@ def profile(username):
     if not uid:
         flash("User not found")
         return render_template("home.html")
-    uid=uid['uid']
+    uid=uid
     
     
     
@@ -373,7 +373,7 @@ def following(username):
 def aFollow(username):
     try:
         conn = getConn()
-        profUID = db.getUID(conn, username)
+        profUID = db.getUid(conn, username)
         db.addfollower(conn, session['uid'], profUID)
         numFollowing = db.numFollowing(conn, profUID)
         numFollowers = db.numFollowers(conn, profUID)
@@ -387,7 +387,7 @@ def aFollow(username):
 def dFollow(username):
     try: 
         conn = getConn()
-        profUID = db.getUID(conn, username)
+        profUID = db.getUid(conn, username)
         db.deletefollower(conn, session['uid'], profUID)
         numFollowing = db.numFollowing(conn, profUID)
         numFollowers = db.numFollowers(conn, profUID)

@@ -2,7 +2,7 @@
 # test
 
 from flask import (Flask, render_template, make_response, url_for, request,
-                   redirect, flash, session, send_from_directory, Response)
+                   redirect, flash, session, send_from_directory, Response, jsonify)
 from werkzeug import secure_filename
 
 app = Flask(__name__)
@@ -377,7 +377,7 @@ def aFollow(username):
         db.addfollower(conn, session['uid'], profUID)
         numFollowing = db.numFollowing(conn, profUID)
         numFollowers = db.numFollowers(conn, profUID)
-        return jsonify(followers = numFollowers, following= numFollowing)
+        return jsonify(updateFollowers = numFollowers, updateFollowing= numFollowing)
     except Exception as err:
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )

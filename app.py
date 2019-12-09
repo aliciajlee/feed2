@@ -232,7 +232,9 @@ def logout():
 def upload():
     if 'username' in session:
         if request.method == 'GET':
-            return render_template('upload.html')
+            postconn = db.getConn(DB)
+            tags = db.getAllTags(postconn)
+            return render_template('upload.html', tags = tags)
         if request.method == 'POST':
             try:
                 uid = session['uid']
@@ -244,15 +246,16 @@ def upload():
                 restaurant = request.form['restaurant']
                 location = request.form['location']
                 price = request.form['price']
+                tags = request.form.getlist("tags")
                 f = request.files['pic']
+
                 #make sure image is not too big
                 fsize = os.fstat(f.stream.fileno()).st_size
-                print('file size is {} '.format(fsize))
                 if fsize > app.config['MAX_CONTENT_LENGTH']:
                     raise Exception('File is too big')
+                
                 #make sure image is right type
                 mime_type = imghdr.what(f)
-                print('mime type is {}'.format(mime_type))
                 if not mime_type or mime_type.lower() not in ['jpeg','gif','png']:
                     raise Exception('Not recognized as JPEG, GIF or PNG: {}'
                                     .format(mime_type))                
@@ -265,16 +268,25 @@ def upload():
                     os.mkdir(user_folder)
                 pathname = os.path.join(user_folder,filename)
                 f.save(pathname)
-                #what gets put into the database
+                
+                #the filepath that gets put into the database
                 filePath = os.path.join('images/{}/'.format(uid), filename)
+
+                #add to post table
                 conn = getConn()
                 curs = dbi.cursor(conn)
                 curs.execute(
                     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
                     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
                     [uid, name, rating, price, review, restaurant, location, filePath])
+                
+                #add to Tagpost table
+                for tag in tags:
+                    curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
+                
                 flash('Upload successful')
-                return render_template('upload.html')
+                return redirect(url_for("index"))
+            
             except Exception as err:
                 print("upload failed because " + str(err))
                 flash('Upload failed {why}'.format(why=err))

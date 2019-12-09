@@ -48,6 +48,16 @@
                 <input type="radio" name="price" value="2"> 2
                 <input type="radio" name="price" value="3"> 3 
                 <input type="radio" name="price" value="4"> 4 </p>
+                {% for tag in tags %}
+                <tr>
+                  <td>
+                    <label class="checkbox">
+                      <input type="checkbox" name="tags" value="{{tag['tid']}}"/>
+                    </label>
+                      {{tag['ttype']}}
+                  </td>
+                </tr>
+                {% endfor %}
             <p><input type="submit" value="upload"></p>
         </form>
     {% endblock %}

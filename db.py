@@ -98,3 +98,9 @@ def getPostsByUser(conn, uid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts where uid = %s''', [uid])
     return curs.fetchall()
+
+#gets all tags in the database
+def getAllTags(conn):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select * from Tags ''')
+    return curs.fetchall()

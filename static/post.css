@@ -28,9 +28,11 @@ img{
 }
 
 .right {
-    overflow: hidden;
+    /* overflow: hidden; */
+    position: relative; 
     padding-left: 10px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .left{
@@ -40,10 +42,6 @@ img{
 .edit-delete {
     position: absolute;
     right: 0px;
-}
-
-#edit {
-    margin-right:2px;
 }
 
 .rating {
@@ -59,6 +57,76 @@ img{
 #review {
     margin-top: 10px;
 }
+
+.time{
+    /* position: absolute;
+    bottom: 0px; */
+    margin-top: auto;
+}
+
+span{
+    display: inline-block;
+}
+
+.form-inline label {
+    margin-right: 8px;
+}
+
+#stars {
+
+}
+
+.select-tag{
+    /* width: 100%; */
+    display: inline-block;
+}
+
+#edit-post-form label:not(.radio-inline){
+    width:68px;
+    justify-content: flex-start;
+}
+
+.hide{
+    display:none;
+}
+
+.rating-stars ul {
+    list-style-type:none;
+    padding:0;
+    
+    -moz-user-select:none;
+    -webkit-user-select:none;
+  }
+  .rating-stars ul > li.star {
+    display:inline-block;
+    
+  }
+
+  .rating-stars ul > li.star > i.fa {
+    font-size:1.5em; /* Change the size of the stars */
+    color:#ccc; /* Color on idle state */
+  }
+
+  .rating-stars ul > li.star.hover > i.fa {
+    color:#FFCC36;
+  }
+
+  .rating-stars ul > li.star.selected > i.fa {
+    color:#FF912C;
+  }
+
+  .select2-selection {
+      width: 350px !important;
+  }
+
+  .select2-dropdown {
+      width: 350px !important;
+  }
+
+  .buttons {
+      padding-top: 12px;
+      padding-bottom: 12px;
+  }
 
 /* .container {
     width: 120px;

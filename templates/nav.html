@@ -58,20 +58,20 @@
 
     {% endblock %}
 
+    {% block options %}
+
+    {% endblock %}
+
     {% block flash %}
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <div id="messages">
+            <div id="flash">
             {% for msg in messages %}
-                <p>{{msg}}</p>
+                <p class="message">{{msg}}</p>
             {% endfor %}
             </div>
         {% endif %}
         {% endwith %}
-    {% endblock %}
-
-    {% block options%}
-
     {% endblock %}
 
     {% block content %}
@@ -86,10 +86,16 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-{% endblock %}
 <script>
-    // $("#type").value("Users")
-    // $("#option-user").attr("selected", true)
+    $("#searchbar").on("submit", function(e) {
+        var t = ($("#type").val());
+        if (!(t=="posts"||t=="users")){
+            e.preventDefault();
+            alert("Please choose Posts or Users");
+        }
+    })
 </script>
+{% endblock %}
+
 </body>
 </html>

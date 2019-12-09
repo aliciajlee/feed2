@@ -97,6 +97,11 @@ a.custom-card:hover {
         column-count: 5 !important;
     }
 }
+/* 
+#options{
+    position: fixed;
+    top: 70px;
+} */
 
 /* .card-columns {
     @include media-breakpoint-only(lg) {

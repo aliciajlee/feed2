@@ -12,6 +12,7 @@ import dbi
 import imghdr
 import bcrypt
 import db # database stuff
+import json
 
 # for file uploads
 app.config['UPLOADS'] = 'static/images/'
@@ -66,6 +67,7 @@ def search():
         flash("Post results for '{}'".format(query))
         return render_template("home.html", page_title="Results", posts=posts, options=True)
     else:
+        # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
         if not users:
             flash("no users found")
@@ -73,23 +75,29 @@ def search():
         return render_template("home.html", page_title="Results",users=users, options=False)
 
 
-# individual post
+# display info of an individual post
 @app.route('/post/<pid>/')
 def post(pid):
     # can people see posts without logging in -- for now, don't need to be logged in
-    user = None
-    if "username" in session:
-        user = session['username']
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
-    tags = db.getTagsofPost(conn, pid)
-    if not user or user != post['username']:
-        posted = False
-    else:
-        posted = True
     if not post:
         flash("Post not found")
-    return render_template("post.html", post=post, tags=tags, posted=posted)
+        return redirect(request.referrer)
+
+    tags = db.getTagsofPost(conn, pid)
+
+    rating = post['rating']
+
+    user = None if 'username' not in session else session['username']
+    posted = user == post['username']
+    
+    all_tags = []
+    if posted:
+        all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
+
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags)
+
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
@@ -363,6 +371,63 @@ def editProf():
     db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
 
     return redirect(url_for('profile', username = username))
+
+
+@app.route('/delete_post/<pid>', methods=['POST'])
+def delete_post(pid):
+    # might be good to check that user deleting post is valid
+    # if 
+    #     flash("post doesn't belong to user logged in")
+    try:
+        conn = db.getConn(DB)
+        db.deletePost(conn, pid)
+    except Exception as err:
+        flash("error deleting post")
+        print("error deleting post")
+        return redirect(request.referrer)
+
+    flash("Successfully deleted post")
+    return redirect(url_for("home"))
+
+# edit a post's name, resturant, location, rating, price, review
+@app.route('/edit_post/<pid>', methods=['POST'])
+
+# @Scott--can we pass variables from jinja to python function?
+# trying to pass tags of a post that we got when we rendered post.html
+def edit_post(pid, old_tags=None): 
+    
+    # conn = db.getConn(DB)
+
+    pname = request.form.get("pname")
+    restaurant = request.form.get("restaurant")
+    location = request.form.get("location")
+    rating = request.form.get("rating")
+    price = request.form.get("price")
+    review = request.form.get("review")
+    new_tags = request.form.getlist("tags")
+ 
+    # print("delete " + delete)
+    # print("insert " + insert)
+
+    try:
+        db.editPost(db.getConn(DB), pid, pname, restaurant, location, rating, price, review)
+
+        # @Scott is it better to delete all tags of a Post and then add all new tags we get in the form,
+        # or find the new tags that should be added and the old tags that should be deleted
+        # and insert/delete them?
+        db.deleteAllTagsofPost(db.getConn(DB), pid)
+
+        for tid in new_tags:
+            db.insertTagPost(db.getConn(DB), pid, tid)
+
+    except Exception as err:
+        print("error editing post")
+        flash("error editing post")
+        return redirect(request.referrer)
+
+    flash("Sucessfully edited post")
+    return redirect(request.referrer)
+
 
 if __name__ == '__main__':
     import sys,os

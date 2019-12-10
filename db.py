@@ -169,7 +169,8 @@ def getQueryPosts(conn, query):
 # return users where query matches username, fullname
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select * from Users where username like %s or fullname like %s''', 
+    curs.execute('''select uid, fullname, email, username, biotxt, profpicPath
+                        from Users where username like %s or fullname like %s''', 
                         ["%"+query+"%", "%"+query+"%"])
     return curs.fetchall()
 

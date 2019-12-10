@@ -33,56 +33,55 @@
 
 			</div>
 			<!-- Edit profile form -->
-
-
-			<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-				  <div class="modal-content">
-					<div class="modal-header">
-					  <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
-					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					  </button>
+			<div class="profile-user-settings">
+				<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
+						  <button class="btn profile-edit-btn"> Edit Profile</button>
+						</div>
+	
+	
+						<form id="edit-post-form" method=POST action="{{url_for('editProf')}}">
+							<div class="form-group form-inline">
+							  <label>Username</label>
+							  <input type="text" id = "edit-username" class="form-control" name="pname" 
+									value="{{profName}}" maxlength="30" required /> 
+							</div>   
+							<div class="form-group form-inline">
+								<label>Display Name</label>
+								<input type="text" id="edit-displayName" class="form-control" name="displayName" 
+										value="{{fname}}" maxlength="30"> 
+							</div>
+							<div class="form-group form-inline">
+								<label>Bio Text</label>
+								<input type="text" id="edit-bio" class="form-control" name="bioText" 
+										value="{{bio}}" maxlength="30"> 
+							</div>
+							<div class="form-group form-inline">
+								<label>Upload Profile Picture</label>
+								<input type="file" id="edit-profilePicture" class="form-control" name="profpic" 
+										value="upload file"> 
+							</div>  
+						</form>
+	
+	
 					</div>
-
-
-					<form id="edit-post-form" method=POST action="{{url_for('editProf')}}">
-						<div class="form-group form-inline">
-						  <label>Username</label>
-						  <input type="text" id = "edit-username" class="form-control" name="pname" 
-								value="{{profName}}" maxlength="30" required /> 
-						</div>   
-						<div class="form-group form-inline">
-							<label>Display Name</label>
-							<input type="text" id="edit-displayName" class="form-control" name="displayName" 
-									value="{{fname}}" maxlength="30"> 
-						</div>
-						<div class="form-group form-inline">
-							<label>Bio Text</label>
-							<input type="text" id="edit-bio" class="form-control" name="bioText" 
-									value="{{bio}}" maxlength="30"> 
-						</div>
-						<div class="form-group form-inline">
-							<label>Upload Profile Picture</label>
-							<input type="file" id="edit-profilePicture" class="form-control" name="profpic" 
-									value="upload file"> 
-						</div>  
-					</form>
-
-
 				</div>
-            </div>
-          </div>
-      </div>
-			
+			  </div>
+	
+				
+
+			</div>
 			<!-- End Edit Profile -->
 
 			<div class="profile-stats">
 
 				<ul>
 					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count" id="followers"> {{numFers}}</span> <a href="/listofFollowers/{{profName}}" >followers</a> </li>
-					<li><span class="profile-stat-count" id="following">{{numFing}}</span> <a href="/listofFollowing/{{profName}}">following </a></li>
+					<li><span class="profile-stat-count" id="followers"><a href="/listofFollowers/{{profName}}" > {{numFers}}</a></span> followers </li>
+					<li><span class="profile-stat-count" id="following"><a href="/listofFollowing/{{profName}}">{{numFing}}</a></span> following </li>
 				</ul>
 
 			</div>
@@ -121,19 +120,7 @@
 
 
 </main>
-{% endblock %}
-{% block scripts%}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-    <script src="{{url_for('static',filename='home.js')}}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
 	function editProfile() {
 	  document.getElementById("editForm").style.display = "block";
@@ -142,8 +129,6 @@
 	//function closeForm() {
 	 // document.getElementById("editForm").style.display = "none";
 	//}
-
-
 	//var follow_on = false;
 	
 	var info = $(this).closest("h1");
@@ -151,17 +136,14 @@
 	
 	var URL_add = "{{url_for('aFollow', username=profName)}}"
     var URL_delete = "{{url_for('dFollow', username = profName)}}"
-
 	
 	var follow_on = false
-
 	$("#follow-button").on('click', function () {
 		
         
         // turn it on
 		var fbuttonText = $("#follow-button").text();
 		if(fbuttonText == "Follow") {
-
 		
 			$("#follow-button").text('Following');
 			$.post(URL_add, updateAddFollowers)   
@@ -172,53 +154,46 @@
 		}
         
     });
-
 	function updateAddFollowers(obj) {
         console.log(obj);
-
         if(obj.error) {
             $("#errors").empty().html('Error: '+obj.err);
             console.log('obj error')
         } else {
             $("#followers").text(obj.updateFollowers);
 			$("#following").text(obj.updateFollowing);
-
         }
     }
-
 	function updateDeleteFollowers(obj) {
         console.log(obj);
-
         if(obj.error) {
             $("#errors").empty().html('Error: '+obj.err);
             console.log('obj error')
         } else {
             $("#followers").text(obj.updateFollowers);
 			$("#following").text(obj.updateFollowing);
-
         }
     }
-
-
-	$("#edit-post-form").on("submit", function(){
-
-})
-
-$("#edit-button").on("click", function() {
-
- 
-
-  //$('.select-tag').select2();
-
-  //$(".select2-container").css("width", "");
-
-  
-  $('select').trigger('change');
-});
-
-
+	//$("#following-button").on('click', function () {
+		
+        
+         // unfollow
+       // $("#follow-button").text('Follow');
+      //  var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
+       
+    //});
 	</script>
 
+<!-- <script src="{{url_for('static',filename='home.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+<script src="{{url_for('static',filename='home.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
 	 {% endblock %}
 
 

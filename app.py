@@ -431,14 +431,15 @@ def edit_post(pid, old_tags=None):
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
     conn = db.getConn(DB)
+    #convert from tag to tid
     tid = db.getTid(conn,tag)['tid']
-    print(tid)
+    #get posts with the tag
     posts = db.getPostsWithTid(conn, tid)
+    #check if user is logged in
     if "username" not in session:
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))
     username = session['username']
-    # how should they be sorted -- bootstrap card thing inserts by column and not row
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
                             options=True)

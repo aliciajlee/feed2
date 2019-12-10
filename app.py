@@ -2,7 +2,7 @@
 # test
 
 from flask import (Flask, render_template, make_response, url_for, request,
-                   redirect, flash, session, send_from_directory, Response)
+                   redirect, flash, session, send_from_directory, Response, jsonify)
 from werkzeug import secure_filename
 
 app = Flask(__name__)
@@ -310,28 +310,128 @@ def redirProfile():
     return redirect(url_for('profile', username = username))
 
 @app.route('/profile/<username>')
+# def profile(username): 
+#     conn = getConn()
+#     print(username)
+#     try:
+#         uid = db.getUid(conn, username)
+#         print(uid)
+#         if not uid:
+#             flash("User not found")
+#             return render_template("home.html")
+#         uid=uid['uid']
+#         fullName = db.getFullName(conn, uid)
+#         print(fullName)
+#         bioText = db.getBioText(conn, uid)
+#         print(bioText)
+#         profPic = db.getPPic(conn, uid)
+#         print(profPic)
+#         posts = db.getPostsByUser(conn, uid)
+#         print(posts)
+#         #add a way to get fullname and bio text, image file
+#         return render_template('profile.html', profName=username,
+#                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+#                                     ppic = profPic['profpicPath'], posts = posts)
+#     except Exception as err:
+#         print(err)
+#         return redirect(request.referrer)
 def profile(username): 
     conn = getConn()
-    print(username)
+    #print(username)
+    # try:
+    uid = db.getUid(conn, username)
+    print(uid)
+
+    if not uid:
+        flash("User not found")
+        return render_template("home.html")
+    uid=uid
+    
+    
+    
+    match = False
+    print(session['uid'])
+    print(uid)
+    if session['uid'] == uid: #if the session user is on their profile or someone elses
+        match = True
+
+    print("match?: " + str(match))
+    
+    fullName = db.getFullName(conn, uid)
+    bioText = db.getBioText(conn, uid)
+    profPic = db.getPPic(conn, uid)
+    posts = db.getPostsByUser(conn, uid)
+    numPosts = db.numPostsUser(conn, uid)
+    #print(match)
+    numFollowing = db.numFollowing(conn, uid)
+    #print("following" + str(numFollowing))
+    numFollowers = db.numFollowers(conn, uid)
+    #print("followers" + str(numFollowers))
+
+    # print(uid)
+    
+    followingBoolean = db.following_trueFalse(conn, session['uid'], uid)
+    #(session['uid'] == uid) or 
+    #print("followingBoolean" + str(followingBoolean))
+
+    if followingBoolean == True:
+        buttonText = "Following"
+    else:
+        buttonText = "Follow"
+
+    return render_template('profile.html', profName=username,
+                                uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+                                ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
+                                match = match, numFing = numFollowing, numFers = numFollowers, tButton = buttonText)
+                                #fboolean = followingBoolean
+    # except Exception as err:
+    #     print(err)
+    #     flash("user not found")
+    #     return redirect(request.referrer)
+
+@app.route('/follow/<username>', methods= ["POST"])   
+def aFollow(username):
     try:
-        uid = db.getUid(conn, username)
-        print(uid)
-        if not uid:
-            flash("User not found")
-            return render_template("home.html")
-        uid=uid['uid']
-        fullName = db.getFullName(conn, uid)
-        bioText = db.getBioText(conn, uid)
-        profPic = db.getPPic(conn, uid)
-        posts = db.getPostsByUser(conn, uid)
-        #add a way to get fullname and bio text, image file
-        return render_template('profile.html', profName=username,
-                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts)
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        db.addfollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(updateFollowers = numFollowers, updateFollowing= numFollowing)
     except Exception as err:
-        flash("user not found")
-        return redirect(request.referrer)
-     
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
+
+@app.route('/unfollow/<username>', methods= ["POST"])   
+def dFollow(username):
+    try: 
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        db.deletefollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(updateFollowers = numFollowers, updateFollowing = numFollowing)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
+@app.route('/listofFollowers/<username>', methods = ["POST", "GET"])
+def followersList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followersUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="Followers of {}".format(username),users=users, options=False)
+
+@app.route('/listofFollowing/<username>', methods = ["POST", "GET"])
+def followingList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followingUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="{} Following".format(username),users=users, options=False)
+
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():
     uid = session['uid']

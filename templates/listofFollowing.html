@@ -1,0 +1,56 @@
+{% extends "home.html" %}
+<!doctype html>
+<html>
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name=author content="Rachel Navarrette">  
+        <title>Home • Feed</title>
+        <link rel="stylesheet" type="text/css"
+              href="{{url_for('static', filename='home.css')}}">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
+        <link rel="stylesheet" 
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+        {% endblock %}
+    </head>
+<body>
+{% block content %}
+<div id="users" class="masonry card-columns">
+        {% if users is sameas 0 %} 
+            <h5 class="card-title"> User not found</h5>
+        {% else %}
+            {% for user in users %}
+                
+                
+            <a href="/profile/{{user['username']}}" class = "custom-card"> 
+                <div class="item card">
+                {# ... 
+                    <!-- <img src="{{post['imgPath']}}"> -->
+                    <!-- <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
+                    -->#}
+                    <div class="card-body">
+                        <h5 class="card-title">{{user['username']}}</h5>
+                        {#
+                        <!-- rating -->
+                        <!-- <p class="card-text rating" data-rating="{{post['rating']}}"></p>
+                        <p class="card-text">{{post['review'] | truncate(150)}}</p> -->#}
+                    </div>
+                </div>
+            </a>
+                {% endfor %}
+           
+        {% endif %}
+        </div>
+
+        {% endblock %}
+
+        {% block scripts %}
+           {{super()}}
+            <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+            <script src="{{url_for('static',filename='home.js')}}"></script>
+        {% endblock %}   
+    
+</body>
+</html>

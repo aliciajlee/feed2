@@ -33,15 +33,19 @@
                     <!-- </form> -->
                 </span>
                 <span>
-                    <form id="tag-form">
+                    <form method="POST" action="/home/" id="tag-form">
                         <label>Category</label>
-                        <select name="tag" id="tag" onchange="this.form.submit()">
+                        <select name="tag" id="tag">
                             <option selected disabled>Choose</option>
-                            <option>Tag 1</option>
-                            <option>Tag 2</option>
+                            {% for tag in tags %}
+                            <option>{{tag.ttype}}</option>
+                            {% endfor %}
                         </select>
-                    </form>
+                    <p><input type="submit" value="sort"></p>
+                  </form>  
                 </span>
+                
+            
                 <!-- <span id="filter-tag"></span> -->
             </div>
             {% endif %}

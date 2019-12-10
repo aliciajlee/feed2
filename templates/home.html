@@ -33,7 +33,7 @@
                     <!-- </form> -->
                 </span>
                 <span>
-                    <form method="POST" action="/home/" id="tag-form">
+                    <form method="POST" action="/home/" id="tag-form" onchange="this.form.submit()">
                         <label>Category</label>
                         <select name="tag" id="tag">
                             <option selected disabled>Choose</option>
@@ -41,7 +41,6 @@
                             <option>{{tag.ttype}}</option>
                             {% endfor %}
                         </select>
-                    <p><input type="submit" value="sort"></p>
                   </form>  
                 </span>
                 

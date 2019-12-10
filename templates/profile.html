@@ -33,33 +33,48 @@
 
 			</div>
 			<!-- Edit profile form -->
-			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name" value="{{profName}}">{{profName}}</h1> 
 
-				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profile</button>
+			<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					  </button>
+					</div>
 
-				<div class="form-popup" id="editForm">
-  				<form method=POST action="{{url_for('editProf')}}" class="form-container" enctype=multipart/form-data>
-    			<h1>Edit Profile</h1>
 
-    			<label for="full_name"><b>Name</b></label>
-    			<input type="text" placeholder="Name" name="fName" required>
-				
-    			<label for="bio_text"><b>Edit Bio</b></label>
-   			    <input type="text" placeholder="Bio: " name="bioText" required>
-				
-				
-					<label for="profile_pic"><b>Upload Profile Picture</b></label>
-					<input type="file" placeholder="Upload File" name="pic" required>
-				
-				
-    			<button type="submit" class="btn">Save Changes</button>
-    			<!-- <button type="button" class="btn cancel" onclick="closeFor()">Close</button> --> 
-  				</form>
+					<form id="edit-post-form" method=POST action="{{url_for('editProf')}}">
+						<div class="form-group form-inline">
+						  <label>Username</label>
+						  <input type="text" id = "edit-username" class="form-control" name="pname" 
+								value="{{profName}}" maxlength="30" required /> 
+						</div>   
+						<div class="form-group form-inline">
+							<label>Display Name</label>
+							<input type="text" id="edit-displayName" class="form-control" name="displayName" 
+									value="{{fname}}" maxlength="30"> 
+						</div>
+						<div class="form-group form-inline">
+							<label>Bio Text</label>
+							<input type="text" id="edit-bio" class="form-control" name="bioText" 
+									value="{{bio}}" maxlength="30"> 
+						</div>
+						<div class="form-group form-inline">
+							<label>Upload Profile Picture</label>
+							<input type="file" id="edit-profilePicture" class="form-control" name="profpic" 
+									value="upload file"> 
+						</div>  
+					</form>
+
+
 				</div>
-
-			</div>
+            </div>
+          </div>
+      </div>
+			
 			<!-- End Edit Profile -->
 
 			<div class="profile-stats">
@@ -106,7 +121,19 @@
 
 
 </main>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+{% endblock %}
+{% block scripts%}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="{{url_for('static',filename='home.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
 	function editProfile() {
 	  document.getElementById("editForm").style.display = "block";
@@ -173,29 +200,25 @@
     }
 
 
-	//$("#following-button").on('click', function () {
-		
-        
-         // unfollow
-       // $("#follow-button").text('Follow');
-      //  var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
-       
-    //});
+	$("#edit-post-form").on("submit", function(){
 
+})
+
+$("#edit-button").on("click", function() {
+
+ 
+
+  //$('.select-tag').select2();
+
+  //$(".select2-container").css("width", "");
+
+  
+  $('select').trigger('change');
+});
 
 
 	</script>
 
-<!-- <script src="{{url_for('static',filename='home.js')}}"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
-<script src="{{url_for('static',filename='home.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
 	 {% endblock %}
 
 

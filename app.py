@@ -434,8 +434,12 @@ def followingList(username):
 
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():
+
     uid = session['uid']
-    username = session['username']
+    username = request.form.get('pname')
+    fullname = request.form.get('fname')
+    biotext = request.form['bioText']
+
     conn = getConn()
 
     #upload folder path, and allowed extension of file images
@@ -466,8 +470,8 @@ def editProf():
         return redirect(url_for('profile', username = username))
     
     #requests from the form
-    fullName = request.form['fName']
-    biotext = request.form['bioText']
+    #fullName = request.form['fName']
+    #biotext = request.form['bioText']
     db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
 
     return redirect(url_for('profile', username = username))

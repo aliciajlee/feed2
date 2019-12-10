@@ -37,12 +37,50 @@ def numFollowing(conn, uid):
     curs.execute('''select count(*) from Follows where follower_id=%s''', [uid])
     result = curs.fetchone()
     return result['count(*)'] 
+
+def followingUsers(conn, uid):
+   
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select followee_id from Follows where follower_id=%s''', [uid])
+    following = curs.fetchall()
+    if len(following) == 0:
+        return 0
+    else:
+        usersList = []
+        for user in following:
+            curs2 = dbi.dictCursor(conn)
+            id = user['followee_id']
+            curs2.execute('''select username from Users where uid=%s''', [id])
+            usersList.append(curs2.fetchone())
+       
+        return usersList
+
  
 def numFollowers(conn, uid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Follows where followee_id=%s''', [uid])
     result = curs.fetchone()
     return result['count(*)']
+
+def followersUsers(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select follower_id from Follows where followee_id=%s''', [uid])
+    followers = curs.fetchall()
+    if len(followers) == 0:
+        return 0
+    else:
+        usersList = []
+        for user in followers:
+            
+            curs2 = dbi.dictCursor(conn)
+            id = user['follower_id']
+            
+            curs2.execute('''select username from Users where uid=%s''', [id])
+            usersList.append(curs2.fetchone())
+        print("usersList " + str(usersList))
+        return usersList
+   
+
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)

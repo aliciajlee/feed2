@@ -66,8 +66,8 @@
 
 				<ul>
 					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count" id="followers">{{numFers}}</span> followers</li>
-					<li><span class="profile-stat-count" id="following">{{numFing}}</span> following</li>
+					<li><span class="profile-stat-count" id="followers"><a href="/listofFollowers/{{profName}}" > {{numFers}}</a></span> followers </li>
+					<li><span class="profile-stat-count" id="following"><a href="/listofFollowing/{{profName}}">{{numFing}}</a></span> following </li>
 				</ul>
 
 			</div>
@@ -79,15 +79,11 @@
 			</div> 
 
 			{% if match is sameas false%}
-				{% if fboolean is sameas False%}
+				
 						<div>
-							<button id="follow-button" class="followButton bouncy">Follow</button>
+							<button id="follow-button" class="followButton bouncy">{{tButton}}</button>
 						</div>
-				{% else %}
-					<div>
-						<button id="following-button" class="followingButton bouncy" >Following</button>
-					</div>
-				{% endif %}
+				
 
 			{% endif %}
 
@@ -136,9 +132,17 @@
 		
         
         // turn it on
-        $("#follow-button").text('Following');
-        $.post(URL_add, updateAddFollowers)    
-		//$(this).closest('profile-stat-count').find("#followers").text(newFollowerCount.followers);
+		var fbuttonText = $("#follow-button").text();
+		if(fbuttonText == "Follow") {
+
+		
+			$("#follow-button").text('Following');
+			$.post(URL_add, updateAddFollowers)   
+		} 
+		else {
+		    $("#follow-button").text('Follow');
+        	var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
+		}
         
     });
 
@@ -162,21 +166,21 @@
             $("#errors").empty().html('Error: '+obj.err);
             console.log('obj error')
         } else {
-            $("#followers").text(obj.followers);
-			$("#following").text(obj.following);
+            $("#followers").text(obj.updateFollowers);
+			$("#following").text(obj.updateFollowing);
 
         }
     }
 
 
-	$("#following-button").on('click', function () {
+	//$("#following-button").on('click', function () {
 		
         
          // unfollow
-        $("#follow-button").text('Follow');
-        var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
+       // $("#follow-button").text('Follow');
+      //  var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
        
-    });
+    //});
 
 
 

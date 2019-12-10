@@ -351,25 +351,24 @@ def profile(username):
 
     # print(uid)
     
-    followingBoolean = (session['uid'] == uid) or db.following_trueFalse(conn, session['uid'], uid)
-    print("followingBoolean" + str(followingBoolean))
+    followingBoolean = db.following_trueFalse(conn, session['uid'], uid)
+    #(session['uid'] == uid) or 
+    #print("followingBoolean" + str(followingBoolean))
+
+    if followingBoolean == True:
+        buttonText = "Following"
+    else:
+        buttonText = "Follow"
 
     return render_template('profile.html', profName=username,
                                 uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
                                 ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
-                                match = match, numFing = numFollowing, numFers = numFollowers, fboolean = followingBoolean)
+                                match = match, numFing = numFollowing, numFers = numFollowers, tButton = buttonText)
+                                #fboolean = followingBoolean
     # except Exception as err:
     #     print(err)
     #     flash("user not found")
     #     return redirect(request.referrer)
-
-'''
-@app.route('/follow/<username>', methods= ["POST"])   
-def following(username):
-    conn = getConn()
-    profUID = db.getUID(conn, username)
-    return db.following_trueFalse(conn, sessionUid, profUid)
-'''
 
 @app.route('/follow/<username>', methods= ["POST"])   
 def aFollow(username):
@@ -397,6 +396,22 @@ def dFollow(username):
     except Exception as err:
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
+
+@app.route('/listofFollowers/<username>', methods = ["POST", "GET"])
+def followersList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followersUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="Followers of {}".format(username),users=users, options=False)
+
+@app.route('/listofFollowing/<username>', methods = ["POST", "GET"])
+def followingList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followingUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="{} Following".format(username),users=users, options=False)
 
 @app.route('/editprofile/', methods= ["POST"])
 def editProf():

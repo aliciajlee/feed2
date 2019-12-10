@@ -80,23 +80,26 @@
             </div>
 
             <div id="users" class="masonry card-columns">
-            {% for user in users %}
-            <a href="/profile/{{user['username']}}" class = "custom-card"> 
-                <div class="item card">
-                 {# ... 
-                    <!-- <img src="{{post['imgPath']}}"> -->
-                    <!-- <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
-                     -->#}
-                    <div class="card-body">
-                        <h5 class="card-title">{{user['username']}}</h5>
-                        {#
-                        <!-- rating -->
-                        <!-- <p class="card-text rating" data-rating="{{post['rating']}}"></p>
-                        <p class="card-text">{{post['review'] | truncate(150)}}</p> -->#}
+                
+                {% for user in users %}
+                    
+                <a href="/profile/{{user['username']}}" class = "custom-card"> 
+                    <div class="item card">
+                    {# ... 
+                        <!-- <img src="{{post['imgPath']}}"> -->
+                        <!-- <img class="card-image-top img-fluid" src="{{url_for('static',filename=post['imgPath'])}}">
+                        -->#}
+                        <div class="card-body">
+                            <h5 class="card-title">{{user['username']}}</h5>
+                            {#
+                            <!-- rating -->
+                            <!-- <p class="card-text rating" data-rating="{{post['rating']}}"></p>
+                            <p class="card-text">{{post['review'] | truncate(150)}}</p> -->#}
+                        </div>
                     </div>
-                </div>
-            </a>
-            {% endfor %}
+                </a>
+                {% endfor %}
+          
             </div>
 
         {% endblock %}

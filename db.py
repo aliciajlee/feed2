@@ -62,6 +62,12 @@ def getSinglePost(conn, pid):
                      from Posts inner join Users on Users.uid=Posts.uid where Posts.pid = %s''', [pid])
     return curs.fetchone()
 
+def getPostsWithTid(conn, tid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select pname, Posts.pid, rating, price, review, restaurant, location, imgPath, time
+                     from Posts inner join Tagpost on Posts.pid = Tagpost.pid where Tagpost.tid = %s ''',[tid])
+    return curs.fetchall()
+
 # get all tags of a post
 def getTagsofPost(conn, pid):
     curs = dbi.dictCursor(conn)
@@ -131,7 +137,7 @@ def deleteTagPost(conn, pid, tag):
 # get tag id of a tag by its tag type
 def getTid(conn,ttype):
     curs = dbi.dictCursor(conn)
-    curs.execute('''select tid from Tagpost where ttype=%s''',[ttype])
+    curs.execute('''select tid from Tags where ttype=%s''',[ttype])
     return curs.fetchone()
 
 # delete all tags of a post by pid

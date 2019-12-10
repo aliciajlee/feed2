@@ -66,8 +66,8 @@
 
 				<ul>
 					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count" id="followers">{{numFing}}</span> followers</li>
-					<li><span class="profile-stat-count" id="following">{{numFers}}</span> following</li>
+					<li><span class="profile-stat-count" id="followers">{{numFers}}</span> followers</li>
+					<li><span class="profile-stat-count" id="following">{{numFing}}</span> following</li>
 				</ul>
 
 			</div>
@@ -81,11 +81,11 @@
 			{% if match is sameas false%}
 				{% if fboolean is sameas False%}
 						<div>
-							<button id="follow-button">Follow</button>
+							<button id="follow-button" class="followButton bouncy">Follow</button>
 						</div>
 				{% else %}
 					<div>
-						<button id="following-button">Following</button>
+						<button id="following-button" class="followingButton bouncy" >Following</button>
 					</div>
 				{% endif %}
 
@@ -162,8 +162,8 @@
             $("#errors").empty().html('Error: '+obj.err);
             console.log('obj error')
         } else {
-            $(this).closest('profile-stat-count').find("#followers").text(obj.followers);
-			$(this).closest('profile-stat-count').find("#following").text(obj.following);
+            $("#followers").text(obj.followers);
+			$("#following").text(obj.following);
 
         }
     }
@@ -174,7 +174,7 @@
         
          // unfollow
         $("#follow-button").text('Follow');
-        var newFollowerCount = $.post(URL_delete, {'followers': followers, 'following': following}, updateDeleteFollowers)  
+        var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
        
     });
 

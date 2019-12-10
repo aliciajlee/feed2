@@ -343,9 +343,11 @@ def profile(username):
     profPic = db.getPPic(conn, uid)
     posts = db.getPostsByUser(conn, uid)
     numPosts = db.numPostsUser(conn, uid)
-    print(match)
+    #print(match)
     numFollowing = db.numFollowing(conn, uid)
+    #print("following" + str(numFollowing))
     numFollowers = db.numFollowers(conn, uid)
+    #print("followers" + str(numFollowers))
 
     # print(uid)
     

@@ -33,18 +33,16 @@
                     <!-- </form> -->
                 </span>
                 <span>
-                    <form method="POST" action="/home/" id="tag-form" onchange="this.form.submit()">
+                    <form id="tag-form">
                         <label>Category</label>
-                        <select name="tag" id="tag">
+                        <select name="tag" id="tag" onchange="this.form.submit()">
                             <option selected disabled>Choose</option>
                             {% for tag in tags %}
-                            <option>{{tag.ttype}}</option>
+                            <option>{{tag['ttype']}}</option>
                             {% endfor %}
                         </select>
-                  </form>  
+                    </form>
                 </span>
-                
-            
                 <!-- <span id="filter-tag"></span> -->
             </div>
             {% endif %}

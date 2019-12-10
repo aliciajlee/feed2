@@ -35,7 +35,7 @@
 			<!-- Edit profile form -->
 			<div class="profile-user-settings">
 
-				<h1 class="profile-user-name">{{profName}}</h1> 
+				<h1 class="profile-user-name" value="{{profName}}">{{profName}}</h1> 
 
 				<button class="btn profile-edit-btn" onclick="editProfile()">Edit Profile</button>
 
@@ -65,18 +65,27 @@
 			<div class="profile-stats">
 
 				<ul>
-					<li><span class="profile-stat-count">164</span> posts</li>
-					<li><span class="profile-stat-count">188</span> followers</li>
-					<li><span class="profile-stat-count">206</span> following</li>
+					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
+					<li><span class="profile-stat-count" id="followers"><a href="/listofFollowers/{{profName}}" > {{numFers}}</a></span> followers </li>
+					<li><span class="profile-stat-count" id="following"><a href="/listofFollowing/{{profName}}">{{numFing}}</a></span> following </li>
 				</ul>
 
 			</div>
 
 			<div class="profile-bio">
-
+				
 				<p><span class="profile-real-name">{{fname}}</span> {{bio}}</p>
 
 			</div> 
+
+			{% if match is sameas false%}
+				
+						<div>
+							<button id="follow-button" class="followButton bouncy">{{tButton}}</button>
+						</div>
+				
+
+			{% endif %}
 
 		</div>
 		<!-- End of profile section -->
@@ -95,7 +104,9 @@
 
 	<!-- End of container -->
 
+
 </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script>
 	function editProfile() {
 	  document.getElementById("editForm").style.display = "block";
@@ -104,6 +115,75 @@
 	//function closeForm() {
 	 // document.getElementById("editForm").style.display = "none";
 	//}
+
+
+	//var follow_on = false;
+	
+	var info = $(this).closest("h1");
+	var username = info.find('.profile-user-name').text();
+	
+	var URL_add = "{{url_for('aFollow', username=profName)}}"
+    var URL_delete = "{{url_for('dFollow', username = profName)}}"
+
+	
+	var follow_on = false
+
+	$("#follow-button").on('click', function () {
+		
+        
+        // turn it on
+		var fbuttonText = $("#follow-button").text();
+		if(fbuttonText == "Follow") {
+
+		
+			$("#follow-button").text('Following');
+			$.post(URL_add, updateAddFollowers)   
+		} 
+		else {
+		    $("#follow-button").text('Follow');
+        	var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
+		}
+        
+    });
+
+	function updateAddFollowers(obj) {
+        console.log(obj);
+
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error')
+        } else {
+            $("#followers").text(obj.updateFollowers);
+			$("#following").text(obj.updateFollowing);
+
+        }
+    }
+
+	function updateDeleteFollowers(obj) {
+        console.log(obj);
+
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error')
+        } else {
+            $("#followers").text(obj.updateFollowers);
+			$("#following").text(obj.updateFollowing);
+
+        }
+    }
+
+
+	//$("#following-button").on('click', function () {
+		
+        
+         // unfollow
+       // $("#follow-button").text('Follow');
+      //  var newFollowerCount = $.post(URL_delete, updateDeleteFollowers)  
+       
+    //});
+
+
+
 	</script>
 
 <!-- <script src="{{url_for('static',filename='home.js')}}"></script>

@@ -12,6 +12,76 @@ def getConn(DB):
     conn.select_db(DB)
     return conn
 
+def following_trueFalse(conn, sessionUid, profUid):
+    curs = dbi.cursor(conn)
+    curs.execute('''select * from Follows where follower_id=%s and followee_id=%s''', [sessionUid, profUid])
+    return True if curs.fetchone() else False
+
+def addfollower(conn, sessionUid, profUid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''INSERT INTO Follows(follower_id, followee_id)
+                                VALUES(%s, %s)''', [sessionUid, profUid])
+
+def deletefollower(conn, sessionUid, profUid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''DELETE from Follows where follower_id = %s and followee_id = %s''', [sessionUid, profUid])
+
+def numPostsUser(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Posts where uid=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)']
+
+def numFollowing(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Follows where follower_id=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)'] 
+
+def followingUsers(conn, uid):
+   
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select followee_id from Follows where follower_id=%s''', [uid])
+    following = curs.fetchall()
+    if len(following) == 0:
+        return 0
+    else:
+        usersList = []
+        for user in following:
+            curs2 = dbi.dictCursor(conn)
+            id = user['followee_id']
+            curs2.execute('''select username from Users where uid=%s''', [id])
+            usersList.append(curs2.fetchone())
+       
+        return usersList
+
+ 
+def numFollowers(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Follows where followee_id=%s''', [uid])
+    result = curs.fetchone()
+    return result['count(*)']
+
+def followersUsers(conn, uid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select follower_id from Follows where followee_id=%s''', [uid])
+    followers = curs.fetchall()
+    if len(followers) == 0:
+        return 0
+    else:
+        usersList = []
+        for user in followers:
+            
+            curs2 = dbi.dictCursor(conn)
+            id = user['follower_id']
+            
+            curs2.execute('''select username from Users where uid=%s''', [id])
+            usersList.append(curs2.fetchone())
+        print("usersList " + str(usersList))
+        return usersList
+   
+
+
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select max(pid) from Posts''')
@@ -44,9 +114,11 @@ def updateProfile(conn, uid, fname, text, path):
 # get uid of a user by username
 def getUid(conn, username):
     curs = dbi.dictCursor(conn)
-    print(username)
     curs.execute('''select uid from Users where username = %s''', [username])
-    return curs.fetchone()
+    result = curs.fetchone()
+    return result['uid']
+    
+    
 
 # gets all posts for displaying posts in feed
 def getAllPosts(conn):

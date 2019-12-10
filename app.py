@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'alee31_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -428,6 +428,21 @@ def edit_post(pid, old_tags=None):
     flash("Sucessfully edited post")
     return redirect(request.referrer)
 
+@app.route('/tags/<tag>/', methods=["GET"])
+def show_tag_posts(tag):
+    conn = db.getConn(DB)
+    #convert from tag to tid
+    tid = db.getTid(conn,tag)['tid']
+    #get posts with the tag
+    posts = db.getPostsWithTid(conn, tid)
+    #check if user is logged in
+    if "username" not in session:
+        flash("Please log in or sign up to continue")
+        return redirect(url_for("index"))
+    username = session['username']
+    title = "posts under " + tag
+    return render_template("home.html", page_title= title, posts=posts, username=username,
+                            options=True)
 
 if __name__ == '__main__':
     import sys,os

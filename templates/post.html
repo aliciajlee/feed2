@@ -56,7 +56,7 @@
             
             {% for tag in tags %}
               <span>
-                <a href="#"> {{tag.ttype}} </a>
+                <a href="{{url_for('show_tag_posts', tag= tag.ttype)}}"> {{tag.ttype}} </a>
               </span>
             {% endfor %}
             </div>

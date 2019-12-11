@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -495,7 +495,7 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
-# edit a post's name, resturant, location, rating, price, review
+# edit a post's name, resturant, location, rating, price, tags, review
 @app.route('/edit_post/<pid>', methods=['POST'])
 
 # @Scott--can we pass variables from jinja to python function?

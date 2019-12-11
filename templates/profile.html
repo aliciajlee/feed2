@@ -23,6 +23,52 @@
 		{% endblock %}
 		{% block content %}
 
+		
+		<!-- Edit profile form -->
+		
+			
+			<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-body">
+					<form id="edit-post-form" method=POST action="{{url_for('editProf')}}" enctype=multipart/form-data>
+						<div class="form-group form-inline">
+						  <label>Username</label>
+						  <input type="text" id = "edit-username" class="form-control" name="pname" 
+								value="{{profName}}" maxlength="30" required /> 
+						</div>   
+						<div class="form-group form-inline">
+							<label>Display Name</label>
+							<input type="text" id="edit-displayName" class="form-control" name="displayName" 
+									value="{{fname}}" maxlength="30"> 
+						</div>
+						<div class="form-group form-inline">
+							<label>Bio Text</label>
+							<input type="text" id="edit-bio" class="form-control" name="bioText" 
+									value="{{bio}}" maxlength="30"> 
+						</div>
+						
+						<div>
+							<label for="profile_pic">Upload Profile Picture</label>
+							<input type="file" placeholder="Upload File" name="profpic" > 
+						</div>
+						<button type="submit" class="btn btn-primary"> Edit Profile</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> 
+					</form>
+					</div>
+				</div>
+					</div>
+				</div>
+			
+		
+		  
 	<div class="container">
 
 		<div class="profile">
@@ -34,54 +80,21 @@
 			</div>
 			<!-- Edit profile form -->
 			<div class="profile-user-settings">
-				<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-					  <div class="modal-content">
-						<div class="modal-header">
-						  <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
-						  <button class="btn profile-edit-btn"> Edit Profile</button>
-						</div>
-	
-	
-						<form id="edit-post-form" method=POST action="{{url_for('editProf')}}">
-							<div class="form-group form-inline">
-							  <label>Username</label>
-							  <input type="text" id = "edit-username" class="form-control" name="pname" 
-									value="{{profName}}" maxlength="30" required /> 
-							</div>   
-							<div class="form-group form-inline">
-								<label>Display Name</label>
-								<input type="text" id="edit-displayName" class="form-control" name="displayName" 
-										value="{{fname}}" maxlength="30"> 
-							</div>
-							<div class="form-group form-inline">
-								<label>Bio Text</label>
-								<input type="text" id="edit-bio" class="form-control" name="bioText" 
-										value="{{bio}}" maxlength="30"> 
-							</div>
-							<div class="form-group form-inline">
-								<label>Upload Profile Picture</label>
-								<input type="file" id="edit-profilePicture" class="form-control" name="profpic" 
-										value="upload file"> 
-							</div>  
-						</form>
-	
-	
-					</div>
+			
+			<div> 
+					<button value="{{match}}" id= "editPbutton" data-toggle="modal" data-target="#edit-modal"> Edit Profile</button>
 				</div>
-			  </div>
-	
-				
-
 			</div>
+			
+			
 			<!-- End Edit Profile -->
 
 			<div class="profile-stats">
 
 				<ul>
 					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count" id="followers"><a href="/listofFollowers/{{profName}}" > {{numFers}}</a></span> followers </li>
-					<li><span class="profile-stat-count" id="following"><a href="/listofFollowing/{{profName}}">{{numFing}}</a></span> following </li>
+					<li><span class="profile-stat-count" id="followers">{{numFers}}</span> <a href="/listofFollowers/{{profName}}"> followers </a></li>
+					<li><span class="profile-stat-count" id="following">{{numFing}}</span><a href="/listofFollowing/{{profName}}"> following</a> </li>
 				</ul>
 
 			</div>
@@ -130,6 +143,11 @@
 	 // document.getElementById("editForm").style.display = "none";
 	//}
 	//var follow_on = false;
+    console.log($("#editPbutton").val())
+	if($("#editPbutton").val() == "False") {
+		
+		$("#editPbutton").hide()
+	}
 	
 	var info = $(this).closest("h1");
 	var username = info.find('.profile-user-name').text();

@@ -432,12 +432,13 @@ def followingList(username):
     print(users)
     return render_template("listofFollowing.html", page_title="{} Following".format(username),users=users, options=False)
 
-@app.route('/editprofile/', methods= ["POST"])
+@app.route('/editprofile/', methods= ["POST", "GET"])
 def editProf():
 
     uid = session['uid']
     username = request.form.get('pname')
-    fullname = request.form.get('fname')
+    print("username " + username)
+    fullName = request.form.get('displayName')
     biotext = request.form['bioText']
 
     conn = getConn()
@@ -455,8 +456,9 @@ def editProf():
     #if 'file' not in request.files: ADD LATER WHERE PEOPLE CAN SPECIFY WHAT INPUT FIELDS THEY WOULD LIKE TO UPDATE, NOT REQUIRED TO UPDATE ALL OF THE FIELDS
             #flash('No file part')
             #return redirect('')
-        
-    file = request.files['pic']
+    print(request.files)
+    file = request.files['profpic']
+    print(file)
     filePath = None
     if file and allowed_file(file.filename):
             filename = secure_filename(file.filename) #get the filename

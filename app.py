@@ -2,7 +2,7 @@
 # test
 
 from flask import (Flask, render_template, make_response, url_for, request,
-                   redirect, flash, session, send_from_directory, Response)
+                   redirect, flash, session, send_from_directory, Response, jsonify)
 from werkzeug import secure_filename
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'alee31_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -310,30 +310,78 @@ def redirProfile():
     return redirect(url_for('profile', username = username))
 
 @app.route('/profile/<username>')
+# def profile(username): 
+#     conn = getConn()
+#     print(username)
+#     try:
+#         uid = db.getUid(conn, username)
+#         print(uid)
+#         if not uid:
+#             flash("User not found")
+#             return render_template("home.html")
+#         uid=uid['uid']
+#         fullName = db.getFullName(conn, uid)
+#         print(fullName)
+#         bioText = db.getBioText(conn, uid)
+#         print(bioText)
+#         profPic = db.getPPic(conn, uid)
+#         print(profPic)
+#         posts = db.getPostsByUser(conn, uid)
+#         print(posts)
+#         #add a way to get fullname and bio text, image file
+#         return render_template('profile.html', profName=username,
+#                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
+#                                     ppic = profPic['profpicPath'], posts = posts)
+#     except Exception as err:
+#         print(err)
+#         return redirect(request.referrer)
 def profile(username): 
     conn = db.getConn(DB)
     print(username)
     try:
-        uid = db.getUid(conn, username)
-        print(uid)
-        if not uid:
-            flash("User not found")
-            return render_template("home.html")
-        uid=uid['uid']
-        fullName = db.getFullName(conn, uid)
-        bioText = db.getBioText(conn, uid)
-        profPic = db.getPPic(conn, uid)
-        posts = db.getPostsByUser(conn, uid)
-        #add a way to get fullname and bio text, image file
-        return render_template('profile.html', profName=username,
-                                    uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                    ppic = profPic['profpicPath'], posts = posts)
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        db.addfollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(updateFollowers = numFollowers, updateFollowing= numFollowing)
     except Exception as err:
-        flash("user not found")
-        return redirect(request.referrer)
-     
-@app.route('/editprofile/', methods= ["POST"])
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
+
+@app.route('/unfollow/<username>', methods= ["POST"])   
+def dFollow(username):
+    try: 
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        db.deletefollower(conn, session['uid'], profUID)
+        numFollowing = db.numFollowing(conn, profUID)
+        numFollowers = db.numFollowers(conn, profUID)
+        return jsonify(updateFollowers = numFollowers, updateFollowing = numFollowing)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
+@app.route('/listofFollowers/<username>', methods = ["POST", "GET"])
+def followersList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followersUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="Followers of {}".format(username),users=users, options=False)
+
+@app.route('/listofFollowing/<username>', methods = ["POST", "GET"])
+def followingList(username):
+    conn = getConn()
+    profUID = db.getUid(conn, username)
+    users = db.followingUsers(conn, profUID)
+    print(users)
+    return render_template("listofFollowing.html", page_title="{} Following".format(username),users=users, options=False)
+
+@app.route('/editprofile/', methods= ["POST", "GET"])
 def editProf():
+
     uid = session['uid']
     username = session['username']
     conn = db.getConn(DB)
@@ -351,8 +399,9 @@ def editProf():
     #if 'file' not in request.files: ADD LATER WHERE PEOPLE CAN SPECIFY WHAT INPUT FIELDS THEY WOULD LIKE TO UPDATE, NOT REQUIRED TO UPDATE ALL OF THE FIELDS
             #flash('No file part')
             #return redirect('')
-        
-    file = request.files['pic']
+    print(request.files)
+    file = request.files['profpic']
+    print(file)
     filePath = None
     if file and allowed_file(file.filename):
             filename = secure_filename(file.filename) #get the filename
@@ -366,8 +415,8 @@ def editProf():
         return redirect(url_for('profile', username = username))
     
     #requests from the form
-    fullName = request.form['fName']
-    biotext = request.form['bioText']
+    #fullName = request.form['fName']
+    #biotext = request.form['bioText']
     db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
 
     return redirect(url_for('profile', username = username))
@@ -389,7 +438,7 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
-# edit a post's name, resturant, location, rating, price, review
+# edit a post's name, resturant, location, rating, price, tags, review
 @app.route('/edit_post/<pid>', methods=['POST'])
 
 # @Scott--can we pass variables from jinja to python function?

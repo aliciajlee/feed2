@@ -50,6 +50,7 @@ def home():
         return redirect(url_for("index"))
     username = session['username']
     tags = db.getAllTags(conn)
+    #change this to AJAX later
     tag = request.values.get('tag')
     if(tag):
         return redirect(url_for('show_tag_posts', tag= tag))

@@ -37,8 +37,9 @@
                         <label>Category</label>
                         <select name="tag" id="tag" onchange="this.form.submit()">
                             <option selected disabled>Choose</option>
-                            <option>Tag 1</option>
-                            <option>Tag 2</option>
+                            {% for tag in tags %}
+                            <option>{{tag['ttype']}}</option>
+                            {% endfor %}
                         </select>
                     </form>
                 </span>

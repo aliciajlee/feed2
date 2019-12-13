@@ -85,7 +85,14 @@ def followersUsers(conn, uid):
             usersList.append(curs2.fetchone())
         print("usersList " + str(usersList))
         return usersList
-   
+
+
+def like_trueFalse(conn, pid, uid):
+    '''Are you following this profile? Returns true or false'''
+    curs = dbi.cursor(conn)
+    curs.execute('''select * from Likes where profile_id=%s and post_id=%s''', [uid, pid])
+    return True if curs.fetchone() else False
+
 def countLikes(conn, pid):
     '''counts the number of likes a post has'''
     curs = dbi.dictCursor(conn)

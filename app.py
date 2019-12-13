@@ -74,7 +74,7 @@ def search():
         flash("User results for '{}'".format(query))
         return render_template("home.html", page_title="Results",users=users, options=False)
 
-@app.route('/dlike/<post>', methods= ["POST"])   
+@app.route('/alike/<post>', methods= ["POST", "GET"])   
 def alikes(post):
     try: 
         conn = getConn()
@@ -86,7 +86,7 @@ def alikes(post):
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
 
-@app.route('/dlike/<post>', methods= ["POST"])   
+@app.route('/dlike/<post>', methods= ["POST", "GET"])   
 def dlikes(post):
     try: 
         conn = getConn()
@@ -115,6 +115,7 @@ def post(pid):
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
     likes = db.countLikes(conn, pid)
+
     if not post:
         flash("Post not found")
         return redirect(request.referrer)
@@ -125,12 +126,19 @@ def post(pid):
 
     user = None if 'username' not in session else session['username']
     posted = user == post['username']
+    uid = db.getUid(conn, post['username'])
+
+    likeBoolean = db.like_trueFalse(conn, pid, uid)
+    if likeBoolean == True:
+        buttonText = "Liked"
+    else:
+        buttonText = "Like"
     
     all_tags = []
     if posted:
         all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
 
-    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags, likes=likes)
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags, likes=likes, tfText = buttonText )
 
 
 @app.route('/signUp/', methods=["GET","POST"])
@@ -396,11 +404,9 @@ def profile(username):
     profPic = db.getPPic(conn, uid)
     posts = db.getPostsByUser(conn, uid)
     numPosts = db.numPostsUser(conn, uid)
-    #print(match)
     numFollowing = db.numFollowing(conn, uid)
-    #print("following" + str(numFollowing))
     numFollowers = db.numFollowers(conn, uid)
-    #print("followers" + str(numFollowers))
+   
 
     # print(uid)
     

@@ -20,6 +20,10 @@
           <div class="left">
             <img id="post-image" class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
+          <br>
+          <div>
+            <button id="like-button"> Like </button> <!-- continue added like feature-->
+          </div>
            <div id="flex-right" class="right">
             {% if posted is sameas true %}
             

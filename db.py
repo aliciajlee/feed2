@@ -13,16 +13,19 @@ def getConn(DB):
     return conn
 
 def following_trueFalse(conn, sessionUid, profUid):
+    '''Are you following this profile? Returns true or false'''
     curs = dbi.cursor(conn)
     curs.execute('''select * from Follows where follower_id=%s and followee_id=%s''', [sessionUid, profUid])
     return True if curs.fetchone() else False
 
 def addfollower(conn, sessionUid, profUid):
+    '''adds a follower to the Follows table to the current profile'''
     curs = dbi.dictCursor(conn)
     curs.execute('''INSERT INTO Follows(follower_id, followee_id)
                                 VALUES(%s, %s)''', [sessionUid, profUid])
 
 def deletefollower(conn, sessionUid, profUid):
+    ''' deletes a follower from the Follows table of the current profile'''
     curs = dbi.dictCursor(conn)
     curs.execute('''DELETE from Follows where follower_id = %s and followee_id = %s''', [sessionUid, profUid])
 
@@ -33,13 +36,14 @@ def numPostsUser(conn, uid):
     return result['count(*)']
 
 def numFollowing(conn, uid):
+    ''' counts the number of users the current profile is following'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Follows where follower_id=%s''', [uid])
     result = curs.fetchone()
     return result['count(*)'] 
 
 def followingUsers(conn, uid):
-   
+    '''lists the users who are the current profile is following'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select followee_id from Follows where follower_id=%s''', [uid])
     following = curs.fetchall()
@@ -57,12 +61,14 @@ def followingUsers(conn, uid):
 
  
 def numFollowers(conn, uid):
+    ''' counts the number of users following the current profile'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Follows where followee_id=%s''', [uid])
     result = curs.fetchone()
     return result['count(*)']
 
 def followersUsers(conn, uid):
+    '''lists the users that are following the current profile'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select follower_id from Follows where followee_id=%s''', [uid])
     followers = curs.fetchall()
@@ -81,20 +87,24 @@ def followersUsers(conn, uid):
         return usersList
    
 def countLikes(conn, pid):
+    '''counts the number of likes a post has'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Likes where post_id=%s''', [pid])
     result = curs.fetchone()
     return result['count(*)']
 
 def addLike(conn, pid, uid): 
+    '''adds a like to the post into the Likes table'''
     curs = dbi.dictCursor(conn)
     curs.execute('''INSERT INTO Likes(post_id, profile_id)
                                 VALUES(%s, %s)''', [pid, uid])
-def removeLike(conn, pid, uid): 
+def removeLike(conn, pid, uid):
+    '''removes a like to the post from the Likes table ''' 
     curs = dbi.dictCursor(conn)
     curs.execute('''DELETE from Likes where post_id=%s and profile_id=%s)''', [pid, uid])
 
 def likesList(conn, pid):
+    '''lists the users that liked a particular post'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select profile_id from Likes where post_id=%s''', [pid])
     users = curs.fetchall()
@@ -110,6 +120,7 @@ def likesList(conn, pid):
         return usersList
 
 def getComments(conn, pid):
+    '''gets the comment and who made the comment from the Comments table'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select comment, profile_id from Comments where post_id=%s''', [pid])
     comments = curs.fetchall()
@@ -118,12 +129,10 @@ def getComments(conn, pid):
     return comments
 
 def addComment(conn, pid, uid, cText): 
+    '''adds a comment to the Comments table'''
     curs = dbi.dictCursor(conn)
     curs.execute('''INSERT INTO Comments(post_id, profile_id, comment)
                                 VALUES(%s, %s,%s)''', [pid, uid, cText])
-def removeLike(conn, pid, uid, cText): 
-    curs = dbi.dictCursor(conn)
-    curs.execute('''DELETE from Comment where post_id=%s and profile_id=%s and Ctext=%s)''', [pid, uid, cText])
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
@@ -160,8 +169,7 @@ def getUid(conn, username):
     curs.execute('''select uid from Users where username = %s''', [username])
     result = curs.fetchone()
     return result['uid']
-    
-    
+
 
 # gets all posts for displaying posts in feed
 def getAllPosts(conn):

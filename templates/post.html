@@ -22,7 +22,7 @@
           </div>
           <br>
           <div>
-            <button id="like-button"> Like </button> <span> <a href="/listofLikes/{{pid}}"> {{likes}}</a></span><!-- continue added like feature--> 
+            <button id="like-button"> Like </button> <span id="number"> <a href="/listofLikes/{{pid}}"> {{likes}}</a></span><!-- continue added like feature--> 
           </div>
            <div id="flex-right" class="right">
             {% if posted is sameas true %}
@@ -242,7 +242,8 @@
 
 	      $("#like-button").on('click', function () {
         // turn it on
-	    	var likeButtonText = $("#follow-button").text();
+	    	var likeButtonText = $("#like-button").text();
+
 		    if(likeButtonText == "Like") {
 		
 			    $("#like-button").text('Liked');
@@ -251,7 +252,7 @@
 		    } 
 		    else {
 		    $("#like-button").text('Like');
-        	var newFollowerCount = $.post(URL_unlike, updateLikes)  
+        	$.post(URL_unlike, updateLikes)  
 		    }
 
         function updateLikes(obj) {
@@ -260,7 +261,7 @@
             $("#errors").empty().html('Error: '+obj.err);
             console.log('obj error')
         } else {
-            $("#followers").text(obj.numLikes);
+            $("#number").text(obj.numLikes);
         }
     }
 

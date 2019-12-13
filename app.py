@@ -98,15 +98,15 @@ def dlikes(post):
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
 
-'''
+
 @app.route('/listofLikes/<post>', methods = ["POST", "GET"])
-def followersList(post):
+def likesList(post):
     conn = getConn()
     #profUID = db.getUid(conn, username)
     pid = post
     userLikesList = db.likesList(conn, pid)
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
-'''
+
 
 # display info of an individual post
 @app.route('/post/<pid>/')

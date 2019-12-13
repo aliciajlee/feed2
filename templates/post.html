@@ -22,7 +22,7 @@
           </div>
           <br>
           <div>
-            <button id="like-button"> Like </button> <!-- continue added like feature-->
+            <button id="like-button"> Like </button> <span> <a href="/listofLikes/{{pid}}"> {{likes}}</a></span><!-- continue added like feature--> 
           </div>
            <div id="flex-right" class="right">
             {% if posted is sameas true %}
@@ -235,6 +235,36 @@
           $('select').trigger('change');
         });
 
+        	
+	      var URL_like = "{{url_for('alikes', post=pid)}}"
+        var URL_unlike = "{{url_for('dlikes', post=pid)}}"
+        var like_on = false
+
+	      $("#like-button").on('click', function () {
+        // turn it on
+	    	var likeButtonText = $("#follow-button").text();
+		    if(likeButtonText == "Like") {
+		
+			    $("#like-button").text('Liked');
+			    $.post(URL_like, updateLikes) 
+
+		    } 
+		    else {
+		    $("#like-button").text('Like');
+        	var newFollowerCount = $.post(URL_unlike, updateLikes)  
+		    }
+
+        function updateLikes(obj) {
+        console.log(obj);
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error')
+        } else {
+            $("#followers").text(obj.numLikes);
+        }
+    }
+
+    
         // $('#stars li').on('mouseover', function(){
         //   var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
    

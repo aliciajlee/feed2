@@ -86,6 +86,14 @@ def countLikes(conn, pid):
     result = curs.fetchone()
     return result['count(*)']
 
+def addLike(conn, pid, uid): 
+    curs = dbi.dictCursor(conn)
+    curs.execute('''INSERT INTO Likes(post_id, profile_id)
+                                VALUES(%s, %s)''', [pid, uid])
+def removeLike(conn, pid, uid): 
+    curs = dbi.dictCursor(conn)
+    curs.execute('''DELETE from Likes where post_id=%s and profile_id=%s)''', [pid, uid])
+
 def likesList(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select profile_id from Likes where post_id=%s''', [pid])
@@ -105,8 +113,17 @@ def getComments(conn, pid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select comment, profile_id from Comments where post_id=%s''', [pid])
     comments = curs.fetchall()
-    if len(users) == 0:
+    if len(comments) == 0:
         return 0
+    return comments
+
+def addComment(conn, pid, uid, cText): 
+    curs = dbi.dictCursor(conn)
+    curs.execute('''INSERT INTO Comments(post_id, profile_id, comment)
+                                VALUES(%s, %s,%s)''', [pid, uid, cText])
+def removeLike(conn, pid, uid, cText): 
+    curs = dbi.dictCursor(conn)
+    curs.execute('''DELETE from Comment where post_id=%s and profile_id=%s and Ctext=%s)''', [pid, uid, cText])
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)

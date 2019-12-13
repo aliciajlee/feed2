@@ -224,6 +224,24 @@ def editPost(conn, pid, pname, restaurant, location, rating, price, review):
                         rating=%s, price=%s, review=%s where pid = %s''', 
                         [pname, restaurant, location, rating, price, review, pid])
 
+#insert everything but filename and return the pid of the inserted image
+def insertPost(conn, uid, name, rating, price, review, restaurant, location):
+    #add to post table
+    curs = dbi.dictCursor(conn)
+    curs.execute(
+        '''insert into Posts(uid,pname,rating,price,review,restaurant,location, time) 
+        values (%s,%s,%s,%s,%s,%s,%s, now())''',
+        [uid, name, rating, price, review, restaurant, location])
+    curs.execute('''select last_insert_id() from Posts''')
+    result = curs.fetchone()
+    result = str(result['last_insert_id()'])
+    return result
+    
+#inserts the image path named with the pid
+def insertFilepath(conn, path, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''update Posts set imgPath = %s where pid = %s''',[path, pid])
+
 # add a tag to a post by pid and tag id
 def insertTagPost(conn, pid, tid):
     curs = dbi.dictCursor(conn)

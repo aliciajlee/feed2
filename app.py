@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -49,9 +49,15 @@ def home():
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))
     username = session['username']
-    # how should they be sorted -- bootstrap card thing inserts by column and not row
-    return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
-                            options=True)
+    tags = db.getAllTags(conn)
+    #change this to AJAX later
+    tag = request.values.get('tag')
+    if(tag):
+        return redirect(url_for('show_tag_posts', tag= tag))
+    else: 
+        # how should they be sorted -- bootstrap card thing inserts by column and not row
+        return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
+                                tags = tags, options=True)
 
 @app.route('/likes/<post>', methods= ["POST"])   
 def likes(post):
@@ -73,10 +79,11 @@ def search():
     conn = db.getConn(DB)
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)
+        tags = db.getAllTags(conn)
         if not posts:
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
-        return render_template("home.html", page_title="Results", posts=posts, options=True)
+        return render_template("home.html", page_title="Results", posts=posts, tags = tags, options=True)
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
@@ -128,7 +135,7 @@ def signUp():
             hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
             hashed_str = hashed.decode('utf-8')
             #print(passwd1, type(passwd1), hashed, hashed_str)
-            conn = getConn()
+            conn = db.getConn(DB)
             curs = dbi.cursor(conn)
             try:
                 curs.execute('''INSERT INTO Users(uid,fullname,email,username,hashed, biotxt, profpicPath)
@@ -163,7 +170,7 @@ def login():
         try:
             username = request.form['username']
             passwd = request.form['password']
-            conn = getConn()
+            conn = db.getConn(DB)
             curs = dbi.dictCursor(conn)
             curs.execute('''SELECT *
                         FROM Users
@@ -207,7 +214,7 @@ def login():
 def user(username):
     try:
         # don't trust the URL; it's only there for decoration
-        conn = getConn()
+        conn = db.getConn(DB)
         if 'username' in session:
             username = session['username']
             uid = session['uid']
@@ -258,7 +265,6 @@ def upload():
             try:
                 uid = session['uid']
                 postconn = db.getConn(DB)
-                pid = db.getNumPosts(postconn) + 1
                 name = request.form['name'] 
                 rating = request.form['rating']
                 review = request.form['review']
@@ -268,40 +274,34 @@ def upload():
                 tags = request.form.getlist("tags")
                 f = request.files['pic']
 
-                #make sure image is not too big
-                fsize = os.fstat(f.stream.fileno()).st_size
-                if fsize > app.config['MAX_CONTENT_LENGTH']:
-                    raise Exception('File is too big')
-                
                 #make sure image is right type
                 mime_type = imghdr.what(f)
                 if not mime_type or mime_type.lower() not in ['jpeg','gif','png']:
                     raise Exception('Not recognized as JPEG, GIF or PNG: {}'
                                     .format(mime_type))                
                 ext = f.filename.split('.')[-1]
-                filename = secure_filename('{}.{}'.format(pid,ext))
+
+                #insert everything but the image path into the post table and get the pid to name the imgpath
+                pid = db.insertPost(postconn, uid, name, rating, price, review, restaurant, location)
+                
+                #create image name. The name is of the image is the pid of its post.
+                filename = secure_filename('{}.{}'.format(str(pid),ext))
                 user_folder = os.path.join(app.config['UPLOADS'],str(uid))
 
-                #if user folder doesn't exist, create it. Otherwise, upload it
+                #if user folder doesn't exist, create it. Otherwise, upload the new image into the static images folder
                 if not(os.path.isdir(user_folder)):
                     os.mkdir(user_folder)
                 pathname = os.path.join(user_folder,filename)
                 f.save(pathname)
                 
-                #the filepath that gets put into the database
+                #the filepath of the post image gets put into the database
                 filePath = os.path.join('images/{}/'.format(uid), filename)
-
-                #add to post table
-                conn = getConn()
-                curs = dbi.cursor(conn)
-                curs.execute(
-                    '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
-                    values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-                    [uid, name, rating, price, review, restaurant, location, filePath])
+                db.insertFilepath(postconn, filePath, pid)
                 
-                #add to Tagpost table
+                #add all the relevant tags into the database
                 for tag in tags:
-                    curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
+                    db.insertTagPost(postconn,pid,tag)
+                    #curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
                 
                 flash('Upload successful')
                 return redirect(url_for("index"))
@@ -347,61 +347,8 @@ def redirProfile():
 #         print(err)
 #         return redirect(request.referrer)
 def profile(username): 
-    conn = getConn()
-    #print(username)
-    # try:
-    uid = db.getUid(conn, username)
-    print(uid)
-
-    if not uid:
-        flash("User not found")
-        return render_template("home.html")
-    uid=uid
-    
-    
-    
-    match = False
-    print(session['uid'])
-    print(uid)
-    if session['uid'] == uid: #if the session user is on their profile or someone elses
-        match = True
-
-    print("match?: " + str(match))
-    
-    fullName = db.getFullName(conn, uid)
-    bioText = db.getBioText(conn, uid)
-    profPic = db.getPPic(conn, uid)
-    posts = db.getPostsByUser(conn, uid)
-    numPosts = db.numPostsUser(conn, uid)
-    #print(match)
-    numFollowing = db.numFollowing(conn, uid)
-    #print("following" + str(numFollowing))
-    numFollowers = db.numFollowers(conn, uid)
-    #print("followers" + str(numFollowers))
-
-    # print(uid)
-    
-    followingBoolean = db.following_trueFalse(conn, session['uid'], uid)
-    #(session['uid'] == uid) or 
-    #print("followingBoolean" + str(followingBoolean))
-
-    if followingBoolean == True:
-        buttonText = "Following"
-    else:
-        buttonText = "Follow"
-
-    return render_template('profile.html', profName=username,
-                                uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-                                ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
-                                match = match, numFing = numFollowing, numFers = numFollowers, tButton = buttonText)
-                                #fboolean = followingBoolean
-    # except Exception as err:
-    #     print(err)
-    #     flash("user not found")
-    #     return redirect(request.referrer)
-
-@app.route('/follow/<username>', methods= ["POST"])   
-def aFollow(username):
+    conn = db.getConn(DB)
+    print(username)
     try:
         conn = getConn()
         profUID = db.getUid(conn, username)
@@ -447,12 +394,8 @@ def followingList(username):
 def editProf():
 
     uid = session['uid']
-    username = request.form.get('pname')
-    print("username " + username)
-    fullName = request.form.get('displayName')
-    biotext = request.form['bioText']
-
-    conn = getConn()
+    username = session['username']
+    conn = db.getConn(DB)
 
     #upload folder path, and allowed extension of file images
     UPLOAD_FOLDER = 'static/img/{}/'.format(uid)
@@ -506,7 +449,7 @@ def delete_post(pid):
     flash("Successfully deleted post")
     return redirect(url_for("home"))
 
-# edit a post's name, resturant, location, rating, price, review
+# edit a post's name, resturant, location, rating, price, tags, review
 @app.route('/edit_post/<pid>', methods=['POST'])
 
 # @Scott--can we pass variables from jinja to python function?
@@ -558,7 +501,8 @@ def show_tag_posts(tag):
         return redirect(url_for("index"))
     username = session['username']
     title = "posts under " + tag
-    return render_template("home.html", page_title= title, posts=posts, username=username,
+    tags = db.getAllTags(conn)
+    return render_template("home.html", page_title= title, posts=posts, username=username, tags = tags,
                             options=True)
 
 if __name__ == '__main__':

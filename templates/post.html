@@ -210,13 +210,9 @@
         var imgHeight = $("#post-image").height();
         $("#flex-right").height(imgHeight);
 
-        // $("#edit-save").on("click", function() {
-        //   $("#edit-post-form").submit();
-        // });
-
         $("#edit-post-form").on("submit", function(){
 
-        })
+        });
 
         $("#edit-button").on("click", function() {
 
@@ -243,7 +239,7 @@
 	      $("#like-button").on('click', function () {
         // turn it on
 	    	var likeButtonText = $("#like-button").text();
-
+        console.log(likeButtonText)
 		    if(likeButtonText == "Like") {
 		
 			    $("#like-button").text('Liked');
@@ -254,6 +250,8 @@
 		    $("#like-button").text('Like');
         	$.post(URL_unlike, updateLikes)  
 		    }
+        
+        });
 
         function updateLikes(obj) {
         console.log(obj);
@@ -265,28 +263,6 @@
             console.log(obj)
         }
     }
-
-    
-        // $('#stars li').on('mouseover', function(){
-        //   var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
-   
-        // // Now highlight all the stars that's not after the current hovered star
-        //   $(this).parent().children('li.star').each(function(e){
-        //     if (e < onStar) {
-        //       $(this).addClass('hover');
-        //     }
-        //     else {
-        //       $(this).removeClass('hover');
-        //     }
-        //   });
-    
-        // }).on('mouseout', function(){
-        //   $(this).parent().children('li.star').each(function(e){
-        //     $(this).removeClass('hover');
-        //   });
-        // });
-  
-
       });
 
     </script>

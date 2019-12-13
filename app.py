@@ -78,7 +78,7 @@ def search():
 def alikes(post):
     try: 
         conn = getConn()
-        profUID = db.getUid(conn, username)
+        profUID = db.getUidfromPost(conn, post)
         db.addLike(conn, post, profUID)
         numberLikes = db.countLikes(conn, post)
         return jsonify(numLikes = numberLikes)
@@ -90,8 +90,8 @@ def alikes(post):
 def dlikes(post):
     try: 
         conn = getConn()
-        profUID = db.getUid(conn, username)
-        db.deleteLike(conn, post, profUID)
+        profUID = db.getUidfromPost(conn, post)
+        db.removeLike(conn, post, profUID)
         numberLikes = db.countLikes(conn, post)
         return jsonify(numLikes = numberLikes)
     except Exception as err:

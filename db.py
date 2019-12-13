@@ -93,6 +93,12 @@ def like_trueFalse(conn, pid, uid):
     curs.execute('''select * from Likes where profile_id=%s and post_id=%s''', [uid, pid])
     return True if curs.fetchone() else False
 
+def getUidfromPost(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select uid from Posts where pid=%s''', [pid])
+    result = curs.fetchone()
+    return result['uid']
+
 def countLikes(conn, pid):
     '''counts the number of likes a post has'''
     curs = dbi.dictCursor(conn)

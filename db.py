@@ -80,7 +80,33 @@ def followersUsers(conn, uid):
         print("usersList " + str(usersList))
         return usersList
    
+def countLikes(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select count(*) from Likes where post_id=%s''', [pid])
+    result = curs.fetchone()
+    return result['count(*)']
 
+def likesList(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select profile_id from Likes where post_id=%s''', [pid])
+    users = curs.fetchall()
+    if len(users) == 0:
+        return 0
+    else:
+        usersList = []
+        for user in users:
+            curs2 = dbi.dictCursor(conn)
+            id = user['profile_id']
+            curs2.execute('''select username from Users where uid=%s''', [id])
+            usersList.append(curs2.fetchone())
+        return usersList
+
+def getComments(conn, pid):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select comment, profile_id from Comments where post_id=%s''', [pid])
+    comments = curs.fetchall()
+    if len(users) == 0:
+        return 0
 
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)

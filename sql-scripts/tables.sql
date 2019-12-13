@@ -1,6 +1,8 @@
 -- use sxu5_db;
 
 drop table if exists Follows;
+drop table if exists Likes;
+drop table if exists Comments;
 drop table if exists Tagpost;
 drop table if exists Tags;
 drop table if exists Posts;
@@ -27,6 +29,7 @@ create table Follows(
            on delete cascade
 );
 
+
 create table Posts(
     pid int auto_increment not null primary key,
     uid int,
@@ -40,6 +43,25 @@ create table Posts(
     time timestamp,
     foreign key (uid) references Users(uid)
            on delete cascade        
+);
+
+create table Likes(
+    post_id int,
+    profile_id int,
+    foreign key(post_id) references Posts(pid)
+        on delete CASCADE,
+    foreign key(profile_id) references Users(uid)
+        on delete cascade
+);
+
+create table Comments(
+    post_id int,
+    profile_id int,
+    comment varchar(100),
+    foreign key(post_id) references Posts(pid)
+        on delete CASCADE,
+    foreign key(profile_id) references Users(uid)
+        on delete cascade
 );
 
 create table Tags(

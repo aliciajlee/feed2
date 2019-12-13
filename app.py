@@ -53,6 +53,17 @@ def home():
     return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
                             options=True)
 
+@app.route('/likes/<post>', methods= ["POST"])   
+def likes(post):
+    try: 
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        numberLikes = db.countLikes(conn, post)
+        return jsonify(numLikes = numberLikes)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
 
 # for now return all results where post name, tag, restaurant, username, fullname match
 @app.route("/search/", methods=["GET"])

@@ -147,6 +147,12 @@ def addComment(conn, pid, uid, cText):
     curs.execute('''INSERT INTO Comments(post_id, profile_id, comment)
                                 VALUES(%s, %s,%s)''', [pid, uid, cText])
 
+
+def deleteComment(conn, pid, uid, cText): 
+    '''adds a comment to the Comments table'''
+    curs = dbi.dictCursor(conn)
+    curs.execute('''DELETE from Comments where post_id=%s and profile_id=%s and comment=%s)''', [pid, uid, cText])
+
 def getNumPosts(conn):
     curs = dbi.dictCursor(conn)
     curs.execute('''select max(pid) from Posts''')

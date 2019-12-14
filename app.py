@@ -106,6 +106,35 @@ def likesList(post):
     userLikesList = db.likesList(conn, pid)
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
 
+@app.route('/listofComment/<post>', methods = ["POST", "GET"])
+def commentsList(post):
+    conn = getConn()
+    comments = db.getComments(conn, pid)
+    #profUID = db.getUid(conn, username)
+    pid = post
+    return render_template(".html", page_title="Who commented this post", comments = comments)
+
+@app.route('/dcomment/<post>/<comment>', methods= ["POST", "GET"])   
+def dcomment(post, comment):
+    try: 
+        conn = getConn()
+        db.deleteComment(conn, post, session[uid], comment)
+        db.getComments(conn, pid)
+        return jsonify(comments = comments)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
+
+@app.route('/acomment/<post>/<comment>', methods= ["POST", "GET"])   
+def acomment(post, comment):
+    try: 
+        conn = getConn()
+        db.addComment(conn, post, session[uid], comment)
+        db.getComments(conn, pid)
+        return jsonify(comments = comments)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
 
 # display info of an individual post
 @app.route('/post/<pid>/')

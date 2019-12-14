@@ -54,20 +54,18 @@
         {%endblock %}
 
         {% block content %}
-            <div id="posts" class="masonry card-columns">
+        <!--  BOOTSTRAP CARD -->
+
+            <!-- <div id="posts" class="masonry card-columns">
             {% for post in posts %}
             <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 
                 <div class="item card">
-                    <!-- image -->
-
-                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                    <img class="card-image-top img-fluid rounded-top post-image" 
+                 rd-image-top img-fluid post-image"> -->
+                    <!-- <img class="card-image-top img-fluid rounded-top post-image" 
                         src="{{url_for('static',filename=post['imgPath'])}}">
-                    <!-- </div> -->
                  
                     <div class="card-body">
                         <h5 class="card-title">{{post['pname']}}</h5>
-                        <!-- rating -->
                         <p class="card-text rating" data-rating="{{post['rating']}}"></p>
                         <p class="card-text">{{post['review'] | truncate(150)}}</p>
                     </div>
@@ -75,256 +73,11 @@
             </a>
 
             {% endfor %}
-            </div>
+            </div>  -->
 
+            <!-- MASONRY -->
             <div id="masonry" class="grid">
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=1)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
                 
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/1.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=4)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/4.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=5)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/5.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=6)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/6.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=11)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/11.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjaslkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjasdajf;klsjfkls;jdklg;jklajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjasdajf;klsjfkls;jdklg;jklajklfjgakldfjksgblfjnv;ksjfvnknadjkvn;jdknvja;kdnjvjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">kdfjasdajf;klsjfkls;jdklg;jklajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">ajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">s;jdklg;jklajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflks;jdfklasjdkfljaslkdfjasdajf;klsjfkls;jdklg;jkjskfnvjkdak;nfdakjvndka;nvjkdafnjvkadnfvjkadnvjkandfjk;vlajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
-                <div class="grid-item">
-                        <a href="{{url_for('post', pid=22)}}" class = "custom-card"> 
-                                <div class="item card">
-                                    <!-- image -->
-                
-                                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                                    <img class="card-image-top img-fluid rounded-top post-image" 
-                                        src="{{url_for('static',filename='images/1/22.jpg')}}">
-                                    <!-- </div> -->
-                                 
-                                    <div class="card-body">
-                                        <h5 class="card-title">i fucking khate myself</h5>
-                                        <!-- rating -->
-                                        <p class="card-text rating" data-rating="5"></p>
-                                        <p class="card-text">sadjflkkdavklafdmvlkdmvkldfmklvmklfmvakldfmvlkmadflkmvlkadfmvlkdafmvlks;jdfklasjdkfljaslkdfjasdajf;klsjfkls;jdklg;jklajklfjgakldfjadlk;jgfak;ldjgklda;jgkfdal;jgkldjgkladf;jgkldf;jgkladfjkgadlf;gjfdkal;gjkdla;fglkaureghuerpakgjkd</p>
-                                    </div>
-                                </div>
-                            </a>
-                </div>
                 {% for post in posts %}
                 <div class="grid-item">
                     <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 

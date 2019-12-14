@@ -50,13 +50,15 @@ def home():
         return redirect(url_for("index"))
     username = session['username']
     tags = db.getAllTags(conn)
+
     #change this to AJAX later
     tag = request.values.get('tag')
+
     if(tag):
         return redirect(url_for('show_tag_posts', tag= tag))
     else: 
         # how should they be sorted -- bootstrap card thing inserts by column and not row
-        return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
+        return render_template("home.html", page_title="Home • Feed", posts=posts[::-1], username=username,
                                 tags = tags, options=True)
 
 @app.route('/likes/<post>', methods= ["POST"])   
@@ -504,6 +506,14 @@ def show_tag_posts(tag):
     tags = db.getAllTags(conn)
     return render_template("home.html", page_title= title, posts=posts, username=username, tags = tags,
                             options=True)
+
+@app.route('/sort_time', methods=['GET'])
+def sort_time(posts):
+    pass
+
+@app.route('/sort_rating', methods=['GET'])
+def sort_time(posts):
+    pass
 
 if __name__ == '__main__':
     import sys,os

@@ -198,7 +198,9 @@ def post(pid):
     if posted:
         all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
     print("buttonText for likes " + str(buttonText))
-    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags, likes=likes, tfText = str(buttonText))
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, 
+                            all_tags=all_tags, likes=likes, tfText = str(buttonText),
+                            liked=likeBoolean)
 
 
 @app.route('/signUp/', methods=["GET","POST"])

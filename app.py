@@ -507,13 +507,13 @@ def show_tag_posts(tag):
     return render_template("home.html", page_title= title, posts=posts, username=username, tags = tags,
                             options=True)
 
-@app.route('/sort_time', methods=['GET'])
-def sort_time(posts):
-    pass
+# @app.route('/sort_time/', methods=['GET'])
+# def sort_time(posts):
+#     pass
 
-@app.route('/sort_rating', methods=['GET'])
-def sort_time(posts):
-    pass
+# @app.route('/sort_rating/', methods=['GET'])
+# def sort_time(posts):
+#     pass
 
 if __name__ == '__main__':
     import sys,os

@@ -78,8 +78,7 @@ def search():
 def alikes(post):
     try: 
         conn = getConn()
-        profUID = db.getUidfromPost(conn, post)
-        db.addLike(conn, post, profUID)
+        db.addLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
         return jsonify(numLikes = numberLikes)
     except Exception as err:
@@ -90,9 +89,9 @@ def alikes(post):
 def dlikes(post):
     try: 
         conn = getConn()
-        profUID = db.getUidfromPost(conn, post)
-        db.removeLike(conn, post, profUID)
+        db.removeLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
+        print("number of likes after deleting: " + str(numberLikes))
         return jsonify(numLikes = numberLikes)
     except Exception as err:
         print(err)
@@ -129,6 +128,7 @@ def post(pid):
     uid = db.getUid(conn, post['username'])
 
     likeBoolean = db.like_trueFalse(conn, pid, uid)
+    print("likeBoolean " + str(likeBoolean))
     if likeBoolean == True:
         buttonText = "Liked"
     else:
@@ -137,8 +137,8 @@ def post(pid):
     all_tags = []
     if posted:
         all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
-
-    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags, likes=likes, tfText = buttonText )
+    print("buttonText for likes " + str(buttonText))
+    return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, all_tags=all_tags, likes=likes, tfText = str(buttonText))
 
 
 @app.route('/signUp/', methods=["GET","POST"])

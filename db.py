@@ -90,7 +90,7 @@ def followersUsers(conn, uid):
 def like_trueFalse(conn, pid, uid):
     '''Are you following this profile? Returns true or false'''
     curs = dbi.cursor(conn)
-    curs.execute('''select * from Likes where profile_id=%s and post_id=%s''', [uid, pid])
+    curs.execute('''select * from Likes where post_id=%s and profile_id=%s''', [pid, uid])
     return True if curs.fetchone() else False
 
 def getUidfromPost(conn, pid):
@@ -114,7 +114,7 @@ def addLike(conn, pid, uid):
 def removeLike(conn, pid, uid):
     '''removes a like to the post from the Likes table ''' 
     curs = dbi.dictCursor(conn)
-    curs.execute('''DELETE from Likes where post_id=%s and profile_id=%s)''', [pid, uid])
+    curs.execute('''DELETE from Likes where post_id=%s and profile_id=%s''', [pid, uid])
 
 def likesList(conn, pid):
     '''lists the users that liked a particular post'''

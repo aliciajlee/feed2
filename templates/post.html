@@ -202,7 +202,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/cc5f13310d.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script>
       $(document).ready(function() {
         
@@ -238,18 +238,21 @@
 
 	      $("#like-button").on('click', function () {
         // turn it on
-	    	var likeButtonText = $("#like-button").text();
-        console.log(likeButtonText)
-		    if(likeButtonText == "Like") {
-		
-			    $("#like-button").text('Liked');
-			    $.post(URL_like, updateLikes) 
+          var likeButtonText = String($("#like-button").text());
+          console.log(likeButtonText)
+          console.log(likeButtonText == "Like")
 
-		    } 
-		    else {
-		    $("#like-button").text('Like');
-        	$.post(URL_unlike, updateLikes)  
-		    }
+          if(likeButtonText == "Like") {
+      
+            $("#like-button").text("Liked");
+            $.post(URL_like, updateLikes) 
+
+          } 
+          else {
+            $("#like-button").text("Like");
+            $.post(URL_unlike, updateLikes)  
+            //console.log(newLikeCount)
+          }
         
         });
 
@@ -257,7 +260,19 @@
         console.log(obj);
         if(obj.error) {
             $("#errors").empty().html('Error: '+obj.err);
-            console.log('obj error')
+            console.log('obj error at adding like')
+        } else {
+            $("#likeNumber").text(obj.numLikes);
+            console.log(obj)
+        }
+    }
+
+
+    function updatedLikes(obj) {
+        console.log(obj);
+        if(obj.error) {
+            $("#errors").empty().html('Error: '+obj.err);
+            console.log('obj error at delete like')
         } else {
             $("#likeNumber").text(obj.numLikes);
             console.log(obj)

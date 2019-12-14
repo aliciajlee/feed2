@@ -53,6 +53,7 @@ def home():
 
     #change this to AJAX later
     tag = request.values.get('tag')
+    conn.close()
 
     if(tag):
         return redirect(url_for('show_tag_posts', tag= tag))
@@ -67,6 +68,7 @@ def likes(post):
         conn = getConn()
         profUID = db.getUid(conn, username)
         numberLikes = db.countLikes(conn, post)
+        conn.close()
         return jsonify(numLikes = numberLikes)
     except Exception as err:
         print(err)
@@ -81,6 +83,7 @@ def search():
     conn = db.getConn(DB)
     if type_ == 'posts':
         posts = db.getQueryPosts(conn, query)
+        conn.close()
         if not posts:
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
@@ -88,6 +91,7 @@ def search():
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
+        conn.close()
         if not users:
             flash("no users found")
         flash("User results for '{}'".format(query))
@@ -99,6 +103,7 @@ def alikes(post):
         conn = getConn()
         db.addLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
+        conn.close()
         return jsonify(numLikes = numberLikes)
     except Exception as err:
         print(err)
@@ -110,6 +115,7 @@ def dlikes(post):
         conn = getConn()
         db.removeLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
+        conn.close()
         print("number of likes after deleting: " + str(numberLikes))
         return jsonify(numLikes = numberLikes)
     except Exception as err:
@@ -123,6 +129,7 @@ def likesList(post):
     #profUID = db.getUid(conn, username)
     pid = post
     userLikesList = db.likesList(conn, pid)
+    conn.close()
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
 
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
@@ -168,14 +175,19 @@ def post(pid):
         return redirect(request.referrer)
 
     tags = db.getTagsofPost(conn, pid)
+    conn.close()
 
     rating = post['rating']
 
     user = None if 'username' not in session else session['username']
     posted = user == post['username']
+    conn = db.getConn(DB)
     uid = db.getUid(conn, post['username'])
+    conn.close()
 
-    likeBoolean = db.like_trueFalse(conn, pid, uid)
+    conn = db.getConn(DB)
+    liked = db.like_trueFalse(conn, pid, uid)
+    conn.close()
     print("likeBoolean " + str(likeBoolean))
     if likeBoolean == True:
         buttonText = "Liked"

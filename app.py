@@ -99,6 +99,7 @@ def alikes(post):
         conn = getConn()
         db.addLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
+        print("here")
         return jsonify(numLikes = numberLikes)
     except Exception as err:
         print(err)
@@ -175,6 +176,7 @@ def post(pid):
     posted = user == post['username']
     uid = db.getUid(conn, post['username'])
 
+    #always false
     likeBoolean = db.like_trueFalse(conn, pid, uid)
     print("likeBoolean " + str(likeBoolean))
     if likeBoolean == True:

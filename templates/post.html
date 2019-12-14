@@ -79,7 +79,7 @@
         </span>
         <span>Like</span>
         </span>
-        <span>
+        <span id="likeNumber">
           {{likes}}
         </span>
         <!-- comments -->
@@ -227,7 +227,9 @@
 
     <script>
       $(document).ready(function() {
-        
+        var URL_like = "{{url_for('alikes', post=pid)}}"
+        var URL_unlike = "{{url_for('dlikes', post=pid)}}"
+        var like_on = false;
         // remove height for min width
         var imgHeight = $("#post-image").height();
         $("#flex-right").height(imgHeight);
@@ -238,7 +240,44 @@
 
         $("#edit-post-form").on("submit", function(){
 
-        })
+        });
+
+        console.log($("#like").attr("data-liked"));
+
+        // IF USER ALREADY LIKED POST DO STUFF HERe
+
+
+        $("#like").click(function() {
+          if ($(this).attr("data-liked")=="False") {
+              console.log("liked");
+              $(this).css("color", "#EF3B3A");
+              $(this).attr("data-liked", "True");
+              $.post(URL_like, updateLikes);
+          } else {
+              console.log("unliked");
+              $(this).css("color", "#5d5d5d");
+              $(this).attr("data-liked", "False");
+              $.post(URL_unlike, updateLikes); 
+          }
+        });
+
+        function updateLikes(obj) {
+          if(obj.error) {
+              $("#errors").empty().html('Error: '+obj.err);
+              console.log('obj error at adding like')
+          } else {
+              $("#likeNumber").text(obj.numLikes);
+          }
+        }
+
+        function updatedLikes(obj) {
+            console.log(obj);
+            if(obj.error) {
+                $("#errors").empty().html('Error: '+obj.err);
+                console.log('obj error at delete like')
+            } else {
+                $("#likeNumber").text(obj.numLikes);    
+      }};
 
         $("#edit-button").on("click", function() {
 
@@ -256,27 +295,6 @@
           $('select').val(tags);
           $('select').trigger('change');
         });
-
-        // $('#stars li').on('mouseover', function(){
-        //   var onStar = parseInt($(this).data('value'), 10); // The star currently mouse on
-   
-        // // Now highlight all the stars that's not after the current hovered star
-        //   $(this).parent().children('li.star').each(function(e){
-        //     if (e < onStar) {
-        //       $(this).addClass('hover');
-        //     }
-        //     else {
-        //       $(this).removeClass('hover');
-        //     }
-        //   });
-    
-        // }).on('mouseout', function(){
-        //   $(this).parent().children('li.star').each(function(e){
-        //     $(this).removeClass('hover');
-        //   });
-        // });
-  
-
       });
 
     </script>

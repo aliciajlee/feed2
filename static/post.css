@@ -8,10 +8,15 @@
 .indv-post{
     top: 10px;
     bottom: 15px;
-    width: 60%;  
+     
     /* display: inline-block; */
     overflow: hidden;
     padding: 10px;
+    width: 60%; 
+    overflow: hidden;
+    float: none;
+    padding: 10px;
+    margin-bottom: 0px !important;
 }
 
 img{

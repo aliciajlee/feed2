@@ -20,10 +20,10 @@
           <div class="left">
             <img id="post-image" class="rounded" src="{{url_for('static',filename=post['imgPath'])}}" alt="post image">
           </div>
-          <br>
-          <div>
+        
+          <!-- <div>
             <button id="like-button"> {{tfText}} </button> <span id="likeNumber"> {{likes}} </span> <a href="/listofLikes/{{pid}}">  users </a><!-- continue added like feature--> 
-          </div>
+          <!-- </div>  -->
            <div id="flex-right" class="right">
             {% if posted is sameas true %}
             
@@ -70,6 +70,18 @@
           
         </div>
       </div>
+
+      <!-- LIKES/COMMENTS -->
+      <div id ="likes-comments" class="indv-post rounded border border-light">
+        <span>
+          <i class="fas fa-thumbs-up"></i>
+        </span>
+        <!-- comments -->
+        
+      </div cla>
+      
+      {% if posted is sameas true %}
+      <!-- DELETE FORM -->
       <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -93,7 +105,7 @@
           </div>
         </div>
       </div>
-      {% if posted is sameas true %}
+      <!-- EDIT FORM -->
       <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">

@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -49,9 +49,28 @@ def home():
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))
     username = session['username']
-    # how should they be sorted -- bootstrap card thing inserts by column and not row
-    return render_template("home.html", page_title="Home • Feed", posts=posts, username=username,
-                            options=True)
+    tags = db.getAllTags(conn)
+
+    #change this to AJAX later
+    tag = request.values.get('tag')
+
+    if(tag):
+        return redirect(url_for('show_tag_posts', tag= tag))
+    else: 
+        # how should they be sorted -- bootstrap card thing inserts by column and not row
+        return render_template("home.html", page_title="Home • Feed", posts=posts[::-1], username=username,
+                                tags = tags, options=True)
+
+@app.route('/likes/<post>', methods= ["POST"])   
+def likes(post):
+    try: 
+        conn = getConn()
+        profUID = db.getUid(conn, username)
+        numberLikes = db.countLikes(conn, post)
+        return jsonify(numLikes = numberLikes)
+    except Exception as err:
+        print(err)
+        return jsonify( {'error': True, 'err': str(err) } )
 
 
 # for now return all results where post name, tag, restaurant, username, fullname match
@@ -618,6 +637,14 @@ def show_tag_posts(tag):
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
                             options=True)
+
+# @app.route('/sort_time/', methods=['GET'])
+# def sort_time(posts):
+#     pass
+
+# @app.route('/sort_rating/', methods=['GET'])
+# def sort_time(posts):
+#     pass
 
 if __name__ == '__main__':
     import sys,os

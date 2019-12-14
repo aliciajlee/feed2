@@ -54,20 +54,18 @@
         {%endblock %}
 
         {% block content %}
-            <div id="posts" class="masonry card-columns">
+        <!--  BOOTSTRAP CARD -->
+
+            <!-- <div id="posts" class="masonry card-columns">
             {% for post in posts %}
             <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 
                 <div class="item card">
-                    <!-- image -->
-
-                    <!-- <div class="card-image-top img-fluid post-image"> -->
-                    <img class="card-image-top img-fluid rounded-top post-image" 
+                 rd-image-top img-fluid post-image"> -->
+                    <!-- <img class="card-image-top img-fluid rounded-top post-image" 
                         src="{{url_for('static',filename=post['imgPath'])}}">
-                    <!-- </div> -->
                  
                     <div class="card-body">
                         <h5 class="card-title">{{post['pname']}}</h5>
-                        <!-- rating -->
                         <p class="card-text rating" data-rating="{{post['rating']}}"></p>
                         <p class="card-text">{{post['review'] | truncate(150)}}</p>
                     </div>
@@ -75,7 +73,35 @@
             </a>
 
             {% endfor %}
+            </div>  -->
+
+            <!-- MASONRY -->
+            <div id="masonry" class="grid">
+                
+                {% for post in posts %}
+                <div class="grid-item">
+                    <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 
+                        <div class="item card">
+                            <!-- image -->
+
+                            <!-- <div class="card-image-top img-fluid post-image"> -->
+                            <img class="card-image-top img-fluid rounded-top post-image" 
+                                src="{{url_for('static',filename=post['imgPath'])}}">
+                            <!-- </div> -->
+                        
+                            <div class="card-body">
+                                <h5 class="card-title">{{post['pname']}}</h5>
+                                <!-- rating -->
+                                <p class="card-text rating" data-rating="{{post['rating']}}"></p>
+                                <p class="card-text">{{post['review'] | truncate(150)}}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            {% endfor %}
             </div>
+
 
             <div id="users" class="masonry card-columns">
             {% for user in users %}
@@ -104,6 +130,38 @@
            {{super()}}
             <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
             <script src="{{url_for('static',filename='home.js')}}"></script>
+            <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+            <script>
+                // external js: masonry.pkgd.js
+                window.addEventListener('load', function () {
+                  console.log("It's loaded!");
+                    colWidth = ($("#masonry").innerWidth() - 10*(parseFloat($(".grid-item").css("margin").slice(0,-2))))/5.0;
+                    // console.log(colWidth);
+                    // console.log($("#masonry").innerWidth());
+                    // console.log(parseFloat($(".grid-item").css("margin").slice(0,-2)));
+
+                    // need to set the height of each grid item
+                    $(".grid-item").each(function() {
+                        // this.height(this.find(".custom-card").height());
+                        // console.log(this);
+                        // console.log("here");
+                        $(this).height($(this).find(".custom-card")+50);
+                        $(this).width(colWidth);
+                    
+                    });
+
+                    // for 5 columns, make dynamic later
+                    
+
+                    $('.grid').masonry({
+                        itemSelector: '.grid-item',
+                        columnWidth: '.grid-item',
+                        horizontalOrder: true
+                    });
+                })
+              
+
+            </script>
         {% endblock %}   
     
 </body>

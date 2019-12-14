@@ -87,7 +87,8 @@ def search():
         if not posts:
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
-        return render_template("home.html", page_title="Results", posts=posts, options=True)
+        return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
+                                    query=query, type=type_)
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
@@ -95,7 +96,8 @@ def search():
         if not users:
             flash("no users found")
         flash("User results for '{}'".format(query))
-        return render_template("home.html", page_title="Results",users=users, options=False)
+        return render_template("home.html", page_title="Results",users=users, options=False,
+                                    query=query, type=type_)
 
 @app.route('/alike/<post>', methods= ["POST", "GET"])   
 def alikes(post):
@@ -188,19 +190,13 @@ def post(pid):
     conn = db.getConn(DB)
     liked = db.like_trueFalse(conn, pid, uid)
     conn.close()
-    print("likeBoolean " + str(likeBoolean))
-    if likeBoolean == True:
-        buttonText = "Liked"
-    else:
-        buttonText = "Like"
-    
+
     all_tags = []
     if posted:
         all_tags = db.getAllTags(db.getConn(DB)) # for displaying tags in edit post
-    print("buttonText for likes " + str(buttonText))
+
     return render_template("post.html", post=post, pid=pid, tags=tags, posted=posted, 
-                            all_tags=all_tags, likes=likes, tfText = str(buttonText),
-                            liked=likeBoolean)
+                            all_tags=all_tags, likes=likes, liked=liked)
 
 
 @app.route('/signUp/', methods=["GET","POST"])
@@ -451,8 +447,6 @@ def profile(username):
         return render_template("home.html")
     uid=uid
     
-    
-    
     match = False
     print(session['uid'])
     print(uid)
@@ -656,9 +650,31 @@ def show_tag_posts(tag):
 # def sort_time(posts):
 #     pass
 
-# @app.route('/sort_rating/', methods=['GET'])
-# def sort_time(posts):
-#     pass
+
+# sort posts by rating no ajax, it's a serparate route for now
+@app.route('/sort_rating/', methods=["GET"])
+def sort_rating():
+
+    # better to send posts from ajax over and sort them using python sort
+    # or get the posts again from the db sorted by rating?
+
+    # posts = request.form.get("posts")
+
+
+    query = request.values.get("query")
+    
+    if query[:-1] != "null":
+        # get posts by query
+        conn = db.getConn(DB)
+        posts = db.getQueryPostsSortByRating(conn, query[:-1])
+    else:
+        # get all posts)
+        conn = db.getConn(DB)
+        posts = db.getAllPostsSortByRating(conn)
+    
+    return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
+                                    query=query[:-1], sortBy="rating")
+
 
 if __name__ == '__main__':
     import sys,os

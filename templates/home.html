@@ -23,14 +23,14 @@
             {% if options is sameas true %}
             <div id="options">
                 <span>
-                    <!-- <form id="sort-by-form" method=GET action="/home/"> -->
+                    <form id="sort-by-form" method=GET>
                         <label>Sort by</label>
                         <select name="sort-by" id="sort-by">
                             <option value="recent">Most Recent</option>
                             <option value="rating">Rating</option>
                             <option value="price">Price</option>
                         </select>
-                    <!-- </form> -->
+                    </form>
                 </span>
                 <span>
                     <form id="tag-form">
@@ -132,33 +132,80 @@
             <script src="{{url_for('static',filename='home.js')}}"></script>
             <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
             <script>
-                // external js: masonry.pkgd.js
-                window.addEventListener('load', function () {
-                  console.log("It's loaded!");
-                    colWidth = ($("#masonry").innerWidth() - 10*(parseFloat($(".grid-item").css("margin").slice(0,-2))))/5.0;
-                    // console.log(colWidth);
-                    // console.log($("#masonry").innerWidth());
-                    // console.log(parseFloat($(".grid-item").css("margin").slice(0,-2)));
+                $(document).ready(function() {        
+                    var URL_SORT_RATING = "{{url_for('sort_rating')}}"
+                    // console.log({{posts}})
+                    var query;
 
-                    // need to set the height of each grid item
-                    $(".grid-item").each(function() {
-                        // this.height(this.find(".custom-card").height());
-                        // console.log(this);
-                        // console.log("here");
-                        $(this).height($(this).find(".custom-card")+50);
-                        $(this).width(colWidth);
-                    
+
+                    window.addEventListener('load', function () {
+                        colWidth = ($("#masonry").innerWidth() - 10*(parseFloat($(".grid-item").css("margin").slice(0,-2))))/5.0;
+
+                        // need to set the height of each grid item
+                        $(".grid-item").each(function() {
+                            $(this).height($(this).find(".custom-card")+50);
+                            $(this).width(colWidth);
+                        
+                        });
+                        // for 5 columns, make dynamic later
+                        
+                        $('.grid').masonry({
+                            itemSelector: '.grid-item',
+                            columnWidth: '.grid-item',
+                            horizontalOrder: true
+                        });
                     });
 
-                    // for 5 columns, make dynamic later
-                    
+                    {% if sortBy is defined %}
 
-                    $('.grid').masonry({
-                        itemSelector: '.grid-item',
-                        columnWidth: '.grid-item',
-                        horizontalOrder: true
-                    });
-                })
+                        $("#sort-by").val("{{sortBy}}");
+                        
+                    {% endif %}
+
+                    $("#sort-by").change(function () {
+                        console.log(this.value);
+
+                        // check if there was search query
+                        {% if query is defined %}
+                            query = "{{query}}";
+                        
+                        {% else %}
+
+                            query = null;
+
+                        {% endif %}
+
+                        console.log(query);
+
+                        var sortBy = this.value;
+
+                        switch(this.value) {
+                            case "time":
+                                console.log("sort by time");
+                                // $("#sort-by-form").attr("action", "{{url_for('sort_rating')}}")
+                                
+                                break;
+                            case "rating":
+                                console.log("sort by rating");
+                                $("#sort-by-form").attr("action", "{{url_for('sort_rating')}}");
+                                
+
+                                // $.post(URL_SORT_RATING, {"type": "posts", "query": query}, displaySortedPosts)  
+                                break;
+                            case "price":
+                                console.log("sort by price");
+                                break;
+
+                        };
+                        $("#sort-by-form").submit();
+                    })
+
+                    $("#sort-by-form").submit( function(eventObj) {
+                        stuff = '<input type="hidden" name="query" value=' + query + '/>'
+                        $(this).append(stuff);   
+                        return true;
+                    });         
+            })
               
 
             </script>

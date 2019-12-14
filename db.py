@@ -192,10 +192,15 @@ def getUid(conn, username):
 
 # gets all posts for displaying posts in feed
 def getAllPosts(conn):
-    '''select all the posts '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''') # we don't need to get all change later
     return curs.fetchall() # change this later
+
+def getAllPostsSortByRating(conn):
+
+    curs = dbi.dictCursor(conn)
+    curs.execute('''select * from Posts order by rating''') # we don't need to get all change later
+    return curs.fetchall()
 
 # get single post
 def getSinglePost(conn, pid):
@@ -221,6 +226,7 @@ def getTagsofPost(conn, pid):
 # returns posts where query matches post name, tag, restaurant, username, fullname
 def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)
+    
     curs.execute('''(select * from Posts where pname like %s 
                             or restaurant like %s or location like %s)
                     union
@@ -236,6 +242,24 @@ def getQueryPosts(conn, query):
                     '%'+query+'%', '%'+query+'%'])
     return curs.fetchall() # change to limit x offset y order by time
 
+# returns posts where query matches post name, tag, restaurant, username, fullname
+# sorted by rating
+def getQueryPostsSortByRating(conn, query):
+    curs = dbi.dictCursor(conn)
+    curs.execute('''(select * from Posts where pname like %s 
+                            or restaurant like %s or location like %s)
+                    union
+                    (select Posts.* from Posts inner join 
+                            (select pid from Tagpost inner join Tags 
+                            on Tags.tid = Tagpost.tid where Tags.ttype = %s) as p 
+                            on Posts.pid = p.pid)
+                    union
+                    (select Posts.* from Posts inner join (select uid from Users 
+                            where username like %s or fullname like %s) as u
+                            on Posts.uid = u.uid) order by rating''',
+                ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, 
+                    '%'+query+'%', '%'+query+'%'])
+    return curs.fetchall()
 # return users where query matches username, fullname
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)

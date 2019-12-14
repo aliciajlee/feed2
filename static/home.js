@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $(".rating").each(function () {
         let rating = $(this).attr("data-rating");
         // console.log(rating);
@@ -12,12 +13,12 @@ $(document).ready(function () {
         $(this).text(String.fromCodePoint(0x0024).repeat(txt)); // dollar sign emoji
     });
 
-    $("#sort-by-form").on("submit", function(e) {
-        alert("fuck");
-        e.preventDefault();
-        var s = $("#sort-by").val();
-        console.log(s);
-    });
+    // $("#sort-by-form").on("submit", function(e) {
+    //     alert("fuck");
+    //     e.preventDefault();
+    //     var s = $("#sort-by").val();
+    //     console.log(s);
+    // });
 
     $("#tag-form").on("submit", function(e) {
         e.preventDefault();
@@ -25,9 +26,7 @@ $(document).ready(function () {
         console.log(t);
     });
 
-    $("#sort-by").change(function () {
-        console.log(this.value);
-    })
+   
   });
 
 

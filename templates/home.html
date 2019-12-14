@@ -383,9 +383,10 @@
                 window.addEventListener('load', function () {
                   console.log("It's loaded!");
                     colWidth = ($("#masonry").innerWidth() - 10*(parseFloat($(".grid-item").css("margin").slice(0,-2))))/5.0;
-                    console.log(colWidth);
-                    console.log($("#masonry").innerWidth());
-                    console.log(parseFloat($(".grid-item").css("margin").slice(0,-2)));
+                    // console.log(colWidth);
+                    // console.log($("#masonry").innerWidth());
+                    // console.log(parseFloat($(".grid-item").css("margin").slice(0,-2)));
+
                     // need to set the height of each grid item
                     $(".grid-item").each(function() {
                         // this.height(this.find(".custom-card").height());
@@ -396,7 +397,7 @@
                     
                     });
 
-                    // for 5 columns, columnwidth should be innerwidth/5.0
+                    // for 5 columns, make dynamic later
                     
 
                     $('.grid').masonry({

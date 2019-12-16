@@ -337,11 +337,7 @@ def logout():
         return redirect( url_for('index') )
 
 @app.route('/upload/', methods=["POST"])
-
-# @Scott--can we pass variables from jinja to python function?
-# trying to pass tags of a post that we got when we rendered post.html
 def upload(): 
-
     name = request.form.get("pname")
     restaurant = request.form.get("restaurant")
     location = request.form.get("location")

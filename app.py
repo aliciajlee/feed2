@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'alee31_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -335,6 +335,63 @@ def logout():
     except Exception as err:
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
+
+@app.route('/upload_modal/, methods=['POST'])
+
+# @Scott--can we pass variables from jinja to python function?
+# trying to pass tags of a post that we got when we rendered post.html
+def upload_modal(): 
+
+    pname = request.form.get("pname")
+    restaurant = request.form.get("restaurant")
+    location = request.form.get("location")
+    rating = request.form.get("rating")
+    price = request.form.get("price")
+    review = request.form.get("review")
+    tags = request.form.getlist("tags")
+
+    uid = session['uid']
+    postconn = db.getConn(DB)
+    pid = db.getNumPosts(postconn) + 1
+    f = request.files['pic']
+    
+    print('got all info')
+    print(f)
+    print(pid)
+    print(uid)
+    
+    ext = f.filename.split('.')[-1]
+    filename = secure_filename('{}.{}'.format(pid,ext))
+    user_folder = os.path.join(app.config['UPLOADS'],str(uid))
+
+    #if user folder doesn't exist, create it. Otherwise, upload it
+    if not(os.path.isdir(user_folder)):
+        os.mkdir(user_folder)
+    pathname = os.path.join(user_folder,filename)
+    f.save(pathname)
+    
+    #the filepath that gets put into the database
+    filePath = os.path.join('images/{}/'.format(uid), filename)
+
+    #add to post table
+    conn = getConn()
+    curs = dbi.cursor(conn)
+    curs.execute(
+        '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
+        values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
+        [uid, name, rating, price, review, restaurant, location, filePath])
+    
+    #add to Tagpost table
+    for tag in tags:
+        curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
+    
+    flash('Upload successful')
+    return redirect( url_for('index') )
+
+except Exception as err:
+    print("upload failed because " + str(err))
+    flash('Upload failed {why}'.format(why=err))
+    return redirect( url_for('index') )
 
 @app.route('/upload/', methods=["GET", "POST"])
 def upload():

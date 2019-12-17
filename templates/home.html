@@ -187,7 +187,7 @@
                             $("#sort-by-form").attr("action", "{{url_for('search')}}");
                             
                         // also check tag
-                        
+
                         {% else %}
                             $("#sort-by-form").attr("action", "{{url_for('home')}}");
 
@@ -217,6 +217,7 @@
                     })
 
                     // add values to form
+                    // some of this is unecesary and makes the url ugly
                     $("#sort-by-form").submit( function(eventObj) {
                         stuff = '<input type="hidden" name="query" value=' + query + '/>'
                         stuff2 = '<input type="hidden" name="type" value=posts/>'

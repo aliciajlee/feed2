@@ -44,7 +44,7 @@ def getConn():
 @app.route("/home/") 
 def home():
     conn = db.getConn(DB)
-    posts = db.getAllPosts(conn)
+    # posts = db.getAllPosts(conn)
     if "username" not in session:
         flash("Please log in or sign up to continue")
         return redirect(url_for("index"))
@@ -53,14 +53,27 @@ def home():
 
     #change this to AJAX later
     tag = request.values.get('tag')
+    sort_by = request.values.get("sort-by")
+    
     conn.close()
 
     if(tag):
         return redirect(url_for('show_tag_posts', tag= tag))
     else: 
-        # how should they be sorted -- bootstrap card thing inserts by column and not row
+        conn = db.getConn(DB)
+        if not sort_by: 
+            sort_by = "recent" # default sort by recent
+        if sort_by == "recent":
+            posts = db.getAllPosts(conn) # this is close enough to sort by recent
+        elif sort_by == "rating":
+            posts = db.getAllPostsSortByRating(conn)
+        else:
+            posts = None
+            flash("need to implement sort by price!!!!")
+            
+        print("sort_by: " + sort_by)
         return render_template("home.html", page_title="Home • Feed", posts=posts[::-1], username=username,
-                                tags = tags, options=True)
+                                tags = tags, options=True, sort_by=sort_by)
 
 @app.route('/likes/<post>', methods= ["POST"])   
 def likes(post):
@@ -79,19 +92,38 @@ def likes(post):
 @app.route("/search/", methods=["GET"])
 def search():
     query = request.values.get('query')
+    if query[-1] == "/":
+        query = query[:-1] # bad fix
+
     type_ = request.values.get('type')
     conn = db.getConn(DB)
-    if type_ == 'posts':
-        posts = db.getQueryPosts(conn, query)
+    if type_ == "posts/": type_ = "posts" # how to get rid of /?
+    if type_ == 'posts': 
+
+        # here we also need to check sorting
+        sort_by = request.values.get("sort-by")
+        if not sort_by:
+            sort_by = "recent"
+        print("search sort_by: " + sort_by)
+        print("query: " + query)
+        print("type:" + type_)
+        if sort_by == "recent":
+            posts = db.getQueryPosts(conn, query)
+        elif sort_by == "rating":
+            posts = db.getQueryPostsSortByRating(conn,query)
+        else:
+            posts = None
+            flash("need to implement sort by price!!!!")
         conn.close()
         if not posts:
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
         return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query, type=type_)
+                                    query=query, type=type_, search=True)
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
+        print("type: " + type_)
         conn.close()
         if not users:
             flash("no users found")
@@ -410,31 +442,6 @@ def redirProfile():
     return redirect(url_for('profile', username = username))
 
 @app.route('/profile/<username>')
-# def profile(username): 
-#     conn = getConn()
-#     print(username)
-#     try:
-#         uid = db.getUid(conn, username)
-#         print(uid)
-#         if not uid:
-#             flash("User not found")
-#             return render_template("home.html")
-#         uid=uid['uid']
-#         fullName = db.getFullName(conn, uid)
-#         print(fullName)
-#         bioText = db.getBioText(conn, uid)
-#         print(bioText)
-#         profPic = db.getPPic(conn, uid)
-#         print(profPic)
-#         posts = db.getPostsByUser(conn, uid)
-#         print(posts)
-#         #add a way to get fullname and bio text, image file
-#         return render_template('profile.html', profName=username,
-#                                     uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
-#                                     ppic = profPic['profpicPath'], posts = posts)
-#     except Exception as err:
-#         print(err)
-#         return redirect(request.referrer)
 def profile(username): 
     conn = getConn()
     #print(username)
@@ -650,7 +657,7 @@ def show_tag_posts(tag):
 # def sort_time(posts):
 #     pass
 
-
+# DELETE LATER
 # sort posts by rating no ajax, it's a serparate route for now
 @app.route('/sort_rating/', methods=["GET"])
 def sort_rating():
@@ -673,7 +680,7 @@ def sort_rating():
         posts = db.getAllPostsSortByRating(conn)
     
     return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query[:-1], sortBy="rating")
+                                    query=query[:-1])
 
 
 if __name__ == '__main__':

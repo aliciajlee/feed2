@@ -639,6 +639,9 @@ def edit_post(pid, old_tags=None):
 
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
+
+    # NEED TO DO SROTING HERE TTOO
+
     conn = db.getConn(DB)
     #convert from tag to tid
     tid = db.getTid(conn,tag)['tid']

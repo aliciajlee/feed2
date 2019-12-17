@@ -179,11 +179,15 @@
                         console.log(query);
 
                         // var sortBy = this.value;
+
+                        // we need to pass type = posts
+
+                        // submit form action
                         {% if search is defined %}
                             $("#sort-by-form").attr("action", "{{url_for('search')}}");
-                            // we need to pass type = posts
-
-
+                            
+                        // also check tag
+                        
                         {% else %}
                             $("#sort-by-form").attr("action", "{{url_for('home')}}");
 

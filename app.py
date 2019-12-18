@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -95,6 +95,7 @@ def likes(post):
 # for now return all results where post name, tag, restaurant, username, fullname match
 @app.route("/search/", methods=["GET"])
 def search():
+    '''search by rating or search by time post (most recent) '''
     query = request.values.get('query')
     if query[-1] == "/":
         query = query[:-1] # bad fix
@@ -134,6 +135,7 @@ def search():
 
 @app.route('/alike/<post>', methods= ["POST", "GET"])   
 def alikes(post):
+    '''ajax function to add a like (insert into database). The number of likes is recalculated and sent through jsonify '''
     try: 
         conn = getConn()
         db.addLike(conn, post, session['uid'])
@@ -147,6 +149,7 @@ def alikes(post):
 
 @app.route('/dlike/<post>', methods= ["POST", "GET"])   
 def dlikes(post):
+    ''' ajax function to delete a like (delete into database). The number of likes is recalculated and sent through jsonify'''
     try: 
         conn = getConn()
         db.removeLike(conn, post, session['uid'])
@@ -161,6 +164,7 @@ def dlikes(post):
 
 @app.route('/listofLikes/<post>', methods = ["POST", "GET"])
 def likesList(post):
+    '''gets the lists of people who liked that particular post '''
     conn = getConn()
     #profUID = db.getUid(conn, username)
     pid = post
@@ -171,14 +175,16 @@ def likesList(post):
 
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
 def commentsList(post):
+    ''' gets the lists of comments for each post '''
     conn = getConn()
     comments = db.getComments(conn, pid)
     #profUID = db.getUid(conn, username)
     pid = post
-    return render_template(".html", page_title="Who commented this post", comments = comments)
+    #return render_template(".html", page_title="Who commented this post", comments = comments)
 
 @app.route('/dcomment/<post>/<comment>', methods= ["POST", "GET"])   
 def dcomment(post, comment):
+    ''' deletes a comment for each post '''
     try: 
         conn = getConn()
         db.deleteComment(conn, post, session[uid], comment)
@@ -190,6 +196,7 @@ def dcomment(post, comment):
 
 @app.route('/acomment/<post>/<comment>', methods= ["POST", "GET"])   
 def acomment(post, comment):
+    ''' adds a comment for each post '''
     try: 
         conn = getConn()
         db.addComment(conn, post, session[uid], comment)
@@ -202,7 +209,7 @@ def acomment(post, comment):
 # display info of an individual post
 @app.route('/post/<pid>/')
 def post(pid):
-    # can people see posts without logging in -- for now, don't need to be logged in
+    ''' gets a single post that is rendered on post.html when clicking on the post in the home feed '''
     conn = db.getConn(DB)
     post = db.getSinglePost(conn, pid)
     likes = db.countLikes(conn, pid)
@@ -236,6 +243,8 @@ def post(pid):
 
 @app.route('/signUp/', methods=["GET","POST"])
 def signUp():
+    ''' gets the info from the sign up form and inserts info into the Users table, otherwise if a field is 
+    not filled in, will reupload the page for them to try again '''
     if request.method == 'GET':
         return redirect(url_for('index'))
     else:
@@ -251,7 +260,6 @@ def signUp():
                 return redirect( url_for('index'))
             hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
             hashed_str = hashed.decode('utf-8')
-            #print(passwd1, type(passwd1), hashed, hashed_str)
             conn = getConn()
             curs = dbi.cursor(conn)
             try:
@@ -264,17 +272,15 @@ def signUp():
             curs.execute('select last_insert_id()')
             row = curs.fetchone()
             uid = row[0]
-            #flash('FYI, you were issued UID {}'.format(uid))
             session['username'] = username
             session['uid'] = uid
             session['logged_in'] = True
             session['fullname'] = fullname
 
             os.mkdir('static/img/{}'.format(uid)) 
-            #session['visits'] = 1
             return redirect(url_for('user', username=username) )
         except Exception as err:
-            flash('form submission error '+str(err))
+            flash('form submission error: field(s) not filled in '+str(err))
             return redirect( url_for('index') )
 
 @app.route('/login/', methods=["GET","POST"])
@@ -295,57 +301,38 @@ def login():
                         [username])
             row = curs.fetchone()
             if row is None:
-                # Same response as wrong password,
-                # so no information about what went wrong
-                flash('login incorrect. Try again or join')
+                flash('username and or/password is incorrect. Try again or join') #making it vague like other social media applications for security precautions 
                 return redirect( url_for('index'))
             hashed = row['hashed']
-            #print('hashed: {} {}'.format(hashed,type(hashed)))
-            # print('passwd: {}'.format(passwd))
-            #print('hashed.encode: {}'.format(hashed.encode('utf-8')))
             bc = bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
-            #print('bcrypt: {}'.format(bc))
-            #print('str(bcrypt): {}'.format(str(bc)))
-            #print('bc.decode: {}'.format(bc.decode('utf-8')))
-            #print('equal? {}'.format(hashed==bc.decode('utf-8')))
             hashed2 = bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
             hashed2_str = hashed2.decode('utf-8')
             if hashed2_str == hashed:
-                #flash('successfully logged in as '+username)
                 session['username'] = username
                 session['uid'] = row['uid']
                 session['logged_in'] = True
-                session['fullname'] = row['fullname'] #add other stuff in the table so the profile.html can get this stuff
-                
-                #session['visits'] = 1
-                return redirect(url_for('user', username=username) ) #add full name, biotext...etc so user() can get them
+                session['fullname'] = row['fullname'] 
+                return redirect(url_for('user', username=username)) 
             else:
-                flash('login incorrect. Try again or join')
+                flash('username and or/password incorrect. Try again or join')
                 return redirect( url_for('index'))
         except Exception as err:
-            flash('form submission error '+str(err))
+            flash('please fill in all fields'+str(err))
             return redirect( url_for('index') )
 
 
 @app.route('/user/<username>')
 def user(username):
+    ''' gets necessary username information '''
     try:
-        # don't trust the URL; it's only there for decoration
         conn = getConn()
         if 'username' in session:
             username = session['username']
             uid = session['uid']
             fullName = session['fullname']
-            #session['visits'] = 1+int(session['visits'])
             bioText = db.getBioText(conn, uid)
             profPic = db.getPPic(conn, uid)
-            #print(profPic['profpicPath'])
-            #session['visits'] = 1+int(session['visits'])
             return redirect(url_for('home'))
-            #return redirect(url_for('profile', username= username))
-            #return render_template('profile.html', profName=username, uid=uid, fname = fullName, bio = bioText['biotxt'], ppic = profPic['profpicPath']) #THIS WORKS
-        
-
         else:
             flash('You are not logged in. Please login or join')
             return redirect(url_for('index') )
@@ -355,8 +342,8 @@ def user(username):
 
 @app.route('/logout/')
 def logout():
+    '''removes username info from session as user clicks log out and redirects to login/signup page'''
     try:
-        
         if 'username' in session:
             username = session['username']
             session.pop('username')
@@ -441,30 +428,25 @@ def upload():
 # i think we can combine the 2 profiles
 @app.route('/profile/')
 def redirProfile():
+    ''' way to solve jinja issue where I needed the session's username'''
     username = session['username']
     return redirect(url_for('profile', username = username))
 
 @app.route('/profile/<username>')
 def profile(username): 
+    ''' gets the uid of the profile, sees whether match is true so we know if the its the 
+     session's own profile so the edit profile button can appear on their page '''
     conn = getConn()
-    #print(username)
-    # try:
     uid = db.getUid(conn, username)
-    # print(uid)
-
-    if not uid:
-        flash("User not found")
-        return render_template("home.html")
+    #if not uid:
+       # flash("User not found")
+       # return render_template("home.html")
     uid=uid
-    
     match = False
-    print(session['uid'])
-    print(uid)
+    
     if session['uid'] == uid: #if the session user is on their profile or someone elses
         match = True
 
-    print("match?: " + str(match))
-    
     fullName = db.getFullName(conn, uid)
     bioText = db.getBioText(conn, uid)
     profPic = db.getPPic(conn, uid)
@@ -473,14 +455,10 @@ def profile(username):
     numFollowing = db.numFollowing(conn, uid)
     numFollowers = db.numFollowers(conn, uid)
    
+    followingBoolean = db.following_trueFalse(conn, session['uid'], uid) #note that that a session username cannot follow itself, so jinja2 in profile.page will 
+    #figure out whether the button should show up using match variable as well, it can carry over but it's used depending on the profile 
 
-    # print(uid)
-    
-    followingBoolean = db.following_trueFalse(conn, session['uid'], uid)
-    #(session['uid'] == uid) or 
-    #print("followingBoolean" + str(followingBoolean))
-
-    if followingBoolean == True:
+    if followingBoolean == True: #checks if there are already following that profile 
         buttonText = "Following"
     else:
         buttonText = "Follow"
@@ -489,14 +467,11 @@ def profile(username):
                                 uid=uid, fname = fullName['fullname'], bio = bioText['biotxt'], 
                                 ppic = profPic['profpicPath'], posts = posts, postNum = numPosts, 
                                 match = match, numFing = numFollowing, numFers = numFollowers, tButton = buttonText)
-                                #fboolean = followingBoolean
-    # except Exception as err:
-    #     print(err)
-    #     flash("user not found")
-    #     return redirect(request.referrer)
+                               
 
 @app.route('/follow/<username>', methods= ["POST"])   
 def aFollow(username):
+    ''' ajax function adds a follower to the Follows table and updates the follower and following count and returns that as a jsonify '''
     try:
         conn = getConn()
         profUID = db.getUid(conn, username)
@@ -511,6 +486,7 @@ def aFollow(username):
 
 @app.route('/unfollow/<username>', methods= ["POST"])   
 def dFollow(username):
+    ''' ajax function deletes a follower to the Follows table and updates the follower and following count and returns that as a jsonify '''
     try: 
         conn = getConn()
         profUID = db.getUid(conn, username)
@@ -524,6 +500,7 @@ def dFollow(username):
 
 @app.route('/listofFollowers/<username>', methods = ["POST", "GET"])
 def followersList(username):
+    '''gets a list of users links that follow the current profile'''
     conn = getConn()
     profUID = db.getUid(conn, username)
     users = db.followersUsers(conn, profUID)
@@ -532,6 +509,7 @@ def followersList(username):
 
 @app.route('/listofFollowing/<username>', methods = ["POST", "GET"])
 def followingList(username):
+    '''gets a list of users links that the current profile is following'''
     conn = getConn()
     profUID = db.getUid(conn, username)
     users = db.followingUsers(conn, profUID)
@@ -540,7 +518,7 @@ def followingList(username):
 
 @app.route('/editprofile/', methods= ["POST", "GET"])
 def editProf():
-
+    '''gets info from the edit profile form and updates info accordingly '''
     uid = session['uid']
     username = request.form.get('pname')
     print("username " + username)
@@ -559,7 +537,7 @@ def editProf():
         return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     
-    #if 'file' not in request.files: ADD LATER WHERE PEOPLE CAN SPECIFY WHAT INPUT FIELDS THEY WOULD LIKE TO UPDATE, NOT REQUIRED TO UPDATE ALL OF THE FIELDS
+    #if 'file' not in request.files: 
             #flash('No file part')
             #return redirect('')
     print(request.files)
@@ -574,8 +552,7 @@ def editProf():
             #return redirect(url_for('uploaded_file',
                                     #filename=filename))
     else:
-        flash('not valid file type') #flash a message for errors of file uploads
-        return redirect(url_for('profile', username = username))
+        #get old file path and  update profile that way
     
     #requests from the form
     #fullName = request.form['fName']

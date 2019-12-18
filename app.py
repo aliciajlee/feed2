@@ -104,9 +104,6 @@ def search():
         sort_by = request.values.get("sort-by")
         if not sort_by:
             sort_by = "recent"
-        print("search sort_by: " + sort_by)
-        print("query: " + query)
-        print("type:" + type_)
         if sort_by == "recent":
             posts = db.getQueryPosts(conn, query)
         elif sort_by == "rating":
@@ -640,7 +637,18 @@ def edit_post(pid, old_tags=None):
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
 
-    # NEED TO DO SROTING HERE TTOO
+    # NEED TO DO SROTING HERE TTOO for future reference
+    # sort_by = request.values.get("sort-by")
+    # conn = db.getConn(DB)
+    # if not sort_by:
+    #     sort_by = "recent"
+    # if sort_by == "recent":
+    #     posts = db.getQueryPosts(conn, query)
+    # elif sort_by == "rating":
+    #     posts = db.getQueryPostsSortByRating(conn,query)
+    # else:
+    #     posts = None
+    #     flash("need to implement sort by price!!!!")
 
     conn = db.getConn(DB)
     #convert from tag to tid
@@ -654,7 +662,8 @@ def show_tag_posts(tag):
     username = session['username']
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
-                            options=True)
+                            options=False, tag=tag) # make options false cause no
+                            # time to do sorting stuff rip
 
 # @app.route('/sort_time/', methods=['GET'])
 # def sort_time(posts):

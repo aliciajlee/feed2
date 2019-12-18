@@ -28,7 +28,6 @@
                         <select name="sort-by" id="sort-by">
                             <option value="recent">Most Recent</option>
                             <option value="rating">Rating</option>
-                            <option value="price">Price</option>
                         </select>
                     </form>
                 </span>
@@ -85,7 +84,7 @@
                             <!-- image -->
 
                             <!-- <div class="card-image-top img-fluid post-image"> -->
-                            <img class="card-image-top img-fluid rounded-top post-image" 
+                            <img alt = "post image" class="card-image-top img-fluid rounded-top post-image" 
                                 src="{{url_for('static',filename=post['imgPath'])}}">
                             <!-- </div> -->
                         
@@ -187,6 +186,9 @@
                             $("#sort-by-form").attr("action", "{{url_for('search')}}");
                             
                         // also check tag
+
+                        // {% elif tags is defined%}
+                        //     $("#sort-by-form").attr("action", "{{url_for('show_tag_posts', tag=tag)}}");
 
                         {% else %}
                             $("#sort-by-form").attr("action", "{{url_for('home')}}");

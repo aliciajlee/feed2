@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# test
 
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory, Response, jsonify)
@@ -18,19 +17,17 @@ import json
 app.config['UPLOADS'] = 'static/images/'
 app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
-
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
+DSN = None
 
+# this returns to the home feed if already logged in, otherwise it will direct to signup or login 
 @app.route('/')
 def index():
-# this returns to the home feed if already logged in, otherwise it will direct to signup or login 
     if "username" in session:
        return redirect(url_for("home"))
     return render_template('signup.html', page_title='Feed')
-
-DSN = None
 
 
 # display all posts
@@ -67,9 +64,9 @@ def home():
             posts = None
             flash("need to implement sort by price!!!!")
             
-        print("sort_by: " + sort_by)
         return render_template("home.html", page_title="Home • Feed", posts=posts[::-1], username=username,
                                 tags = tags, options=True, sort_by=sort_by)
+
 
 @app.route('/likes/<post>', methods= ["POST"])   
 def likes(post):
@@ -85,7 +82,7 @@ def likes(post):
         return jsonify( {'error': True, 'err': str(err) } )
 
 
-# for now return all results where post name, tag, restaurant, username, fullname match
+# eturn all post results where post name, tag, restaurant, username, fullname match
 @app.route("/search/", methods=["GET"])
 def search():
     '''search by rating or search by time post (most recent) '''
@@ -126,6 +123,7 @@ def search():
         return render_template("home.html", page_title="Results",users=users, options=False,
                                     query=query, type=type_)
 
+
 @app.route('/alike/<post>', methods= ["POST", "GET"])   
 def alikes(post):
     '''ajax function to add a like (insert into database). The number of likes is recalculated and sent through jsonify '''
@@ -139,6 +137,7 @@ def alikes(post):
     except Exception as err:
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
+
 
 @app.route('/dlike/<post>', methods= ["POST", "GET"])   
 def dlikes(post):
@@ -175,6 +174,7 @@ def commentsList(post):
     pid = post
     #return render_template(".html", page_title="Who commented this post", comments = comments)
 
+
 @app.route('/dcomment/<post>/<comment>', methods= ["POST", "GET"])   
 def dcomment(post, comment):
     ''' deletes a comment for each post '''
@@ -187,6 +187,7 @@ def dcomment(post, comment):
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
 
+
 @app.route('/acomment/<post>/<comment>', methods= ["POST", "GET"])   
 def acomment(post, comment):
     ''' adds a comment for each post '''
@@ -198,6 +199,7 @@ def acomment(post, comment):
     except Exception as err:
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
+
 
 # display info of an individual post
 @app.route('/post/<pid>/')
@@ -276,6 +278,7 @@ def signUp():
             flash('form submission error: field(s) not filled in '+str(err))
             return redirect( url_for('index') )
 
+
 @app.route('/login/', methods=["GET","POST"])
 def login():
     if "username" in session:
@@ -333,6 +336,7 @@ def user(username):
         flash('some kind of error '+str(err))
         return redirect(url_for('index') )
 
+
 @app.route('/logout/')
 def logout():
     '''removes username info from session as user clicks log out and redirects to login/signup page'''
@@ -351,6 +355,7 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
+
 @app.route('/upload/', methods=["POST"])
 def upload(): 
     name = request.form.get("pname")
@@ -363,35 +368,41 @@ def upload():
 
     uid = session['uid']
     postconn = db.getConn(DB)
-    pid = db.getNumPosts(postconn) + 1
-    f = request.files["upload"]
-
-    ext = f.filename.split('.')[-1]
-    filename = secure_filename('{}.{}'.format(pid,ext))
-    user_folder = os.path.join(app.config['UPLOADS'],str(uid))
-
-    #if user folder doesn't exist, create it. Otherwise, upload it
-    if not(os.path.isdir(user_folder)):
-        os.mkdir(user_folder)
-    pathname = os.path.join(user_folder,filename)
-    f.save(pathname)
-    
-    #the filepath that gets put into the database
-    filePath = os.path.join('images/{}/'.format(uid), filename)
-
-    #add to post table
-    conn = db.getConn(DB)
-    curs = dbi.cursor(conn)
     try:
-        curs.execute(
-            '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
-            values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-            [uid, name, rating, price, review, restaurant, location, filePath])
+        # pid = db.getNumPosts(postconn) + 1
+        pid = db.insertPost(postconn, uid, name, rating, price, review, restaurant, location)
+        f = request.files["upload"]
+
+        ext = f.filename.split('.')[-1]
+        filename = secure_filename('{}.{}'.format(pid,ext))
+        user_folder = os.path.join(app.config['UPLOADS'],str(uid))
+
+    
+        #if user folder doesn't exist, create it. Otherwise, upload it
+        if not(os.path.isdir(user_folder)):
+            os.mkdir(user_folder)
+        pathname = os.path.join(user_folder,filename)
+        f.save(pathname)
+        
+        #the filepath that gets put into the database
+        filePath = os.path.join('images/{}/'.format(uid), filename)
+
+        db.insertFilepath(postconn, filePath, pid)
+
+        #add to post table
+        conn = db.getConn(DB)
+        curs = dbi.cursor(conn)
+    
+        # curs.execute(
+        #     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
+        #     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
+        #     [uid, name, rating, price, review, restaurant, location, filePath])
         
         #add to Tagpost table
         for tag in tags:
-            curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
-        
+            #curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
+            tid = db.getTid(postconn, tag)
+            db.insertTagPost(postconn,pid,tid)
         flash('Upload successful')
         return redirect(url_for('index'))
 
@@ -401,13 +412,12 @@ def upload():
         return redirect( url_for('index') )
 
 
-
-# i think we can combine the 2 profiles
 @app.route('/profile/')
 def redirProfile():
     ''' way to solve jinja issue where I needed the session's username'''
     username = session['username']
     return redirect(url_for('profile', username = username))
+
 
 @app.route('/profile/<username>')
 def profile(username): 
@@ -431,9 +441,6 @@ def profile(username):
     numPosts = db.numPostsUser(conn, uid)
     numFollowing = db.numFollowing(conn, uid)
     numFollowers = db.numFollowers(conn, uid)
-
-    print(uid)
-    print(profPic)
    
     followingBoolean = db.following_trueFalse(conn, session['uid'], uid) #note that that a session username cannot follow itself, so jinja2 in profile.page will 
     #figure out whether the button should show up using match variable as well, it can carry over but it's used depending on the profile 
@@ -536,6 +543,7 @@ def editProf():
    
 
 
+# delete a post
 @app.route('/delete_post/<pid>', methods=['POST'])
 def delete_post(pid):
     # might be good to check that user deleting post is valid
@@ -551,6 +559,7 @@ def delete_post(pid):
 
     flash("Successfully deleted post")
     return redirect(url_for("home"))
+
 
 # edit a post's name, resturant, location, rating, price, tags, review
 @app.route('/edit_post/<pid>', methods=['POST'])
@@ -622,12 +631,15 @@ def show_tag_posts(tag):
                             options=False, tag=tag) # make options false cause no
                             # time to do sorting stuff rip
 
+
+# implement this later if necessary
 # @app.route('/sort_time/', methods=['GET'])
 # def sort_time(posts):
 #     pass
 
-# DELETE LATER
+
 # sort posts by rating no ajax, it's a serparate route for now
+# this route is not being used in beta
 @app.route('/sort_rating/', methods=["GET"])
 def sort_rating():
 
@@ -635,7 +647,6 @@ def sort_rating():
     # or get the posts again from the db sorted by rating?
 
     # posts = request.form.get("posts")
-
 
     query = request.values.get("query")
     

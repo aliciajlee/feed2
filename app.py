@@ -444,7 +444,7 @@ def profile(username):
     #print(username)
     # try:
     uid = db.getUid(conn, username)
-    print(uid)
+    # print(uid)
 
     if not uid:
         flash("User not found")

@@ -23,20 +23,25 @@
             <!-- fix at top -->
             <a class="navbar-brand nav-link font-large" href="/home/">Feed</a>
             <div class="flex-grow-1 d-flex">
+              
                 <form id="searchbar" method=GET action="/search/" class="form-inline flex-nowrap bg-light mx-0 mx-lg-auto rounded p-1">
                     <div class="input-group">
+                      <label>
                         <input type="search" name="query" id="search" class="form-control border border-right-0" placeholder="Search...">
                         <span class="input-group-append">
-                            <button class="btn btn-outline-secondary border border-left-0" type="submit">
+                            <button class="btn btn-outline-secondary border border-left-0" name = "search" type="submit">
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
+                      </label>
                     </div>
+                    <label>
                     <select name="type" id="type" class="form-control">
                         <option selected disabled>Show...</option>
                         <option id="option-post" value="posts">Posts</option>
                         <option id="option-user" value="users">Users</option>
                     </select>
+                  </label>
                 </form>
             </div>
 
@@ -115,14 +120,17 @@
               <!-- do tags here later-->
               
               <div class="form-group form-inline">
-                <label>Tags
-                <select id = "tags" class="js-example-basic-multiple" name="tags" multiple="multiple">
-                    {% for tag in tags %}
-                    <option value={{tag.tid}}>{{tag.ttype}}</option>
-
-                    {% endfor %}
-                </select>
-              </label>
+                  {% for tag in tags %}
+                  <tr>
+                    <td>
+                      <label class="checkbox">
+                        <input type="checkbox" name="tags" value="{{tag['tid']}}"/>
+                      
+                        {{tag['ttype']}}
+                      </label>
+                    </td>
+                  </tr>
+                  {% endfor %}
               </div>
 
               <div class="form-group form-inline">

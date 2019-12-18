@@ -120,7 +120,7 @@ def search():
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
         return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query, type=type_, search=True)
+                                    query=query, type=type_, search=True, sort_by=sort_by)
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)

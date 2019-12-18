@@ -182,10 +182,10 @@ def updateProfileNoPic(conn, uid, username, fname, text):
     curs = dbi.dictCursor(conn)
     curs.execute('''update Users set fullname=%s, biotxt=%s, username=%s where uid=%s''', [fname, text, username, uid])
 
-def updateProfile(conn, uid, fname, text, username, path):
+def updateProfile(conn, uid, username, fname, text, path):
     '''update the profile of a given user '''
     curs = dbi.dictCursor(conn)
-    curs.execute('''update Users set fullname=%s, biotxt=%s, username=%s, profpicPath=%s where uid=%s''', [fname, text, username, path, uid])
+    curs.execute('''update Users set username=%s, fullname=%s, biotxt=%s, profpicPath=%s where uid=%s''', [username, fname, text, path, uid])
 
 # get uid of a user by username
 def getUid(conn, username):

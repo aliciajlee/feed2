@@ -25,6 +25,7 @@ DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
+# this returns to the home feed if already logged in, otherwise it will direct to signup or login 
     if "username" in session:
        return redirect(url_for("home"))
     return render_template('signup.html', page_title='Feed')
@@ -43,6 +44,8 @@ def getConn():
 # change to only following posts later or maybe another route for follwing posts
 @app.route("/home/") 
 def home():
+    '''if the user is not loggin, it will flash and redirect to the appropriate page from the index app route. 
+    It will get all the posts, keep track of the username, and gets all the tags. Renders the home.html page'''
     conn = db.getConn(DB)
     posts = db.getAllPosts(conn)
     if "username" not in session:
@@ -64,6 +67,7 @@ def home():
 
 @app.route('/likes/<post>', methods= ["POST"])   
 def likes(post):
+    ''' ajax function that updates the number of likes when either a like is added or deleted'''
     try: 
         conn = getConn()
         profUID = db.getUid(conn, username)
@@ -74,30 +78,6 @@ def likes(post):
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
 
-
-# for now return all results where post name, tag, restaurant, username, fullname match
-@app.route("/search/", methods=["GET"])
-def search():
-    query = request.values.get('query')
-    type_ = request.values.get('type')
-    conn = db.getConn(DB)
-    if type_ == 'posts':
-        posts = db.getQueryPosts(conn, query)
-        conn.close()
-        if not posts:
-            flash ("no posts found")
-        flash("Post results for '{}'".format(query))
-        return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query, type=type_)
-    else:
-        # might be nice to have a separate html for users
-        users = db.getQueryUsers(conn, query)
-        conn.close()
-        if not users:
-            flash("no users found")
-        flash("User results for '{}'".format(query))
-        return render_template("home.html", page_title="Results",users=users, options=False,
-                                    query=query, type=type_)
 
 @app.route('/alike/<post>', methods= ["POST", "GET"])   
 def alikes(post):
@@ -134,6 +114,31 @@ def likesList(post):
     userLikesList = db.likesList(conn, pid)
     conn.close()
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
+
+
+# for now return all results where post name, tag, restaurant, username, fullname match
+@app.route("/search/", methods=["GET"])
+def search():
+    query = request.values.get('query')
+    type_ = request.values.get('type')
+    conn = db.getConn(DB)
+    if type_ == 'posts':
+        posts = db.getQueryPosts(conn, query)
+        conn.close()
+        if not posts:
+            flash ("no posts found")
+        flash("Post results for '{}'".format(query))
+        return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
+                                    query=query, type=type_)
+    else:
+        # might be nice to have a separate html for users
+        users = db.getQueryUsers(conn, query)
+        conn.close()
+        if not users:
+            flash("no users found")
+        flash("User results for '{}'".format(query))
+        return render_template("home.html", page_title="Results",users=users, options=False,
+                                    query=query, type=type_)
 
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
 def commentsList(post):

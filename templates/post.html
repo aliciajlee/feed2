@@ -248,7 +248,7 @@
 
         // IF USER ALREADY LIKED POST DO STUFF HERe
         
-        
+        //makes sure if the like button is liked when the page is reloaded, that the color is red
         if ($("#like").attr("data-liked") == "True") {
           $("#like").css("color", "#EF3B3A");
         };
@@ -267,6 +267,7 @@
           }
         });
 
+        //update likes using ajax app route and gets the number of likes from the jsonify dictionary, changing the like button text
         function updateLikes(obj) {
           if(obj.error) {
               $("#errors").empty().html('Error: '+obj.err);
@@ -276,6 +277,7 @@
           }
         }
 
+        //update likes using ajax app route and gets the number of likes from the jsonify dictionary, changing the like button text
         function updatedLikes(obj) {
             console.log(obj);
             if(obj.error) {

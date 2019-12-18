@@ -165,9 +165,10 @@ def likesList(post):
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
 
 
+''' COMMENTS IMPLEMENTATION WE DID NOT HAVE TIME FOR :(
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
 def commentsList(post):
-    ''' gets the lists of comments for each post '''
+    gets the lists of comments for each post 
     conn = db.getConn(DB)
     comments = db.getComments(conn, pid)
     #profUID = db.getUid(conn, username)
@@ -177,7 +178,7 @@ def commentsList(post):
 
 @app.route('/dcomment/<post>/<comment>', methods= ["POST", "GET"])   
 def dcomment(post, comment):
-    ''' deletes a comment for each post '''
+    deletes a comment for each post
     try: 
         conn = db.getConn(DB)
         db.deleteComment(conn, post, session[uid], comment)
@@ -190,7 +191,7 @@ def dcomment(post, comment):
 
 @app.route('/acomment/<post>/<comment>', methods= ["POST", "GET"])   
 def acomment(post, comment):
-    ''' adds a comment for each post '''
+  adds a comment for each post 
     try: 
         conn = db.getConn(DB)
         db.addComment(conn, post, session[uid], comment)
@@ -199,6 +200,7 @@ def acomment(post, comment):
     except Exception as err:
         print(err)
         return jsonify( {'error': True, 'err': str(err) } )
+'''
 
 
 # display info of an individual post

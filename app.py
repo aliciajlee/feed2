@@ -357,8 +357,8 @@ def logout():
 
 
 @app.route('/upload/', methods=["POST"])
-'''adds a post's information into the database'''
 def upload(): 
+    '''adds a post's information into the database'''
     name = request.form.get("pname")
     restaurant = request.form.get("restaurant")
     location = request.form.get("location")

@@ -229,16 +229,16 @@
 
     <script>
       $(document).ready(function() {
+
         var URL_like = "{{url_for('alikes', post=pid)}}"
         var URL_unlike = "{{url_for('dlikes', post=pid)}}"
+        
         var like_on = false;
+
         // remove height for min width
         var imgHeight = $("#post-image").height();
         $("#flex-right").height(imgHeight);
 
-        // $("#edit-save").on("click", function() {
-        //   $("#edit-post-form").submit();
-        // });
 
         $("#edit-post-form").on("submit", function(){
 

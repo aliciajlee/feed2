@@ -169,30 +169,6 @@ def likesList(post):
     return render_template("listofFollowing.html", page_title="Who Likes this post", users = userLikesList, options=False)
 
 
-# for now return all results where post name, tag, restaurant, username, fullname match
-@app.route("/search/", methods=["GET"])
-def search():
-    query = request.values.get('query')
-    type_ = request.values.get('type')
-    conn = db.getConn(DB)
-    if type_ == 'posts':
-        posts = db.getQueryPosts(conn, query)
-        conn.close()
-        if not posts:
-            flash ("no posts found")
-        flash("Post results for '{}'".format(query))
-        return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query, type=type_)
-    else:
-        # might be nice to have a separate html for users
-        users = db.getQueryUsers(conn, query)
-        conn.close()
-        if not users:
-            flash("no users found")
-        flash("User results for '{}'".format(query))
-        return render_template("home.html", page_title="Results",users=users, options=False,
-                                    query=query, type=type_)
-
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
 def commentsList(post):
     conn = getConn()

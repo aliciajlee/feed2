@@ -520,26 +520,20 @@ def editProf():
     #if 'file' not in request.files: 
             #flash('No file part')
             #return redirect('')
-    print(request.files)
+
     file = request.files['profpic']
-    print("FILE" + str(file))
     filePath = None
     if file and allowed_file(file.filename):
             filename = secure_filename(file.filename) #get the filename
-            print("filename" + str(filename))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #save the file to the upload folder destination
             filePath = os.path.join('img/{}/'.format(uid), filename) #make a modified path so the profile.html can read it
-            print("filePath" + str(filePath))
-            db.updateProfile(conn, uid, username, fullName, biotext, filePath) #update profile
+            db.updateProfile(conn, uid, username, fullName, biotext, filePath) #update profile with new pic path
             return redirect(url_for('profile', username = username))
     else:
-        #get old file path and  update profile that way
+        #if not pic is uploaded, just upload the pre-filled data
         db.updateProfileNoPic(conn, uid, username, fullName, biotext)
         return redirect(url_for('profile', username = username))
-    #requests from the form
-    #fullName = request.form['fName']
-    #biotext = request.form['bioText']
-    
+   
 
 
 @app.route('/delete_post/<pid>', methods=['POST'])

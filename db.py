@@ -133,28 +133,29 @@ def likesList(conn, pid):
             curs2.execute('''select username from Users where uid=%s''', [id])
             usersList.append(curs2.fetchone())
         return usersList
-
+''' COMMENTS mysql for comments, but not implemented...see app.py for more notes 
 def getComments(conn, pid):
-    '''gets the comment and who made the comment from the Comments table'''
+    gets the comment and who made the comment from the Comments table
     curs = dbi.dictCursor(conn)
-    curs.execute('''select comment, profile_id from Comments where post_id=%s''', [pid])
+    curs.execute(select comment, profile_id from Comments where post_id=%s, [pid])
     comments = curs.fetchall()
     if len(comments) == 0:
         return 0
     return comments
 
 def addComment(conn, pid, uid, cText): 
-    '''adds a comment to the Comments table'''
+    adds a comment to the Comments table
     curs = dbi.dictCursor(conn)
-    curs.execute('''INSERT INTO Comments(post_id, profile_id, comment)
-                                VALUES(%s, %s,%s)''', [pid, uid, cText])
+    curs.execute(INSERT INTO Comments(post_id, profile_id, comment)
+                                VALUES(%s, %s,%s), [pid, uid, cText])
 
 
 def deleteComment(conn, pid, uid, cText): 
-    '''adds a comment to the Comments table'''
+    adds a comment to the Comments table
     curs = dbi.dictCursor(conn)
-    curs.execute('''DELETE from Comments where post_id=%s and profile_id=%s and comment=%s)''', [pid, uid, cText])
-    
+    curs.execute(DELETE from Comments where post_id=%s and profile_id=%s and comment=%s), [pid, uid, cText])
+'''  
+
 def getBioText(conn, uid):
     '''get the bio text from the database '''
     curs = dbi.dictCursor(conn)

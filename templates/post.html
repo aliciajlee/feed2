@@ -238,29 +238,18 @@
         // remove height for min width
         var imgHeight = $("#post-image").height();
         $("#flex-right").height(imgHeight);
-
-
-        $("#edit-post-form").on("submit", function(){
-
-        });
-
-        console.log($("#like").attr("data-liked"));
-
-        // IF USER ALREADY LIKED POST DO STUFF HERe
-        
-        
+      
+        // like button
         if ($("#like").attr("data-liked") == "True") {
           $("#like").css("color", "#EF3B3A");
         };
 
         $("#like").click(function() {
           if ($(this).attr("data-liked")=="False") {
-              console.log("liked");
               $(this).css("color", "#EF3B3A");
               $(this).attr("data-liked", "True");
               $.post(URL_like, updateLikes);
           } else {
-              console.log("unliked");
               $(this).css("color", "#5d5d5d");
               $(this).attr("data-liked", "False");
               $.post(URL_unlike, updateLikes); 
@@ -283,17 +272,20 @@
                 console.log('obj error at delete like')
             } else {
                 $("#likeNumber").text(obj.numLikes);    
-      }};
+        }};
 
+        // edit form modal
         $("#edit-button").on("click", function() {
 
           $('input[name=rating][value="{{post.rating}}"]').attr("checked", true);
           $('input[name=price][value="{{post.price}}"]').attr("checked", true);
 
+          // tag select thing using select2
           $('.select-tag').select2();
 
           $(".select2-container").css("width", "");
 
+          // select all tags of post in tag select thing, need to pass an array
           tags = []
           {% for tag in tags %}
             tags.push("{{tag.tid}}");

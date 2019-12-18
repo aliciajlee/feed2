@@ -593,20 +593,7 @@ def edit_post(pid, old_tags=None):
 
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
-
-    # NEED TO DO SROTING HERE TTOO for future reference
-    # sort_by = request.values.get("sort-by")
-    # conn = db.getConn(DB)
-    # if not sort_by:
-    #     sort_by = "recent"
-    # if sort_by == "recent":
-    #     posts = db.getQueryPosts(conn, query)
-    # elif sort_by == "rating":
-    #     posts = db.getQueryPostsSortByRating(conn,query)
-    # else:
-    #     posts = None
-    #     flash("need to implement sort by price!!!!")
-
+'''displays all posts under the given tag'''
     conn = db.getConn(DB)
     #convert from tag to tid
     tid = db.getTid(conn,tag)['tid']
@@ -619,16 +606,8 @@ def show_tag_posts(tag):
     username = session['username']
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
-                            options=False, tag=tag) # make options false cause no
-                            # time to do sorting stuff rip
-
-
-# implement this later if necessary
-# @app.route('/sort_time/', methods=['GET'])
-# def sort_time(posts):
-#     pass
-
-
+                            options=False, tag=tag) 
+                            
 # sort posts by rating no ajax, it's a serparate route for now
 # this route is not being used in beta
 @app.route('/sort_rating/', methods=["GET"])

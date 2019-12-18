@@ -593,7 +593,7 @@ def edit_post(pid, old_tags=None):
 
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
-'''displays all posts under the given tag'''
+    '''displays all posts under the given tag'''
     conn = db.getConn(DB)
     #convert from tag to tid
     tid = db.getTid(conn,tag)['tid']
@@ -607,7 +607,7 @@ def show_tag_posts(tag):
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
                             options=False, tag=tag) 
-                            
+
 # sort posts by rating no ajax, it's a serparate route for now
 # this route is not being used in beta
 @app.route('/sort_rating/', methods=["GET"])

@@ -19,12 +19,8 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-<<<<<<< HEAD
-DB = 'rnavarr2_db' #CHANGE
-=======
 DB = 'feed2019_db' #CHANGE
 DSN = None
->>>>>>> doc
 
 # this returns to the home feed if already logged in, otherwise it will direct to signup or login 
 @app.route('/')

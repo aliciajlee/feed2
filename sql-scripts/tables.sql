@@ -82,4 +82,5 @@ create table Tagpost(
 source enter-users.sql;
 source enter-tags.sql;
 source enter-posts.sql;
+
 source enter-tagpost.sql;

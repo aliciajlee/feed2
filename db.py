@@ -165,7 +165,7 @@ def getBioText(conn, uid):
     curs.execute('''select biotxt from Users where uid=%s''', [uid])
     return curs.fetchone()
 
-def getPPic(conn, uid):
+def (conn, uid):
     ''' get the pic path from the database '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select profpicPath from Users where uid=%s''', [uid])
@@ -177,10 +177,15 @@ def getFullName(conn, uid):
     curs.execute('''select fullname from Users where uid=%s''', [uid])
     return curs.fetchone()
 
-def updateProfile(conn, uid, fname, text, path):
+def updateProfileNoPic(conn, uid, username, fname, text):
     '''update the profile of a given user '''
     curs = dbi.dictCursor(conn)
-    curs.execute('''update Users set fullname=%s, biotxt=%s, profpicPath=%s where uid=%s''', [fname, text, path, uid])
+    curs.execute('''update Users set fullname=%s, biotxt=%s, username=%s where uid=%s''', [fname, text, username, uid])
+
+def updateProfile(conn, uid, fname, text, username, path):
+    '''update the profile of a given user '''
+    curs = dbi.dictCursor(conn)
+    curs.execute('''update Users set fullname=%s, biotxt=%s, username=%s, profpicPath=%s where uid=%s''', [fname, text, username, path, uid])
 
 # get uid of a user by username
 def getUid(conn, username):

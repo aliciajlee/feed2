@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'rnavarr2_db' #CHANGE
+DB = 'feed2019_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -31,13 +31,6 @@ def index():
     return render_template('signup.html', page_title='Feed')
 
 DSN = None
-
-# we should move this to db
-def getConn():
-    global DSN
-    if DSN is None:
-        DSN = dbi.read_cnf()
-    return dbi.connect(DSN)
 
 
 # display all posts
@@ -82,7 +75,7 @@ def home():
 def likes(post):
     ''' ajax function that updates the number of likes when either a like is added or deleted'''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         profUID = db.getUid(conn, username)
         numberLikes = db.countLikes(conn, post)
         conn.close()
@@ -137,7 +130,7 @@ def search():
 def alikes(post):
     '''ajax function to add a like (insert into database). The number of likes is recalculated and sent through jsonify '''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         db.addLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
         conn.close()
@@ -151,7 +144,7 @@ def alikes(post):
 def dlikes(post):
     ''' ajax function to delete a like (delete into database). The number of likes is recalculated and sent through jsonify'''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         db.removeLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
         conn.close()
@@ -165,7 +158,7 @@ def dlikes(post):
 @app.route('/listofLikes/<post>', methods = ["POST", "GET"])
 def likesList(post):
     '''gets the lists of people who liked that particular post '''
-    conn = getConn()
+    conn = db.getConn(DB)
     #profUID = db.getUid(conn, username)
     pid = post
     userLikesList = db.likesList(conn, pid)
@@ -176,7 +169,7 @@ def likesList(post):
 @app.route('/listofComment/<post>', methods = ["POST", "GET"])
 def commentsList(post):
     ''' gets the lists of comments for each post '''
-    conn = getConn()
+    conn = db.getConn(DB)
     comments = db.getComments(conn, pid)
     #profUID = db.getUid(conn, username)
     pid = post
@@ -186,7 +179,7 @@ def commentsList(post):
 def dcomment(post, comment):
     ''' deletes a comment for each post '''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         db.deleteComment(conn, post, session[uid], comment)
         db.getComments(conn, pid)
         return jsonify(comments = comments)
@@ -198,7 +191,7 @@ def dcomment(post, comment):
 def acomment(post, comment):
     ''' adds a comment for each post '''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         db.addComment(conn, post, session[uid], comment)
         db.getComments(conn, pid)
         return jsonify(comments = comments)
@@ -260,7 +253,7 @@ def signUp():
                 return redirect( url_for('index'))
             hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
             hashed_str = hashed.decode('utf-8')
-            conn = getConn()
+            conn = db.getConn(DB)
             curs = dbi.cursor(conn)
             try:
                 curs.execute('''INSERT INTO Users(uid,fullname,email,username,hashed, biotxt, profpicPath)
@@ -293,7 +286,7 @@ def login():
         try:
             username = request.form['username']
             passwd = request.form['password']
-            conn = getConn()
+            conn = db.getConn(DB)
             curs = dbi.dictCursor(conn)
             curs.execute('''SELECT *
                         FROM Users
@@ -325,7 +318,7 @@ def login():
 def user(username):
     ''' gets necessary username information '''
     try:
-        conn = getConn()
+        conn = db.getConn(DB)
         if 'username' in session:
             username = session['username']
             uid = session['uid']
@@ -387,7 +380,7 @@ def upload():
     filePath = os.path.join('images/{}/'.format(uid), filename)
 
     #add to post table
-    conn = getConn()
+    conn = db.getConn(DB)
     curs = dbi.cursor(conn)
     try:
         curs.execute(
@@ -420,7 +413,7 @@ def redirProfile():
 def profile(username): 
     ''' gets the uid of the profile, sees whether match is true so we know if the its the 
      session's own profile so the edit profile button can appear on their page '''
-    conn = getConn()
+    conn = db.getConn(DB)
     uid = db.getUid(conn, username)
     #if not uid:
        # flash("User not found")
@@ -438,6 +431,9 @@ def profile(username):
     numPosts = db.numPostsUser(conn, uid)
     numFollowing = db.numFollowing(conn, uid)
     numFollowers = db.numFollowers(conn, uid)
+
+    print(uid)
+    print(profPic)
    
     followingBoolean = db.following_trueFalse(conn, session['uid'], uid) #note that that a session username cannot follow itself, so jinja2 in profile.page will 
     #figure out whether the button should show up using match variable as well, it can carry over but it's used depending on the profile 
@@ -457,7 +453,7 @@ def profile(username):
 def aFollow(username):
     ''' ajax function adds a follower to the Follows table and updates the follower and following count and returns that as a jsonify '''
     try:
-        conn = getConn()
+        conn = db.getConn(DB)
         profUID = db.getUid(conn, username)
         db.addfollower(conn, session['uid'], profUID)
         numFollowing = db.numFollowing(conn, profUID)
@@ -472,7 +468,7 @@ def aFollow(username):
 def dFollow(username):
     ''' ajax function deletes a follower to the Follows table and updates the follower and following count and returns that as a jsonify '''
     try: 
-        conn = getConn()
+        conn = db.getConn(DB)
         profUID = db.getUid(conn, username)
         db.deletefollower(conn, session['uid'], profUID)
         numFollowing = db.numFollowing(conn, profUID)
@@ -485,7 +481,7 @@ def dFollow(username):
 @app.route('/listofFollowers/<username>', methods = ["POST", "GET"])
 def followersList(username):
     '''gets a list of users links that follow the current profile'''
-    conn = getConn()
+    conn = db.getConn(DB)
     profUID = db.getUid(conn, username)
     users = db.followersUsers(conn, profUID)
     print(users)
@@ -494,7 +490,7 @@ def followersList(username):
 @app.route('/listofFollowing/<username>', methods = ["POST", "GET"])
 def followingList(username):
     '''gets a list of users links that the current profile is following'''
-    conn = getConn()
+    conn = db.getConn(DB)
     profUID = db.getUid(conn, username)
     users = db.followingUsers(conn, profUID)
     print(users)
@@ -509,7 +505,7 @@ def editProf():
     fullName = request.form.get('displayName')
     biotext = request.form['bioText']
 
-    conn = getConn()
+    conn = db.getConn(DB)
 
     #upload folder path, and allowed extension of file images
     UPLOAD_FOLDER = 'static/img/{}/'.format(uid)
@@ -541,8 +537,7 @@ def editProf():
     #requests from the form
     #fullName = request.form['fName']
     #biotext = request.form['bioText']
-    db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
-
+        db.updateProfile(conn, uid, fullName, biotext, filePath) #update profile
     return redirect(url_for('profile', username = username))
 
 

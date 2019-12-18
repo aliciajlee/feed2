@@ -82,6 +82,8 @@
         <span id="likeNumber">
           {{likes}}
         </span>
+        <a href="/listofLikes/{{pid}}"> users </a>
+        
         <!-- comments -->
         <div id="comments">
 
@@ -245,7 +247,11 @@
         console.log($("#like").attr("data-liked"));
 
         // IF USER ALREADY LIKED POST DO STUFF HERe
-
+        
+        
+        if ($("#like").attr("data-liked") == "True") {
+          $("#like").css("color", "#EF3B3A");
+        };
 
         $("#like").click(function() {
           if ($(this).attr("data-liked")=="False") {

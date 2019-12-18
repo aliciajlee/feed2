@@ -28,7 +28,6 @@
                         <select name="sort-by" id="sort-by">
                             <option value="recent">Most Recent</option>
                             <option value="rating">Rating</option>
-                            <option value="price">Price</option>
                         </select>
                     </form>
                 </span>
@@ -85,7 +84,7 @@
                             <!-- image -->
 
                             <!-- <div class="card-image-top img-fluid post-image"> -->
-                            <img class="card-image-top img-fluid rounded-top post-image" 
+                            <img alt = "post image" class="card-image-top img-fluid rounded-top post-image" 
                                 src="{{url_for('static',filename=post['imgPath'])}}">
                             <!-- </div> -->
                         
@@ -156,9 +155,10 @@
                         });
                     });
 
-                    {% if sortBy is defined %}
+                    // select the right option in the dropdown
+                    {% if sort_by is defined %}
 
-                        $("#sort-by").val("{{sortBy}}");
+                        $("#sort-by").val("{{sort_by}}");
                         
                     {% endif %}
 
@@ -177,34 +177,57 @@
 
                         console.log(query);
 
-                        var sortBy = this.value;
+                        // var sortBy = this.value;
 
-                        switch(this.value) {
-                            case "time":
-                                console.log("sort by time");
+                        // we need to pass type = posts
+
+                        // submit form action
+                        {% if search is defined %}
+                            $("#sort-by-form").attr("action", "{{url_for('search')}}");
+                            
+                        // also check tag
+
+                        // {% elif tags is defined%}
+                        //     $("#sort-by-form").attr("action", "{{url_for('show_tag_posts', tag=tag)}}");
+
+                        {% else %}
+                            $("#sort-by-form").attr("action", "{{url_for('home')}}");
+
+                        {% endif %}
+                        // need to see if there was a query, if there was, action should go to /search/
+                   
+                        // switch(this.value) {
+                        //     case "recent":
+                        //         console.log("sort by recent");
                                 // $("#sort-by-form").attr("action", "{{url_for('sort_rating')}}")
-                                
-                                break;
-                            case "rating":
-                                console.log("sort by rating");
-                                $("#sort-by-form").attr("action", "{{url_for('sort_rating')}}");
+                            //     $("#sort-by-form").attr("action", "{{url_for('home')}}");
+                            //     break;
+                            // case "rating":
+                            //     console.log("sort by rating");
+                            //     $("#sort-by-form").attr("action", "{{url_for('home')}}");
                                 
 
                                 // $.post(URL_SORT_RATING, {"type": "posts", "query": query}, displaySortedPosts)  
-                                break;
-                            case "price":
-                                console.log("sort by price");
-                                break;
+                        //         break;
+                        //     case "price":
+                        //         console.log("sort by price");
+                        //         break;
 
-                        };
+                        // };
+
                         $("#sort-by-form").submit();
                     })
 
+                    // add values to form
+                    // some of this is unecesary and makes the url ugly
                     $("#sort-by-form").submit( function(eventObj) {
                         stuff = '<input type="hidden" name="query" value=' + query + '/>'
+                        stuff2 = '<input type="hidden" name="type" value=posts/>'
                         $(this).append(stuff);   
+                        $(this).append(stuff2)
                         return true;
-                    });         
+                });    
+                        
             })
               
 

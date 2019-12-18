@@ -30,6 +30,7 @@ def deletefollower(conn, sessionUid, profUid):
     curs.execute('''DELETE from Follows where follower_id = %s and followee_id = %s''', [sessionUid, profUid])
 
 def numPostsUser(conn, uid):
+    '''computes the total posts for each user they have posted '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select count(*) from Posts where uid=%s''', [uid])
     result = curs.fetchone()
@@ -94,6 +95,7 @@ def like_trueFalse(conn, pid, uid):
     return True if curs.fetchone() else False
 
 def getUidfromPost(conn, pid):
+    '''Given the post id (pid), get the uid of the post '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select uid from Posts where pid=%s''', [pid])
     result = curs.fetchone()
@@ -152,12 +154,6 @@ def deleteComment(conn, pid, uid, cText):
     '''adds a comment to the Comments table'''
     curs = dbi.dictCursor(conn)
     curs.execute('''DELETE from Comments where post_id=%s and profile_id=%s and comment=%s)''', [pid, uid, cText])
-
-def getNumPosts(conn):
-    curs = dbi.dictCursor(conn)
-    curs.execute('''select max(pid) from Posts''')
-    result = curs.fetchone()
-    return result['max(pid)']
     
 def getBioText(conn, uid):
     '''get the bio text from the database '''
@@ -189,6 +185,7 @@ def updateProfile(conn, uid, username, fname, text, path):
 
 # get uid of a user by username
 def getUid(conn, username):
+    '''get uid given a username '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select uid from Users where username = %s''', [username])
     result = curs.fetchone()
@@ -197,6 +194,7 @@ def getUid(conn, username):
 
 # gets all posts for displaying posts in feed
 def getAllPosts(conn):
+    ''' get all the info for each post in the Posts table'''
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts''') # we don't need to get all change later
     return curs.fetchall() # change this later

@@ -111,16 +111,16 @@
             <script src="{{url_for('static',filename='home.js')}}"></script>
             <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
             <script>
-                $(document).ready(function() {        
-                    var URL_SORT_RATING = "{{url_for('sort_rating')}}"
-                    // console.log({{posts}})
+                $(document).ready(function() {       
+
+                    var URL_SORT_RATING = "{{url_for('sort_rating')}}" // not used
                     var query;
 
-
+                    // wait for page to load, otherwise doesn't workj
                     window.addEventListener('load', function () {
                         colWidth = ($("#masonry").innerWidth() - 10*(parseFloat($(".grid-item").css("margin").slice(0,-2))))/5.0;
 
-                        // need to set the height of each grid item
+                        // need to set the height of each grid item otherwise css messes up
                         $(".grid-item").each(function() {
                             $(this).height($(this).find(".custom-card")+50);
                             $(this).width(colWidth);
@@ -135,37 +135,32 @@
                         });
                     });
 
-                    // select the right option in the dropdown
+                    // select the right option in the sort by dropdown
                     {% if sort_by is defined %}
 
                         $("#sort-by").val("{{sort_by}}");
                         
                     {% endif %}
 
+                    // submit sort by form when value is changed
                     $("#sort-by").change(function () {
-                        console.log(this.value);
 
                         // check if there was search query
                         {% if query is defined %}
                             query = "{{query}}";
-                        
+                    
                         {% else %}
 
                             query = null;
 
                         {% endif %}
 
-                        console.log(query);
 
-                        // var sortBy = this.value;
-
-                        // we need to pass type = posts
-
-                        // submit form action
+                        // add form submit action depending on where dropdown change was called
                         {% if search is defined %}
                             $("#sort-by-form").attr("action", "{{url_for('search')}}");
                             
-                        // also check tag
+                        // should also check tag here in the future
 
                         // {% elif tags is defined%}
                         //     $("#sort-by-form").attr("action", "{{url_for('show_tag_posts', tag=tag)}}");
@@ -174,13 +169,12 @@
                             $("#sort-by-form").attr("action", "{{url_for('home')}}");
 
                         {% endif %}
-                        // need to see if there was a query, if there was, action should go to /search/
 
                         $("#sort-by-form").submit();
                     })
 
-                    // add values to form
-                    // some of this is unecesary and makes the url ugly
+                    // add query and type to form
+                    // some of this is probably unecesary and makes the url ugly
                     $("#sort-by-form").submit( function(eventObj) {
                         stuff = '<input type="hidden" name="query" value=' + query + '/>'
                         stuff2 = '<input type="hidden" name="type" value=posts/>'

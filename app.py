@@ -360,6 +360,7 @@ def logout():
 
 @app.route('/upload/', methods=["POST"])
 def upload(): 
+    '''adds a post's information into the database'''
     name = request.form.get("pname")
     restaurant = request.form.get("restaurant")
     location = request.form.get("location")
@@ -371,7 +372,7 @@ def upload():
     uid = session['uid']
     postconn = db.getConn(DB)
     try:
-        # pid = db.getNumPosts(postconn) + 1
+        #add everything but the imgpath to the Post table
         pid = db.insertPost(postconn, uid, name, rating, price, review, restaurant, location)
         f = request.files["upload"]
 
@@ -386,23 +387,13 @@ def upload():
         pathname = os.path.join(user_folder,filename)
         f.save(pathname)
         
-        #the filepath that gets put into the database
+        #add the renamed imgpath into the Post table
         filePath = os.path.join('images/{}/'.format(uid), filename)
 
         db.insertFilepath(postconn, filePath, pid)
 
-        #add to post table
-        conn = db.getConn(DB)
-        curs = dbi.cursor(conn)
-    
-        # curs.execute(
-        #     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
-        #     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-        #     [uid, name, rating, price, review, restaurant, location, filePath])
-        
         #add to Tagpost table
         for tag in tags:
-            #curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
             tid = db.getTid(postconn, tag)
             db.insertTagPost(postconn,pid,tid)
         flash('Upload successful')
@@ -604,20 +595,7 @@ def edit_post(pid, old_tags=None):
 
 @app.route('/tags/<tag>/', methods=["GET"])
 def show_tag_posts(tag):
-
-    # NEED TO DO SROTING HERE TTOO for future reference
-    # sort_by = request.values.get("sort-by")
-    # conn = db.getConn(DB)
-    # if not sort_by:
-    #     sort_by = "recent"
-    # if sort_by == "recent":
-    #     posts = db.getQueryPosts(conn, query)
-    # elif sort_by == "rating":
-    #     posts = db.getQueryPostsSortByRating(conn,query)
-    # else:
-    #     posts = None
-    #     flash("need to implement sort by price!!!!")
-
+    '''displays all posts under the given tag'''
     conn = db.getConn(DB)
     #convert from tag to tid
     tid = db.getTid(conn,tag)['tid']
@@ -630,15 +608,7 @@ def show_tag_posts(tag):
     username = session['username']
     title = "posts under " + tag
     return render_template("home.html", page_title= title, posts=posts, username=username,
-                            options=False, tag=tag) # make options false cause no
-                            # time to do sorting stuff rip
-
-
-# implement this later if necessary
-# @app.route('/sort_time/', methods=['GET'])
-# def sort_time(posts):
-#     pass
-
+                            options=False, tag=tag) 
 
 # sort posts by rating no ajax, it's a serparate route for now
 # this route is not being used in beta

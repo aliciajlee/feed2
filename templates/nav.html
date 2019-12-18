@@ -34,8 +34,8 @@
                     </div>
                     <select name="type" id="type" class="form-control">
                         <option selected disabled>Show...</option>
-                        <option  id="option-post"value="posts">Posts</option>
-                        <option od="option-user"value="users">Users</option>
+                        <option id="option-post" value="posts">Posts</option>
+                        <option id="option-user" value="users">Users</option>
                     </select>
                 </form>
             </div>
@@ -71,52 +71,37 @@
               <!-- EDIT POST FORM -->
             <form id="upload-post-form" method=POST action="{{url_for('upload')}}" enctype="multipart/form-data">
               <div class="form-group form-inline">
-                <label>Name</label>
+                <label>Name
                 <input type="text" id = "edit-name" class="form-control" name="pname" 
                       value="" maxlength="30" required /> 
+                    </label>
               </div>   
+              
               <div class="form-group form-inline">
-                  <label>Restaurant</label>
+                  <label>Restaurant
                   <input type="text" id="edit-restaurant" class="form-control" name="restaurant" 
                           value="" maxlength="30"> 
-              </div>
+                  </label>
+                </div>
               <div class="form-group form-inline">
-                  <label>Location</label>
+                  <label>Location
                   <input type="text" id="edit-location" class="form-control" name="location" 
                           value="" maxlength="50"> 
+                    </label>
               </div> 
               <div class="form-group form-inline">
-                  <label>Pic:</label>
+                  <label>Pic:
                    <input type="file" id="upload-pic" class="form-control" name="upload">
+                  </label>
             </div> 
               <!-- rating -->
               <div class="form-group form-inline">
-                  <label>Rating</label>
-                  <!-- <div class='rating-stars text-center'> -->
-                    <!-- <input class="hide" name="rating"> -->
-                      <!-- <ul id='stars'>
-                        <li class='star' title='Poor' data-value='1'>
-                          <i class='fa fa-star fa-fw'></i>
-                        </li>
-                        <li class='star' title='Fair' data-value='2'>
-                          <i class='fa fa-star fa-fw'></i>
-                        </li>
-                        <li class='star' title='Good' data-value='3'>
-                          <i class='fa fa-star fa-fw'></i>
-                        </li>
-                        <li class='star' title='Excellent' data-value='4'>
-                          <i class='fa fa-star fa-fw'></i>
-                        </li>
-                        <li class='star' title='WOW!!!' data-value='5'>
-                          <i class='fa fa-star fa-fw'></i>
-                        </li> -->
-                      <!-- </ul> -->
+                  <label>Rating </label>
                       <label class="radio-inline"><input type="radio" value="1" name="rating">1</label>
                       <label class="radio-inline"><input type="radio" value="2" name="rating">2</label>
                       <label class="radio-inline"><input type="radio" value="3" name="rating">3</label>
                       <label class="radio-inline"><input type="radio" value="4" name="rating">4</label>
                       <label class="radio-inline"><input type="radio" value="5" name="rating">5</label>
-                    <!-- </div> -->
                  
               </div>   
               <!-- price -->
@@ -130,20 +115,21 @@
               <!-- do tags here later-->
               
               <div class="form-group form-inline">
-                <label>Tags</label>
+                <label>Tags
                 <select id = "tags" class="js-example-basic-multiple" name="tags" multiple="multiple">
                     {% for tag in tags %}
                     <option value={{tag.tid}}>{{tag.ttype}}</option>
 
                     {% endfor %}
                 </select>
-
+              </label>
               </div>
 
               <div class="form-group form-inline">
-                <label>Review</label>
+                <label>Review <br>
                 <!-- make rows and cols dynamic later -->
-                <textarea class="form-control" rows="5" cols="56" name="review" maxlength="500"></textarea>
+                <textarea class="form-control" rows="5" cols="45" name="review" maxlength="500"></textarea>
+              </label>
               </div>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 

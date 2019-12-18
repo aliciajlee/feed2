@@ -1,7 +1,7 @@
 {% extends "nav.html" %}
 
 <!doctype html>
-<html>
+<html lang="en">
     <head>
         {% block head %}
         <meta charset="utf-8">
@@ -24,22 +24,22 @@
             <div id="options">
                 <span>
                     <form id="sort-by-form" method=GET>
-                        <label>Sort by</label>
+                        <label>Sort by
                         <select name="sort-by" id="sort-by">
                             <option value="recent">Most Recent</option>
                             <option value="rating">Rating</option>
-                        </select>
+                        </select></label>
                     </form>
                 </span>
                 <span>
                     <form id="tag-form">
-                        <label>Category</label>
+                        <label>Category
                         <select name="tag" id="tag" onchange="this.form.submit()">
                             <option selected disabled>Choose</option>
                             {% for tag in tags %}
                             <option>{{tag['ttype']}}</option>
                             {% endfor %}
-                        </select>
+                        </select></label>
                     </form>
                 </span>
                 <!-- <span id="filter-tag"></span> -->
@@ -53,26 +53,6 @@
         {%endblock %}
 
         {% block content %}
-        <!--  BOOTSTRAP CARD -->
-
-            <!-- <div id="posts" class="masonry card-columns">
-            {% for post in posts %}
-            <a href="{{url_for('post', pid=post.pid)}}" class = "custom-card"> 
-                <div class="item card">
-                 rd-image-top img-fluid post-image"> -->
-                    <!-- <img class="card-image-top img-fluid rounded-top post-image" 
-                        src="{{url_for('static',filename=post['imgPath'])}}">
-                 
-                    <div class="card-body">
-                        <h5 class="card-title">{{post['pname']}}</h5>
-                        <p class="card-text rating" data-rating="{{post['rating']}}"></p>
-                        <p class="card-text">{{post['review'] | truncate(150)}}</p>
-                    </div>
-                </div>
-            </a>
-
-            {% endfor %}
-            </div>  -->
 
             <!-- MASONRY -->
             <div id="masonry" class="grid">
@@ -195,25 +175,6 @@
 
                         {% endif %}
                         // need to see if there was a query, if there was, action should go to /search/
-                   
-                        // switch(this.value) {
-                        //     case "recent":
-                        //         console.log("sort by recent");
-                                // $("#sort-by-form").attr("action", "{{url_for('sort_rating')}}")
-                            //     $("#sort-by-form").attr("action", "{{url_for('home')}}");
-                            //     break;
-                            // case "rating":
-                            //     console.log("sort by rating");
-                            //     $("#sort-by-form").attr("action", "{{url_for('home')}}");
-                                
-
-                                // $.post(URL_SORT_RATING, {"type": "posts", "query": query}, displaySortedPosts)  
-                        //         break;
-                        //     case "price":
-                        //         console.log("sort by price");
-                        //         break;
-
-                        // };
 
                         $("#sort-by-form").submit();
                     })

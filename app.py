@@ -121,7 +121,7 @@ def search():
             flash ("no posts found")
         flash("Post results for '{}'".format(query))
         return render_template("home.html", page_title="Results", posts=posts[::-1], options=True,
-                                    query=query, type=type_, search=True)
+                                    query=query, type=type_, search=True, sort_by=sort_by)
     else:
         # might be nice to have a separate html for users
         users = db.getQueryUsers(conn, query)
@@ -358,72 +358,56 @@ def logout():
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
 
-@app.route('/upload/', methods=["GET", "POST"])
-def upload():
-    if 'username' in session:
-        if request.method == 'GET':
-            postconn = db.getConn(DB)
-            tags = db.getAllTags(postconn)
-            return render_template('upload.html', tags = tags)
-        if request.method == 'POST':
-            try:
-                uid = session['uid']
-                postconn = db.getConn(DB)
-                pid = db.getNumPosts(postconn) + 1
-                name = request.form['name'] 
-                rating = request.form['rating']
-                review = request.form['review']
-                restaurant = request.form['restaurant']
-                location = request.form['location']
-                price = request.form['price']
-                tags = request.form.getlist("tags")
-                f = request.files['pic']
+@app.route('/upload/', methods=["POST"])
+def upload(): 
+    name = request.form.get("pname")
+    restaurant = request.form.get("restaurant")
+    location = request.form.get("location")
+    rating = request.form.get("rating")
+    price = request.form.get("price")
+    review = request.form.get("review")
+    tags = request.form.getlist("tags")
 
-                #make sure image is not too big
-                fsize = os.fstat(f.stream.fileno()).st_size
-                if fsize > app.config['MAX_CONTENT_LENGTH']:
-                    raise Exception('File is too big')
-                
-                #make sure image is right type
-                mime_type = imghdr.what(f)
-                if not mime_type or mime_type.lower() not in ['jpeg','gif','png']:
-                    raise Exception('Not recognized as JPEG, GIF or PNG: {}'
-                                    .format(mime_type))                
-                ext = f.filename.split('.')[-1]
-                filename = secure_filename('{}.{}'.format(pid,ext))
-                user_folder = os.path.join(app.config['UPLOADS'],str(uid))
+    uid = session['uid']
+    postconn = db.getConn(DB)
+    pid = db.getNumPosts(postconn) + 1
+    f = request.files["upload"]
 
-                #if user folder doesn't exist, create it. Otherwise, upload it
-                if not(os.path.isdir(user_folder)):
-                    os.mkdir(user_folder)
-                pathname = os.path.join(user_folder,filename)
-                f.save(pathname)
-                
-                #the filepath that gets put into the database
-                filePath = os.path.join('images/{}/'.format(uid), filename)
+    ext = f.filename.split('.')[-1]
+    filename = secure_filename('{}.{}'.format(pid,ext))
+    user_folder = os.path.join(app.config['UPLOADS'],str(uid))
 
-                #add to post table
-                conn = getConn()
-                curs = dbi.cursor(conn)
-                curs.execute(
-                    '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
-                    values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-                    [uid, name, rating, price, review, restaurant, location, filePath])
-                
-                #add to Tagpost table
-                for tag in tags:
-                    curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
-                
-                flash('Upload successful')
-                return redirect(url_for("index"))
-            
-            except Exception as err:
-                print("upload failed because " + str(err))
-                flash('Upload failed {why}'.format(why=err))
-                return render_template('upload.html')
-    else:
-            flash('You are not logged in. Please login or join')
-            return redirect( url_for('index') )
+    #if user folder doesn't exist, create it. Otherwise, upload it
+    if not(os.path.isdir(user_folder)):
+        os.mkdir(user_folder)
+    pathname = os.path.join(user_folder,filename)
+    f.save(pathname)
+    
+    #the filepath that gets put into the database
+    filePath = os.path.join('images/{}/'.format(uid), filename)
+
+    #add to post table
+    conn = getConn()
+    curs = dbi.cursor(conn)
+    try:
+        curs.execute(
+            '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
+            values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
+            [uid, name, rating, price, review, restaurant, location, filePath])
+        
+        #add to Tagpost table
+        for tag in tags:
+            curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
+        
+        flash('Upload successful')
+        return redirect(url_for('index'))
+
+    except Exception as err:
+        print("upload failed because " + str(err))
+        flash('Upload failed {why}'.format(why=err))
+        return redirect( url_for('index') )
+
+
 
 # i think we can combine the 2 profiles
 @app.route('/profile/')

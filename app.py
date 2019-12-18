@@ -21,7 +21,7 @@ app.config['MAX_CONTENT_LENGTH'] = 5*1024*1024 # 5 MB
 
 app.secret_key = 'able baker charlie'
 
-DB = 'feed2019_db' #CHANGE
+DB = 'rnavarr2_db' #CHANGE
 
 @app.route('/')
 def index():
@@ -106,6 +106,7 @@ def alikes(post):
         db.addLike(conn, post, session['uid'])
         numberLikes = db.countLikes(conn, post)
         conn.close()
+        print("here")
         return jsonify(numLikes = numberLikes)
     except Exception as err:
         print(err)
@@ -184,7 +185,7 @@ def post(pid):
     user = None if 'username' not in session else session['username']
     posted = user == post['username']
     conn = db.getConn(DB)
-    uid = db.getUid(conn, post['username'])
+    uid = session['uid']
     conn.close()
 
     conn = db.getConn(DB)

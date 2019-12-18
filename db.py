@@ -165,7 +165,7 @@ def getBioText(conn, uid):
     curs.execute('''select biotxt from Users where uid=%s''', [uid])
     return curs.fetchone()
 
-def (conn, uid):
+def getPPic(conn, uid):
     ''' get the pic path from the database '''
     curs = dbi.dictCursor(conn)
     curs.execute('''select profpicPath from Users where uid=%s''', [uid])

@@ -357,6 +357,7 @@ def logout():
 
 
 @app.route('/upload/', methods=["POST"])
+'''adds a post's information into the database'''
 def upload(): 
     name = request.form.get("pname")
     restaurant = request.form.get("restaurant")
@@ -369,7 +370,7 @@ def upload():
     uid = session['uid']
     postconn = db.getConn(DB)
     try:
-        # pid = db.getNumPosts(postconn) + 1
+        #add everything but the imgpath to the Post table
         pid = db.insertPost(postconn, uid, name, rating, price, review, restaurant, location)
         f = request.files["upload"]
 
@@ -384,23 +385,13 @@ def upload():
         pathname = os.path.join(user_folder,filename)
         f.save(pathname)
         
-        #the filepath that gets put into the database
+        #add the renamed imgpath into the Post table
         filePath = os.path.join('images/{}/'.format(uid), filename)
 
         db.insertFilepath(postconn, filePath, pid)
 
-        #add to post table
-        conn = db.getConn(DB)
-        curs = dbi.cursor(conn)
-    
-        # curs.execute(
-        #     '''insert into Posts(uid,pname,rating,price,review,restaurant,location, imgPath, time) 
-        #     values (%s,%s,%s,%s,%s,%s,%s,%s, now())''',
-        #     [uid, name, rating, price, review, restaurant, location, filePath])
-        
         #add to Tagpost table
         for tag in tags:
-            #curs.execute('''insert into Tagpost(pid,tid) values (%s,%s)''', [pid, tag])
             tid = db.getTid(postconn, tag)
             db.insertTagPost(postconn,pid,tid)
         flash('Upload successful')

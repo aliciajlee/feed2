@@ -201,8 +201,8 @@ def getAllPosts(conn):
     curs.execute('''select * from Posts''') # we don't need to get all change later
     return curs.fetchall() # change this later
 
+# gets all posts in the db sorted by rating
 def getAllPostsSortByRating(conn):
-
     curs = dbi.dictCursor(conn)
     curs.execute('''select * from Posts order by rating''') # we don't need to get all change later
     return curs.fetchall()
@@ -214,6 +214,7 @@ def getSinglePost(conn, pid):
                      from Posts inner join Users on Users.uid=Posts.uid where Posts.pid = %s''', [pid])
     return curs.fetchone()
 
+# gets posts that have tag 
 def getPostsWithTid(conn, tid):
     curs = dbi.dictCursor(conn)
     curs.execute('''select pname, Posts.pid, rating, price, review, restaurant, location, imgPath, time
@@ -231,7 +232,6 @@ def getTagsofPost(conn, pid):
 # returns posts where query matches post name, tag, restaurant, username, fullname
 def getQueryPosts(conn, query):
     curs = dbi.dictCursor(conn)
-    
     curs.execute('''(select * from Posts where pname like %s 
                             or restaurant like %s or location like %s)
                     union
@@ -265,6 +265,7 @@ def getQueryPostsSortByRating(conn, query):
                 ['%'+query+'%', '%'+query+'%', '%'+query+'%', query, 
                     '%'+query+'%', '%'+query+'%'])
     return curs.fetchall()
+
 # return users where query matches username, fullname
 def getQueryUsers(conn, query):
     curs = dbi.dictCursor(conn)

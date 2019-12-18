@@ -24,7 +24,7 @@
             {% for user in users %}
                 
                 
-            <a href="/profile/{{user['username']}}" class = "custom-card"> 
+            <a href="{{url_for('profile', username = username)}}" class = "custom-card"> 
                 <div class="item card">
                 {# ... 
                     <!-- <img src="{{post['imgPath']}}"> -->

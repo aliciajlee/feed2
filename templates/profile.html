@@ -95,8 +95,8 @@
 
 				<ul>
 					<li><span class="profile-stat-count" id="posts">{{postNum}}</span> posts</li>
-					<li><span class="profile-stat-count" id="followers">{{numFers}}</span> <a href="/listofFollowers/{{profName}}"> followers </a></li>
-					<li><span class="profile-stat-count" id="following">{{numFing}}</span><a href="/listofFollowing/{{profName}}"> following</a> </li>
+					<li><span class="profile-stat-count" id="followers">{{numFers}}</span> <a href="{{url_for('followersList', username=profName)}}"> followers </a></li>
+					<li><span class="profile-stat-count" id="following">{{numFing}}</span><a href="{{url_for('followingList', username=profName)}}"> following</a> </li>
 				</ul>
 
 			</div>

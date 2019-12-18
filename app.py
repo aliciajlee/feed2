@@ -87,7 +87,8 @@ def likes(post):
 def search():
     '''search by rating or search by time post (most recent) '''
     query = request.values.get('query')
-    if query[-1] == "/":
+    
+    if query and query[-1] == "/":
         query = query[:-1] # bad fix
 
     type_ = request.values.get('type')

@@ -1,12 +1,12 @@
 # Feed
-FEED TECHNICAL REPORT
+# FEED TECHNICAL REPORT
 Alicia Lee, Rachel Navarrette, Sandra Xu
 
 
-INTRODUCTION
+# INTRODUCTION
 As self-proclaimed foodies, we struggle to find appetizing and aesthetic dishes at restaurants. Many social media applications lack features that make the enjoyment of sharing food photos possible. We found that Pinterest lacked information on where food photos were taken, like restaurant location or what the dish was called. Yelp contains reviews of restaurants only, and not specific dishes served at those restaurants. It lacks that appeal that instagram food shots achieve. It seemed like these social media applications all had features that were needed on one platform. As a result, Feed combines the best of social media (e.g. Instagram, Pinterest, Yelp),such as looking up dish reviews and pricing, and filtering/searching through content, searching through users and their posts.  
 
-USER GUIDE
+# USER GUIDE
 Getting started on Feed
 Sign up for a Feed account and choose a username that clearly represents your brand
 Add a profile photo, display name, a biography. You can edit this and your username at anytime using “edit profile” on your profile page. 
@@ -79,7 +79,7 @@ Once you've followed someone, their profile will say Following instead of Follow
 To see a list of followers and following on a profile page:
 Click on followers or following hyperlinks to get the list of users
  
-TECHNICAL DETAILS:
+# TECHNICAL DETAILS:
 ER diagram 
 
 Tables 
@@ -145,7 +145,7 @@ Deleting a like is an ajax function, given the post_id, will delete the post_id 
 @app.route('/listofLikes/<post>', methods = ["POST", "GET"])
 Using a post_id as a given parameter, it gets a list of all the users who liked a particular post using likesList(conn, pid), using the Likes table.When a user clicks on ‘users’ found in post.html, the hyperlink is redirected to this app route function that gets the list of people who liked, and redirects the user to a new page called listofFollowing.html (badly worded html page, I know, but it is the same template used to get the list of followers and following, hence why it was named that), where the list of users are transferred and processed for formatting.
 
-# display info of an individual post
+#display info of an individual post
 @app.route('/post/<pid>/')
 Displays information of an individual post with the given pid. Gets the name, user who posted, rating, price range, restaurant, location, review, tags, and time posted from the Posts table, and gets the number of likes from the Likes table. Displays these information in the template post.html. Checks if If the user logged in posted the post, and if so, edit and delete buttons will be displayed. Clicking on these buttons will pop up the edit and delete forms. User who posted and tags are links that redirect to @app.route('/profile/<username>')and @app.route('/tags/<tag>/', methods=["GET"])respectively. 
 
@@ -197,11 +197,11 @@ Redirects here when the edit post form of post with given pid is submitted. Gets
 Fetches the tag name from the url, converts it into its tag id using the Tag table with the getTid(conn,ttype)function and looks up all the posts with the tid using an inner join between the TagPost table and the Post table using the getPostsWithTid(conn, tid)function. Displays the queried posts using the home.html template.
 
  
-CONCLUSION:
+# CONCLUSION:
 Feed is a fully-functioning food blogger’s social media heaven. Users have the power to share their food experiences with the world using our upload form, discover the latest food trends by viewing posts in a beautiful grid format, and connect with similar-minded foodies by following other accounts and liking their posts.  Join the Feed community of foodies today! 
 We promise not to waste your investment with our goal to release IPOs to the market one day. We won’t let you down!
  
-FUTURE DIRECTIONS:
+# FUTURE DIRECTIONS:
 For the future, we hope to deploy the website to the public, and create a mobile application version of the site. We also hope to make it more social, by implementing comments and additional security of accounts by verifying emails, recovering passwords. We want to make the feed and search more robust as the data set expands, by creating the feed for just users that you follow, and to sort by not just rating and time stamp, but also by price. We hope to one day partner with advertisement companies, restaurants, and food delivery companies to monetize the application in the future.  
  
  
